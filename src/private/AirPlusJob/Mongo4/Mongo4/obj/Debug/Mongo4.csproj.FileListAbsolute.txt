@@ -1,0 +1,15 @@
+c:\users\sivanathan82\documents\visual studio 2017\Projects\Mongo4\Mongo4\bin\Debug\Mongo4.exe.config
+c:\users\sivanathan82\documents\visual studio 2017\Projects\Mongo4\Mongo4\bin\Debug\Mongo4.exe
+c:\users\sivanathan82\documents\visual studio 2017\Projects\Mongo4\Mongo4\bin\Debug\Mongo4.pdb
+c:\users\sivanathan82\documents\visual studio 2017\Projects\Mongo4\Mongo4\bin\Debug\MongoDB.Bson.dll
+c:\users\sivanathan82\documents\visual studio 2017\Projects\Mongo4\Mongo4\bin\Debug\MongoDB.Driver.Core.dll
+c:\users\sivanathan82\documents\visual studio 2017\Projects\Mongo4\Mongo4\bin\Debug\MongoDB.Driver.dll
+c:\users\sivanathan82\documents\visual studio 2017\Projects\Mongo4\Mongo4\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
+c:\users\sivanathan82\documents\visual studio 2017\Projects\Mongo4\Mongo4\bin\Debug\MongoDB.Bson.xml
+c:\users\sivanathan82\documents\visual studio 2017\Projects\Mongo4\Mongo4\bin\Debug\MongoDB.Driver.xml
+c:\users\sivanathan82\documents\visual studio 2017\Projects\Mongo4\Mongo4\bin\Debug\MongoDB.Driver.Core.xml
+c:\users\sivanathan82\documents\visual studio 2017\Projects\Mongo4\Mongo4\obj\Debug\Mongo4.csprojResolveAssemblyReference.cache
+c:\users\sivanathan82\documents\visual studio 2017\Projects\Mongo4\Mongo4\obj\Debug\Mongo4.exe
+c:\users\sivanathan82\documents\visual studio 2017\Projects\Mongo4\Mongo4\obj\Debug\Mongo4.pdb
+C:\Users\sivanathan82\documents\visual studio 2017\Projects\Mongo4\Mongo4\bin\Debug\Newtonsoft.Json.dll
+C:\Users\sivanathan82\documents\visual studio 2017\Projects\Mongo4\Mongo4\bin\Debug\Newtonsoft.Json.xml
