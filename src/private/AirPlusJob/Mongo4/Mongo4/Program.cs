@@ -86,6 +86,9 @@ namespace Mongo4
         [BsonElement("Day")]
         public List<Day> days;
 
+        [BsonElement("DateTimeStamp")]
+        public BsonDateTime datetaken;
+
         [BsonElement("Listing")]
         public BsonString ListingId { get; set; }
         public Document()
@@ -164,6 +167,7 @@ namespace Mongo4
                 Document d = new Document();
                 d.Month = new BsonString(oneDoc[i].abbr_name.Value);
                 d.ListingId = new BsonString(listingId);
+                d.datetaken = new BsonDateTime(DateTime.Now);
                 for(int j=0;j< json["calendar_months"][i].days.Count;j++)
                 {
                     Day oneday = new Day();
@@ -215,12 +219,19 @@ namespace Mongo4
             }
             catch (WebException e)
             {
-                if (e.Status == WebExceptionStatus.ProtocolError) response = (HttpWebResponse)e.Response;
+                if (e.Status == WebExceptionStatus.ProtocolError)
+                {
+                    response = (HttpWebResponse)e.Response;
+                    return false;
+                }
                 else return false;
             }
             catch (Exception)
             {
-                if (response != null) response.Close();
+                if (response != null) {
+                    response.Close();
+                }
+                
                 return false;
             }
 
