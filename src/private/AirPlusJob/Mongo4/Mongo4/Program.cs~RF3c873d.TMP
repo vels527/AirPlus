@@ -1,0 +1,54 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using MongoDB;
+using MongoDB.Driver;
+using MongoDB.Driver.Core;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace Mongo4
+{
+    public class Book:BsonDocument
+    {
+        [BsonElement("Name")]
+        public string Name { get; set; }
+
+        [BsonElement("Author")]
+        public string Author { get; set;}
+
+        [BsonElement("Language")]
+        public string Language { get; set; }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("mydb");
+            var collection = database.GetCollection<BsonDocument>("books");
+            Book b = new Book();
+            b.Language = "French";
+            
+             FilterDefinition<BsonDocument> filter= new BsonDocument("Language","French");
+            var document = collection.Find<BsonDocument>(filter).ToList<BsonDocument>();
+            //document.
+            //var docall = document.GetEnumerator();
+
+            //while (docall.MoveNext())
+            //{
+            //    Console.WriteLine(docall.Current.GetValue("Name"));
+            //}
+
+            foreach (var l in document)
+            {
+                BsonElement doc=new BsonElement();
+                if(l.TryGetElement("Language",out doc)!=false)
+                if(l.GetElement("Language").Value=="French")
+                Console.WriteLine(l.GetElement("Name").Value);
+            }
+        }
+    }
+}
