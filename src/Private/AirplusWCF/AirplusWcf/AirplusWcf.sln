@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirplusWcf", "AirplusWcf\AirplusWcf.csproj", "{034660CB-8CC9-4210-A487-BBDB998C65DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDataLayer", "MongoDataLayer\MongoDataLayer.csproj", "{A0421867-B276-4F3C-99BE-3E008F4C87A1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{034660CB-8CC9-4210-A487-BBDB998C65DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{034660CB-8CC9-4210-A487-BBDB998C65DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{034660CB-8CC9-4210-A487-BBDB998C65DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{034660CB-8CC9-4210-A487-BBDB998C65DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0421867-B276-4F3C-99BE-3E008F4C87A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0421867-B276-4F3C-99BE-3E008F4C87A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0421867-B276-4F3C-99BE-3E008F4C87A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0421867-B276-4F3C-99BE-3E008F4C87A1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
