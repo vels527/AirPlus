@@ -1,0 +1,6 @@
+C:\projects\AirPlus\AirPlus\src\private\AirbnbMonitor\code\bin\Debug\ConsoleApplication19.exe.config
+C:\projects\AirPlus\AirPlus\src\private\AirbnbMonitor\code\bin\Debug\ConsoleApplication19.exe
+C:\projects\AirPlus\AirPlus\src\private\AirbnbMonitor\code\bin\Debug\ConsoleApplication19.pdb
+C:\projects\AirPlus\AirPlus\src\private\AirbnbMonitor\code\obj\Debug\AirbnbMonitor.csprojResolveAssemblyReference.cache
+C:\projects\AirPlus\AirPlus\src\private\AirbnbMonitor\code\obj\Debug\ConsoleApplication19.exe
+C:\projects\AirPlus\AirPlus\src\private\AirbnbMonitor\code\obj\Debug\ConsoleApplication19.pdb
