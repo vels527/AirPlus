@@ -1,0 +1,12 @@
+C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDataLayer.dll
+C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDataLayer.pdb
+C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDB.Bson.dll
+C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDB.Driver.Core.dll
+C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDB.Driver.dll
+C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
+C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDB.Bson.xml
+C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDB.Driver.xml
+C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDB.Driver.Core.xml
+C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\obj\Debug\MongoDataLayer.csprojResolveAssemblyReference.cache
+C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\obj\Debug\MongoDataLayer.dll
+C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\obj\Debug\MongoDataLayer.pdb
