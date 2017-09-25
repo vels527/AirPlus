@@ -31,6 +31,15 @@ namespace AirplusWeb {
         protected global::System.Web.UI.WebControls.Panel Panel1;
         
         /// <summary>
+        /// RegisterTable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Table RegisterTable;
+        
+        /// <summary>
         /// Label_User control.
         /// </summary>
         /// <remarks>
@@ -58,12 +67,66 @@ namespace AirplusWeb {
         protected global::System.Web.UI.WebControls.Label Label_Register;
         
         /// <summary>
-        /// Login1 control.
+        /// LoginPanel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Login Login1;
+        protected global::System.Web.UI.WebControls.Panel LoginPanel;
+        
+        /// <summary>
+        /// LoginTable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Table LoginTable;
+        
+        /// <summary>
+        /// LoginUserlbl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LoginUserlbl;
+        
+        /// <summary>
+        /// LoginUsertxt control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox LoginUsertxt;
+        
+        /// <summary>
+        /// LoginPasswordlbl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LoginPasswordlbl;
+        
+        /// <summary>
+        /// LoginPasswordtxt control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox LoginPasswordtxt;
+        
+        /// <summary>
+        /// Loginbtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Loginbtn;
     }
 }

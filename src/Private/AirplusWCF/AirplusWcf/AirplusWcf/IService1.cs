@@ -19,6 +19,8 @@ namespace AirplusWcf
         [OperationContract]
         CompositeType RegisterUser(string uname, string upass, string email, string question, string answer);
 
+        //[OperationContract]
+        //bool ValidateUser(string uname,string upass);
         // TODO: Add your service operations here
     }
 

@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
 using MongoDataLayer;
+using System.Security.Permissions;
 
 
 namespace AirplusWcf
@@ -14,10 +15,17 @@ namespace AirplusWcf
     // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
     public class Service1 : IService1
     {
+        
+        [PrincipalPermission(SecurityAction.Demand)]
         public string GetData(int value)
         {
             return string.Format("You entered: {0}", value);
         }
+
+        //public bool ValidateUser(string uname,string upass)
+        //{
+        //    return false;
+        //}
 
         public CompositeType RegisterUser(string uname,string upass,string email,string question,string answer)
         {

@@ -47,5 +47,12 @@ namespace AirplusWeb
         {
 
         }
+        protected void Loginbtn_click(object sender,EventArgs e)
+        {
+            AirPlusReference.Service1Client sc = new AirPlusReference.Service1Client();
+            sc.ClientCredentials.UserName.UserName =LoginUsertxt.Text;
+            sc.ClientCredentials.UserName.Password = LoginPasswordtxt.Text;
+            var a=sc.GetData(5);
+        }
     }
 }
