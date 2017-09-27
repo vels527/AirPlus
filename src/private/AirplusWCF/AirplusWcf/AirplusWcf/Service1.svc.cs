@@ -16,7 +16,7 @@ namespace AirplusWcf
     public class Service1 : IService1
     {
         
-        [PrincipalPermission(SecurityAction.Demand)]
+        
         public string GetData(int value)
         {
             return string.Format("You entered: {0}", value);
