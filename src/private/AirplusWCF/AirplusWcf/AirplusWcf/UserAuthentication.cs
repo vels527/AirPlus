@@ -16,7 +16,7 @@ namespace AirplusWcf
                 throw new ArgumentNullException();
             }
 
-            if (!(userName == "test1" && password == "1tset") && !(userName == "test2" && password == "2tset"))
+            if (!(userName == "test1" && password == "test1"))
             {
 
                 // This throws an informative fault to the client.
@@ -24,6 +24,10 @@ namespace AirplusWcf
                 // When you do not want to throw an infomative fault to the client,
                 // throw the following exception.
                 // throw new SecurityTokenException("Unknown Username or Incorrect Password");
+            }
+            else
+            {
+                Console.WriteLine("Authentic User");
             }
         }
     }
