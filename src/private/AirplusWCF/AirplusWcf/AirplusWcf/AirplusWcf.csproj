@@ -68,7 +68,6 @@
   <ItemGroup>
     <Compile Include="AuthorizationPolicy.cs" />
     <Compile Include="CustomPrincipal.cs" />
-    <Compile Include="MyServiceAuthorizationManager.cs" />
     <Compile Include="Service1.svc.cs">
       <DependentUpon>Service1.svc</DependentUpon>
     </Compile>

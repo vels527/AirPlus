@@ -52,7 +52,14 @@ namespace AirplusWeb
             AirPlusReference.Service1Client sc = new AirPlusReference.Service1Client();
             sc.ClientCredentials.UserName.UserName =LoginUsertxt.Text;
             sc.ClientCredentials.UserName.Password = LoginPasswordtxt.Text;
-            var a=sc.GetData(5);
+            try
+            {
+                var a = sc.GetData(5);
+            }
+            catch
+            {
+
+            }
         }
     }
 }
