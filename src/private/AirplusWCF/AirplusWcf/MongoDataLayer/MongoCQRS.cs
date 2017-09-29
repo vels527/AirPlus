@@ -30,7 +30,7 @@ namespace MongoDataLayer
             _user.question = new BsonString(question);
             _user.answer = new BsonString(answer);
             _user.createddate = new BsonDateTime(DateTime.Now);
-            var _exists = users.Find(x => uname == _user.uname);
+            var _exists = users.Find(x => x.ContainsValue(uname) == true);
             if(_exists.Count()==0)
             {
                 var userDocument = _user.ToBsonDocument();
@@ -41,6 +41,31 @@ namespace MongoDataLayer
                 mesg =false;
             }
             return mesg;
+        }
+        public static bool ValidateUser(string lname,string lpass)
+        {
+            var users = conn.md.GetCollection<BsonDocument>("users");
+            var filter = new BsonDocument();
+            using (var cursor = users.Find(filter).ToCursor())
+            {
+                while (cursor.MoveNext())
+                {
+                    foreach (var doc in cursor.Current)
+                    {
+                        BsonValue bname;
+                        BsonValue bpass;
+                        if(doc.TryGetValue("UserName",out bname) && doc.TryGetValue("Password", out bpass))
+                        { 
+                            if(bname.ToString()==lname && bpass.ToString()==lpass)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
     }
     public class Connection
