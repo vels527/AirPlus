@@ -16,18 +16,19 @@ namespace AirplusWcf
                 throw new ArgumentNullException();
             }
 
-            if (!(userName == "test1" && password == "test1"))
+            if ((MongoDataLayer.MongoCQRS.ValidateUser(userName,password)))
             {
+                Console.WriteLine("Authentic User");
 
+            }
+            else
+            {
                 // This throws an informative fault to the client.
                 throw new FaultException("Unknown Username or Incorrect Password");
                 // When you do not want to throw an infomative fault to the client,
                 // throw the following exception.
                 // throw new SecurityTokenException("Unknown Username or Incorrect Password");
-            }
-            else
-            {
-                Console.WriteLine("Authentic User");
+                
             }
         }
     }
