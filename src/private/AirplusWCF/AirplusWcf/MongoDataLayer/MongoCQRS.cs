@@ -68,7 +68,7 @@ namespace MongoDataLayer
             var users = conn.md.GetCollection<UserData>("users");
             var coll = users.Find(new BsonDocument()).ToListAsync().GetAwaiter().GetResult();
             var filter = Builders<UserData>.Filter.Eq(c => c.uname,uname);
-            var result = conn.md.GetCollection<UserData>("users").Find<UserData>(filter).FirstOrDefaultAsync();
+            var result = conn.md.GetCollection<UserData>("users").Find(filter).FirstOrDefaultAsync().GetAwaiter().GetResult();
             
             return true;
         }
