@@ -27,7 +27,6 @@ E:\Projects\Airbnb\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\bin\Debug\MongoD
 E:\Projects\Airbnb\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\bin\Debug\Newtonsoft.Json.xml
 E:\Projects\Airbnb\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Debug\Mongo4.exe
 E:\Projects\Airbnb\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Debug\Mongo4.pdb
-C:\projects\AirPlus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Debug\Mongo4.csprojResolveAssemblyReference.cache
 C:\projects\AirPlus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Debug\Mongo4.exe
 C:\projects\AirPlus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Debug\Mongo4.pdb
 C:\projects\AirPlus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\bin\Debug\Mongo4.exe.config

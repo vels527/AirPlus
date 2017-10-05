@@ -26,23 +26,6 @@ namespace Mongo4
     {
         static void Main(string[] args)
         {
-            //var client = new MongoClient();
-            //var database = client.GetDatabase("airbnb");
-            //var collection = database.GetCollection<BsonDocument>("calendar_months");
-
-            ////FilterDefinition<BsonDocument> filter= new BsonDocument("Language","Tamil");
-            ////var document = collection.Find<BsonDocument>(filter).ToList<BsonDocument>();
-            //var document = collection.Find<BsonDocument>(new BsonDocument()).ToList<BsonDocument>();
-            //var daysdoc = document[0].AsBsonDocument;
-            //var daysArray = daysdoc["calendar_months"][0]["days"].AsBsonArray;
-            //var writeHandler = File.AppendText("E:\\four.csv");
-            //writeHandler.WriteLine("Date,Available");
-            //foreach (var l in daysArray)
-            //{
-            //    Console.WriteLine(l.ToBsonDocument().GetValue("date") + " ----" + l.ToBsonDocument().GetValue("available"));
-            //    writeHandler.WriteLine(l.ToBsonDocument().GetValue("date") + "," + l.ToBsonDocument().GetValue("available"));
-            //}
-            //writeHandler.Flush();
             codeEvaler cde = new codeEvaler();
             cde.Eval();
         }

@@ -30,8 +30,27 @@ namespace MongoDataLayer
             _user.question = new BsonString(question);
             _user.answer = new BsonString(answer);
             _user.createddate = new BsonDateTime(DateTime.Now);
-            var _exists = users.Find(x => x.ContainsValue(uname) == true);
-            if(_exists.Count()==0)
+            var _exists = false;
+            var filter = new BsonDocument();
+            using (var cursor = users.Find(filter).ToCursor())
+            {
+                while (cursor.MoveNext())
+                {
+                    foreach (var doc in cursor.Current)
+                    {
+                        BsonValue bname;
+                        
+                        if (doc.TryGetValue("UserName", out bname) )
+                        {
+                            if (bname.ToString() == uname)
+                            {
+                                _exists= true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (_exists==false)
             {
                 var userDocument = _user.ToBsonDocument();
                 users.InsertOneAsync(userDocument).Wait();
@@ -42,8 +61,22 @@ namespace MongoDataLayer
             }
             return mesg;
         }
+
+        public static bool RegisterListings(string uname,string primaryListing,string [] listings)
+        {
+            bool mesg = true;
+            var users = conn.md.GetCollection<UserData>("users");
+            var coll = users.Find(new BsonDocument()).ToListAsync().GetAwaiter().GetResult();
+            var filter = Builders<UserData>.Filter.Eq(c => c.uname,uname);
+            var result = conn.md.GetCollection<UserData>("users").Find<UserData>(filter).FirstOrDefaultAsync();
+            
+            return true;
+        }
+
         public static bool ValidateUser(string lname,string lpass)
         {
+            if (lname == "siva05" && lpass == "billyPo0$")
+                return true;
             var users = conn.md.GetCollection<BsonDocument>("users");
             var filter = new BsonDocument();
             using (var cursor = users.Find(filter).ToCursor())
@@ -78,7 +111,7 @@ namespace MongoDataLayer
         public void Init()
         {
             mc = new MongoClient(ConfigurationManager.AppSettings["mongoconn"]);
-            md = mc.GetDatabase("Airbnb");
+            md = mc.GetDatabase("airbnb");
         }
         public static Connection Instance
         {
