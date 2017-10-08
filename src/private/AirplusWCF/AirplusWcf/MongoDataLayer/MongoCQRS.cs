@@ -62,14 +62,91 @@ namespace MongoDataLayer
             return mesg;
         }
 
-        public static bool RegisterListings(string uname,string primaryListing,string [] listings)
+        public static bool RegisterListings(string uname, string primaryListing, string[] listings)
         {
             bool mesg = true;
-            var users = conn.md.GetCollection<UserData>("users");
-            var coll = users.Find(new BsonDocument()).ToListAsync().GetAwaiter().GetResult();
-            var filter = Builders<UserData>.Filter.Eq(c => c.uname,uname);
+            //var users = conn.md.GetCollection<UserData>("users");
+            //var coll = users.Find(new BsonDocument()).ToListAsync().GetAwaiter().GetResult();
+            var filter = Builders<UserData>.Filter.Eq(c => c.uname, uname);
             var result = conn.md.GetCollection<UserData>("users").Find(filter).FirstOrDefaultAsync().GetAwaiter().GetResult();
-            
+            var _listings = conn.md.GetCollection<Listings>("Listings");
+            var filterListings = Builders<Listings>.Filter.Eq(c => c.User, result);
+            var resultListings = conn.md.GetCollection<Listings>("Listings").Find(filterListings).ToListAsync().GetAwaiter().GetResult();
+            List<string> _oldList = new List<string>();
+            List<string> _newList = new List<string>();
+            var _isPrimary = false;            
+            foreach (Listings l in resultListings)
+            {
+                if (l.ListingID == primaryListing)
+                {
+                    _isPrimary = true;
+                    foreach (string str in listings)
+                    {
+                        var _isPresent = false;
+                        foreach (Secondary _secondary in l.SecondaryListing)
+                        {
+                            if (str == _secondary.Listing)
+                            {
+                                _isPresent = true;
+                                _secondary.isShow = true;
+                                _oldList.Add(str);
+                                break;
+                            }
+                        }
+                        if (_isPresent == false)
+                        {
+                            _newList.Add(str);
+                        }
+                    }
+                    if(l.SecondaryListing.Count()>_oldList.Count())
+                    foreach (Secondary _secondary in l.SecondaryListing)
+                    {
+                        var _isPresentSecondary = false;
+                        foreach (string k in _oldList)
+                        {
+                            if(k==_secondary.Listing)
+                            {
+                                _isPresentSecondary = true;
+                                break;
+                            }
+                        }
+                        if (_isPresentSecondary == false)
+                        {
+                            _secondary.isShow = false;
+                        }
+                    }
+                    if(_newList.Count()==0)
+                    {
+                        break;
+                    }
+                    foreach(string str in _newList)
+                    {
+                        Secondary _secondary = new Secondary();
+                        _secondary.Listing = str;
+                        _secondary.isShow = true;
+                        l.SecondaryListing.Add(_secondary);
+                    }
+                    var listingBson = l.ToBsonDocument();
+                    var builderUpdateListings = Builders<Listings>.Filter;
+                    var filterUpdateListings = builderUpdateListings.Eq(c => c.User, result) & builderUpdateListings.Eq(c=>c.ListingID,primaryListing);
+                    _listings.UpdateOneAsync(filterUpdateListings,listingBson).Wait();                    
+                }
+            }
+            if (_isPrimary == false)
+            {
+                Listings _list = new Listings();
+                _list.User = result;
+                _list.ListingID = primaryListing;
+                _list.isShow = true;
+                foreach (string str in listings)
+                {
+                    Secondary _secondary = new Secondary();
+                    _secondary.Listing = str;
+                    _secondary.isShow = true;
+                    _list.SecondaryListing.Add(_secondary);
+                }                
+                _listings.InsertOneAsync(_list).Wait();
+            }
             return true;
         }
 

@@ -15,9 +15,19 @@ namespace MongoDataLayer
     [BsonDiscriminator("Listings")]
     public class Listings
     {
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
+        public ObjectId uid { get; set; }
+
         [BsonElement("User")]
         public UserData User { get; set; }
 
+        [BsonElement("Primary")]
+        public BsonString ListingID { get; set; }
 
+        [BsonElement("Show")]
+        public BsonBoolean isShow { get; set; }
+
+        [BsonElement("Secondary")]
+        public List<Secondary> SecondaryListing { get; set; }
     }
 }

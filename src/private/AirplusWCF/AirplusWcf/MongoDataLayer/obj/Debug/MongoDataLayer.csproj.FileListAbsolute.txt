@@ -10,3 +10,15 @@ C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin
 C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\obj\Debug\MongoDataLayer.csprojResolveAssemblyReference.cache
 C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\obj\Debug\MongoDataLayer.dll
 C:\projects\AirPlus\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\obj\Debug\MongoDataLayer.pdb
+E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDataLayer.dll
+E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDataLayer.pdb
+E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDB.Bson.dll
+E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDB.Driver.Core.dll
+E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDB.Driver.dll
+E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
+E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDB.Bson.xml
+E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDB.Driver.xml
+E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDB.Driver.Core.xml
+E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\obj\Debug\MongoDataLayer.csprojResolveAssemblyReference.cache
+E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\obj\Debug\MongoDataLayer.dll
+E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\obj\Debug\MongoDataLayer.pdb
