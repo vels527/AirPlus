@@ -19,6 +19,5 @@ E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\
 E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDB.Bson.xml
 E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDB.Driver.xml
 E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\bin\Debug\MongoDB.Driver.Core.xml
-E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\obj\Debug\MongoDataLayer.csprojResolveAssemblyReference.cache
 E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\obj\Debug\MongoDataLayer.dll
 E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\MongoDataLayer\obj\Debug\MongoDataLayer.pdb

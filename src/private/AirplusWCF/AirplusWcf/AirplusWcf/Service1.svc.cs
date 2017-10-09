@@ -17,10 +17,9 @@ namespace AirplusWcf
     {
 
 
-        public bool RegisterListings(string uname, string primaryListing, string[] listings)
+        public void RegisterListings(string uname, string primaryListing, string[] listings)
         {
-            bool mesg = MongoCQRS.RegisterListings(uname, primaryListing, listings);
-            return mesg;
+            MongoCQRS.RegisterListings(uname, primaryListing, listings);            
         }
 
         public string GetData(int value)

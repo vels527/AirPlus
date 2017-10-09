@@ -23,7 +23,7 @@ namespace AirplusWcf
         //bool ValidateUser(string uname,string upass);
         // TODO: Add your service operations here
         [OperationContract]
-        bool RegisterListings(string uname, string primaryListing, string[] listings);
+        void RegisterListings(string uname, string primaryListing, string[] listings);
     }
 
 

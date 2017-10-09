@@ -62,9 +62,9 @@ namespace MongoDataLayer
             return mesg;
         }
 
-        public static bool RegisterListings(string uname, string primaryListing, string[] listings)
+        //Register listings,edit listings,modify listings
+        public static void RegisterListings(string uname, string primaryListing, string[] listings)
         {
-            bool mesg = true;
             //var users = conn.md.GetCollection<UserData>("users");
             //var coll = users.Find(new BsonDocument()).ToListAsync().GetAwaiter().GetResult();
             var filter = Builders<UserData>.Filter.Eq(c => c.uname, uname);
@@ -115,10 +115,7 @@ namespace MongoDataLayer
                             _secondary.isShow = false;
                         }
                     }
-                    if(_newList.Count()==0)
-                    {
-                        break;
-                    }
+                    if(_newList.Count()!=0)
                     foreach(string str in _newList)
                     {
                         Secondary _secondary = new Secondary();
@@ -129,7 +126,8 @@ namespace MongoDataLayer
                     var listingBson = l.ToBsonDocument();
                     var builderUpdateListings = Builders<Listings>.Filter;
                     var filterUpdateListings = builderUpdateListings.Eq(c => c.User, result) & builderUpdateListings.Eq(c=>c.ListingID,primaryListing);
-                    _listings.UpdateOneAsync(filterUpdateListings,listingBson).Wait();                    
+                    _listings.UpdateOneAsync(filterUpdateListings,listingBson).Wait();
+                    break;
                 }
             }
             if (_isPrimary == false)
@@ -147,7 +145,6 @@ namespace MongoDataLayer
                 }                
                 _listings.InsertOneAsync(_list).Wait();
             }
-            return true;
         }
 
         public static bool ValidateUser(string lname,string lpass)
