@@ -86,9 +86,9 @@ namespace AirplusWeb
                 Response.Cookies.Add(cookie);
                 Response.Redirect("Default.aspx");
             }
-            catch
+            catch(Exception exp)
             {
-
+                throw exp;
             }
         }
 
@@ -100,8 +100,8 @@ namespace AirplusWeb
             string squestion = TextBox_Question.Text;
             string sanswer = TextBox_Answer.Text;
             AirPlusReference.Service1Client svc = new AirPlusReference.Service1Client();
-            svc.ClientCredentials.UserName.UserName = "siva05";
-            svc.ClientCredentials.UserName.Password = "billyPo0$";
+            //svc.ClientCredentials.UserName.UserName = "siva05";
+            //svc.ClientCredentials.UserName.Password = "billyPo0$";
             var ct = svc.RegisterUser(uname, upass, email, squestion, sanswer);
             if (ct.BoolValue)
             {

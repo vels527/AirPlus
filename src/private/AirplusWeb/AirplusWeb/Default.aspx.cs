@@ -25,7 +25,7 @@ namespace AirplusWeb
                 try
                 {
                     string[] listings = { "1", "2" };
-                    var a = sc.RegisterListings("vels527","1",listings);
+                    sc.RegisterListings("vels527","1",listings);
                 }
                 catch
                 {

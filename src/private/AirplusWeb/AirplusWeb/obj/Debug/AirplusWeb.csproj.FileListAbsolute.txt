@@ -60,3 +60,4 @@ C:\projects\AirPlus\AirPlus\src\private\AirplusWeb\AirplusWeb\bin\Microsoft.AI.W
 C:\projects\AirPlus\AirPlus\src\private\AirplusWeb\AirplusWeb\obj\Debug\AirplusWeb.csprojResolveAssemblyReference.cache
 C:\projects\AirPlus\AirPlus\src\private\AirplusWeb\AirplusWeb\obj\Debug\AirplusWeb.dll
 C:\projects\AirPlus\AirPlus\src\private\AirplusWeb\AirplusWeb\obj\Debug\AirplusWeb.pdb
+C:\projects\Airplus\AirPlus\src\private\AirplusWeb\AirplusWeb\obj\Debug\AirplusWeb.csproj.CoreCompileInputs.cache

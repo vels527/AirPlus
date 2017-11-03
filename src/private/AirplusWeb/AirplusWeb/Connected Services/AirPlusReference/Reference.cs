@@ -91,10 +91,10 @@ namespace AirplusWeb.AirPlusReference {
         System.Threading.Tasks.Task<AirplusWeb.AirPlusReference.CompositeType> RegisterUserAsync(string uname, string upass, string email, string question, string answer);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/RegisterListings", ReplyAction="http://tempuri.org/IService1/RegisterListingsResponse")]
-        bool RegisterListings(string uname, string primaryListing, string[] listings);
+        void RegisterListings(string uname, string primaryListing, string[] listings);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/RegisterListings", ReplyAction="http://tempuri.org/IService1/RegisterListingsResponse")]
-        System.Threading.Tasks.Task<bool> RegisterListingsAsync(string uname, string primaryListing, string[] listings);
+        System.Threading.Tasks.Task RegisterListingsAsync(string uname, string primaryListing, string[] listings);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -140,11 +140,11 @@ namespace AirplusWeb.AirPlusReference {
             return base.Channel.RegisterUserAsync(uname, upass, email, question, answer);
         }
         
-        public bool RegisterListings(string uname, string primaryListing, string[] listings) {
-            return base.Channel.RegisterListings(uname, primaryListing, listings);
+        public void RegisterListings(string uname, string primaryListing, string[] listings) {
+            base.Channel.RegisterListings(uname, primaryListing, listings);
         }
         
-        public System.Threading.Tasks.Task<bool> RegisterListingsAsync(string uname, string primaryListing, string[] listings) {
+        public System.Threading.Tasks.Task RegisterListingsAsync(string uname, string primaryListing, string[] listings) {
             return base.Channel.RegisterListingsAsync(uname, primaryListing, listings);
         }
     }

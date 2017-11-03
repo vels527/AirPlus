@@ -28,3 +28,4 @@ E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\AirplusWcf\bin\Mong
 E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\AirplusWcf\obj\Debug\AirplusWcf.csprojResolveAssemblyReference.cache
 E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\AirplusWcf\obj\Debug\AirplusWcf.dll
 E:\Projects\Airbnb\AirPlus\src\private\AirplusWCF\AirplusWcf\AirplusWcf\obj\Debug\AirplusWcf.pdb
+C:\projects\Airplus\AirPlus\src\private\AirplusWCF\AirplusWcf\AirplusWcf\obj\Debug\AirplusWcf.csproj.CoreCompileInputs.cache
