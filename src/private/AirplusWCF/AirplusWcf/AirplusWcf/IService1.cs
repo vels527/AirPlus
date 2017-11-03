@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using MongoDataLayer;
 
 namespace AirplusWcf
 {
@@ -18,6 +19,9 @@ namespace AirplusWcf
 
         [OperationContract]
         CompositeType RegisterUser(string uname, string upass, string email, string question, string answer);
+
+        [OperationContract]
+        Document FetchListings(string Month, string Listing);
 
         //[OperationContract]
         //bool ValidateUser(string uname,string upass);

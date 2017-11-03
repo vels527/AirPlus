@@ -41,3 +41,5 @@ C:\projects\AirPlus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\bin\Debug\Mongo
 C:\projects\AirPlus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\bin\Debug\MongoDB.Driver.xml
 C:\projects\AirPlus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\bin\Debug\MongoDB.Driver.Core.xml
 C:\projects\AirPlus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\bin\Debug\Newtonsoft.Json.xml
+C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Debug\Mongo4.csprojResolveAssemblyReference.cache
+C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Debug\Mongo4.csproj.CoreCompileInputs.cache

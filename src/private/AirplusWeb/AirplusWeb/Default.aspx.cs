@@ -4,6 +4,13 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using DataModel;
+using MongoDB;
+using MongoDB.Driver;
+using MongoDB.Driver.Core;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace AirplusWeb
 {
@@ -24,8 +31,55 @@ namespace AirplusWeb
                 sc.ClientCredentials.UserName.Password = cookie["Password"];
                 try
                 {
-                    string[] listings = { "1", "2" };
-                    sc.RegisterListings("vels527","1",listings);
+                    string Month;
+                    switch (DateTime.Now.Month)
+                    {
+                        case 1:
+                            Month = "Jan";
+                            break;
+                        case 2:
+                            Month = "Feb";
+                            break;
+                        case 3:
+                            Month = "Mar";
+                            break;
+                        case 4:
+                            Month = "Apr";
+                            break;
+                        case 5:
+                            Month = "May";
+                            break;
+                        case 6:
+                            Month = "Jun";
+                            break;
+                        case 7:
+                            Month = "Jul";
+                            break;
+                        case 8:
+                            Month = "Aug";
+                            break;
+                        case 9:
+                            Month = "Sep";
+                            break;
+                        case 10:
+                            Month = "Oct";
+                            break;
+                        case 11:
+                            Month = "Nov";
+                            break;
+                        case 12:
+                            Month = "Dec";
+                            break;
+                        default:
+                            Month = null;
+                            break;
+                    }
+                    AirPlusReference.Document document = sc.FetchListings(Month, "8175972");
+                    
+                    
+
+                    //string[] listings = { "1", "2" };
+                    //sc.RegisterListings("vels527","1",listings);
                 }
                 catch
                 {

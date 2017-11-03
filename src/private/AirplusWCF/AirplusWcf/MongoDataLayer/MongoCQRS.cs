@@ -62,6 +62,20 @@ namespace MongoDataLayer
             return mesg;
         }
 
+        public static Document FetchListings(string Month,string Listing)
+        {
+            var filter = Builders<Document>.Filter.Eq(c => c.ListingId, Listing);
+            var result= conn.md.GetCollection<Document>("Listing").Find(filter).ToListAsync().GetAwaiter().GetResult();
+            foreach (Document d in result)
+            {
+                if(d.Month==Month)
+                {
+                    return d;
+                }
+            }
+            return null;
+        }
+
         //Register listings,edit listings,modify listings
         public static void RegisterListings(string uname, string primaryListing, string[] listings)
         {

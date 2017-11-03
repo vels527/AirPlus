@@ -74,6 +74,301 @@ namespace AirplusWeb.AirPlusReference {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Document", Namespace="http://schemas.datacontract.org/2004/07/MongoDataLayer")]
+    [System.SerializableAttribute()]
+    public partial class Document : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private MongoDB.Bson.BsonString ListingIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private MongoDB.Bson.BsonString MonthField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private MongoDB.Bson.BsonDateTime datetakenField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private AirplusWeb.AirPlusReference.Day[] daysField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public MongoDB.Bson.BsonString ListingId {
+            get {
+                return this.ListingIdField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ListingIdField, value) != true)) {
+                    this.ListingIdField = value;
+                    this.RaisePropertyChanged("ListingId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public MongoDB.Bson.BsonString Month {
+            get {
+                return this.MonthField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MonthField, value) != true)) {
+                    this.MonthField = value;
+                    this.RaisePropertyChanged("Month");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public MongoDB.Bson.BsonDateTime datetaken {
+            get {
+                return this.datetakenField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.datetakenField, value) != true)) {
+                    this.datetakenField = value;
+                    this.RaisePropertyChanged("datetaken");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public AirplusWeb.AirPlusReference.Day[] days {
+            get {
+                return this.daysField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.daysField, value) != true)) {
+                    this.daysField = value;
+                    this.RaisePropertyChanged("days");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Day", Namespace="http://schemas.datacontract.org/2004/07/MongoDataLayer")]
+    [System.SerializableAttribute()]
+    public partial class Day : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private MongoDB.Bson.BsonBoolean availableField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private MongoDB.Bson.BsonDateTime dateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private AirplusWeb.AirPlusReference.Price priceField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public MongoDB.Bson.BsonBoolean available {
+            get {
+                return this.availableField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.availableField, value) != true)) {
+                    this.availableField = value;
+                    this.RaisePropertyChanged("available");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public MongoDB.Bson.BsonDateTime date {
+            get {
+                return this.dateField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.dateField, value) != true)) {
+                    this.dateField = value;
+                    this.RaisePropertyChanged("date");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public AirplusWeb.AirPlusReference.Price price {
+            get {
+                return this.priceField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.priceField, value) != true)) {
+                    this.priceField = value;
+                    this.RaisePropertyChanged("price");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Price", Namespace="http://schemas.datacontract.org/2004/07/MongoDataLayer")]
+    [System.SerializableAttribute()]
+    public partial class Price : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private MongoDB.Bson.BsonDateTime dateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private MongoDB.Bson.BsonString local_currencyField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private MongoDB.Bson.BsonDouble local_priceField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private MongoDB.Bson.BsonString native_currencyField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private MongoDB.Bson.BsonDouble native_priceField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private MongoDB.Bson.BsonString typeField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public MongoDB.Bson.BsonDateTime date {
+            get {
+                return this.dateField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.dateField, value) != true)) {
+                    this.dateField = value;
+                    this.RaisePropertyChanged("date");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public MongoDB.Bson.BsonString local_currency {
+            get {
+                return this.local_currencyField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.local_currencyField, value) != true)) {
+                    this.local_currencyField = value;
+                    this.RaisePropertyChanged("local_currency");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public MongoDB.Bson.BsonDouble local_price {
+            get {
+                return this.local_priceField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.local_priceField, value) != true)) {
+                    this.local_priceField = value;
+                    this.RaisePropertyChanged("local_price");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public MongoDB.Bson.BsonString native_currency {
+            get {
+                return this.native_currencyField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.native_currencyField, value) != true)) {
+                    this.native_currencyField = value;
+                    this.RaisePropertyChanged("native_currency");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public MongoDB.Bson.BsonDouble native_price {
+            get {
+                return this.native_priceField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.native_priceField, value) != true)) {
+                    this.native_priceField = value;
+                    this.RaisePropertyChanged("native_price");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public MongoDB.Bson.BsonString type {
+            get {
+                return this.typeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.typeField, value) != true)) {
+                    this.typeField = value;
+                    this.RaisePropertyChanged("type");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="AirPlusReference.IService1")]
     public interface IService1 {
@@ -89,6 +384,12 @@ namespace AirplusWeb.AirPlusReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/RegisterUser", ReplyAction="http://tempuri.org/IService1/RegisterUserResponse")]
         System.Threading.Tasks.Task<AirplusWeb.AirPlusReference.CompositeType> RegisterUserAsync(string uname, string upass, string email, string question, string answer);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/FetchListings", ReplyAction="http://tempuri.org/IService1/FetchListingsResponse")]
+        AirplusWeb.AirPlusReference.Document FetchListings(string Month, string Listing);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/FetchListings", ReplyAction="http://tempuri.org/IService1/FetchListingsResponse")]
+        System.Threading.Tasks.Task<AirplusWeb.AirPlusReference.Document> FetchListingsAsync(string Month, string Listing);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/RegisterListings", ReplyAction="http://tempuri.org/IService1/RegisterListingsResponse")]
         void RegisterListings(string uname, string primaryListing, string[] listings);
@@ -138,6 +439,14 @@ namespace AirplusWeb.AirPlusReference {
         
         public System.Threading.Tasks.Task<AirplusWeb.AirPlusReference.CompositeType> RegisterUserAsync(string uname, string upass, string email, string question, string answer) {
             return base.Channel.RegisterUserAsync(uname, upass, email, question, answer);
+        }
+        
+        public AirplusWeb.AirPlusReference.Document FetchListings(string Month, string Listing) {
+            return base.Channel.FetchListings(Month, Listing);
+        }
+        
+        public System.Threading.Tasks.Task<AirplusWeb.AirPlusReference.Document> FetchListingsAsync(string Month, string Listing) {
+            return base.Channel.FetchListingsAsync(Month, Listing);
         }
         
         public void RegisterListings(string uname, string primaryListing, string[] listings) {

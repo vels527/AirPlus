@@ -5,7 +5,9 @@
       <xsd:import schemaLocation="http://localhost:61071/Service1.svc?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://localhost:61071/Service1.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
       <xsd:import schemaLocation="http://localhost:61071/Service1.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/AirplusWcf" />
-      <xsd:import schemaLocation="http://localhost:61071/Service1.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://localhost:61071/Service1.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/MongoDataLayer" />
+      <xsd:import schemaLocation="http://localhost:61071/Service1.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/MongoDB.Bson" />
+      <xsd:import schemaLocation="http://localhost:61071/Service1.svc?xsd=xsd5" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IService1_GetData_InputMessage">
@@ -19,6 +21,12 @@
   </wsdl:message>
   <wsdl:message name="IService1_RegisterUser_OutputMessage">
     <wsdl:part name="parameters" element="tns:RegisterUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService1_FetchListings_InputMessage">
+    <wsdl:part name="parameters" element="tns:FetchListings" />
+  </wsdl:message>
+  <wsdl:message name="IService1_FetchListings_OutputMessage">
+    <wsdl:part name="parameters" element="tns:FetchListingsResponse" />
   </wsdl:message>
   <wsdl:message name="IService1_RegisterListings_InputMessage">
     <wsdl:part name="parameters" element="tns:RegisterListings" />
@@ -34,6 +42,10 @@
     <wsdl:operation name="RegisterUser">
       <wsdl:input wsaw:Action="http://tempuri.org/IService1/RegisterUser" message="tns:IService1_RegisterUser_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IService1/RegisterUserResponse" message="tns:IService1_RegisterUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="FetchListings">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/FetchListings" message="tns:IService1_FetchListings_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/FetchListingsResponse" message="tns:IService1_FetchListings_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="RegisterListings">
       <wsdl:input wsaw:Action="http://tempuri.org/IService1/RegisterListings" message="tns:IService1_RegisterListings_InputMessage" />
@@ -53,6 +65,15 @@
     </wsdl:operation>
     <wsdl:operation name="RegisterUser">
       <soap:operation soapAction="http://tempuri.org/IService1/RegisterUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FetchListings">
+      <soap:operation soapAction="http://tempuri.org/IService1/FetchListings" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

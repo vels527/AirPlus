@@ -17,6 +17,12 @@ namespace AirplusWcf
     {
 
 
+
+        public Document FetchListings(string Month, string Listing)
+        {
+            return MongoCQRS.FetchListings(Month, Listing);
+        }
+
         public void RegisterListings(string uname, string primaryListing, string[] listings)
         {
             MongoCQRS.RegisterListings(uname, primaryListing, listings);            
