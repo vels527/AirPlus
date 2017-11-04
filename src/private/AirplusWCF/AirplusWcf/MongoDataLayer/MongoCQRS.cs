@@ -65,15 +65,29 @@ namespace MongoDataLayer
         public static Document FetchListings(string Month,string Listing)
         {
             var filter = Builders<Document>.Filter.Eq(c => c.ListingId, Listing);
-            var result= conn.md.GetCollection<Document>("Listing").Find(filter).ToListAsync().GetAwaiter().GetResult();
+            var result= conn.md.GetCollection<Document>("listings").Find(filter).ToListAsync().GetAwaiter().GetResult();
+            List<Document> doc = new List<Document>();
+            Document document = new Document();            
+            int count = 0;
+            BsonDateTime bdate = new BsonDateTime(DateTime.Now);
             foreach (Document d in result)
-            {
+            {   
                 if(d.Month==Month)
                 {
-                    return d;
+                    if (count == 0)
+                    {
+                        bdate = d.datetaken;
+                        document = d;
+                        count++;
+                    }
+                    else if(d.datetaken>bdate)
+                    {
+                        document = d;
+                        bdate = d.datetaken;
+                    }                    
                 }
             }
-            return null;
+            return document;
         }
 
         //Register listings,edit listings,modify listings
