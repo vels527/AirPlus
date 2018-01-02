@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.IO;
 using System.Net;
+using System.Net.Mail;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using System.Text.RegularExpressions;
 using System.Web;
 //using System.Windows.Forms;
@@ -24,10 +27,23 @@ namespace Mongo4
 
     class Program
     {
-        static void Main(string[] args)
+        static async Task Execute()
         {
             codeEvaler cde = new codeEvaler();
             cde.Eval();
+            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress("siva@kustotech.in", "siva");
+            var subject = "Morning Airplus Calendar Month";
+            var to = new EmailAddress("siva@kustotech.in", "saran");
+            //var plainTextContent = "and easy to do anywhere, even with C#";
+            var htmlContent = cde.MailBody; ;
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, "Hi", htmlContent);
+            var response = await client.SendEmailAsync(msg);
+        }
+        static void Main(string[] args)
+        {
+            Execute().Wait();
         }
     }
     [BsonDiscriminator("Price")]
@@ -81,30 +97,198 @@ namespace Mongo4
             days = new List<Day>();
         }
     }
-    
+
+    public class Mail
+    {
+        public int Month { get; set; }
+
+        public List<DayName> days;
+
+        public DateTime datetaken;
+
+        public string ListingId { get; set; }
+        public void populate(string content)
+        {
+            DateTime dtx = new DateTime();
+            dtx = DateTime.Now;
+
+            dynamic json = JsonConvert.DeserializeObject(content);
+            for (int i = 0; i < json["calendar_months"].Count; i++)
+            {
+                var oneDoc = json["calendar_months"];
+                this.datetaken = DateTime.Now;
+                for (int j = 0; j < json["calendar_months"][i].days.Count; j++)
+                {
+                    DayName oneday = new DayName();
+                    oneday.available = Convert.ToBoolean(json["calendar_months"][i].days[j]["available"].Value);
+                    oneday.date = Convert.ToDateTime(json["calendar_months"][i].days[j]["date"].Value);
+                    days.Add(oneday);
+                }
+            }
+        }
+        public Mail()
+        {
+            days = new List<DayName>();
+        }
+    }
+    public class MailOut
+    {
+        public List<Mail> MailListings= new List<Mail>();
+        public string RetString()
+        {
+            StringBuilder strb = new StringBuilder();
+            strb.Append("<Table>");
+            strb.Append("<tr>");
+            strb.Append("<td style='border:1px solid black'>");
+            strb.Append(@"</td>");
+            string monthNom = "";
+            foreach (Mail m in MailListings)
+            {                
+                foreach (var dates in m.days)
+                {
+                    if (monthNom != MonthName(dates.date.Month).mon)
+                    {
+                        monthNom = MonthName(dates.date.Month).mon;
+                    }
+                    else{
+                        continue;
+                    }
+                    strb.Append("<td style='border:1px solid black'>" + monthNom+@"</td>");
+                    for (int i = 1; i <= MonthName(dates.date.Month).days; i++)
+                    {
+                        strb.Append("<td style='border:1px solid black'>" + Convert.ToString(i) + @"</td>");
+                    }
+                }             
+            }
+            strb.Append(@"</tr>");
+            strb.Append(@"<tr></tr>");
+            foreach (Mail m in MailListings)
+            {
+                strb.Append("<tr>");
+                strb.Append("<td style='border-bottom:1px solid black'>" + m.ListingId+@"</td><td></td>");
+                foreach (var dates in m.days)
+                {
+                    EachMonth ec = MonthName(dates.date.Month);                    
+                    for (int i = 1; i <= ec.days; i++)
+                    {
+                        strb.Append("<td style='border-bottom:1px solid black'>" + Convert.ToString(dates.available) + @"</td>");
+                    }
+                }
+                strb.Append(@"</tr>");
+            }
+            strb.Append(@"</Table>");
+            return strb.ToString();
+        }
+        private struct EachMonth
+        {
+            public string mon;
+            public int days;
+        }
+        private EachMonth MonthName(int mon)
+        {
+            EachMonth moneach=new EachMonth();
+            moneach.days = 0;
+            moneach.mon = "";
+            switch(mon)
+            {
+                case 1:
+                    moneach.mon = "January";
+                    moneach.days = 31;
+                    return moneach;
+                case 2:
+                    moneach.mon = "February";
+                    moneach.days = 28;
+                    return moneach;                    
+                case 3:
+                    moneach.mon = "March";
+                    moneach.days = 31;
+                    return moneach; 
+                case 4:
+                    moneach.mon = "April";
+                    moneach.days = 30;
+                    return moneach;
+                case 5:
+                    moneach.mon = "May";
+                    moneach.days = 31;
+                    return moneach;                    
+                case 6:
+                    moneach.mon = "June";
+                    moneach.days = 30;
+                    return moneach;
+                case 7:
+                    moneach.mon = "July";
+                    moneach.days = 31;
+                    return moneach;
+                case 8:
+                    moneach.mon = "August";
+                    moneach.days = 31;
+                    return moneach;
+                case 9:
+                    moneach.mon = "September";
+                    moneach.days = 30;
+                    return moneach;
+                case 10:
+                    moneach.mon = "October";
+                    moneach.days = 31;
+                    return moneach;
+                case 11:
+                    moneach.mon = "November";
+                    moneach.days = 30;
+                    return moneach;
+                case 12:
+                    moneach.mon = "December";
+                    moneach.days = 31;
+                    return moneach;
+            }
+            return moneach;
+        }
+    }
+
+    public class DayName
+    {        
+        public Boolean available { get; set; }
+        
+        public DateTime date { get; set; }
+    }
+
     public class codeEvaler
     {
 
-        string urlTemplate =
-"https://www.airbnb.com/api/v2/calendar_months?key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=USD&locale=en&listing_id={0}&month={1}&year={2}&count=6&_format=with_conditions&guests={3}";
+        //string urlTemplate =
+//"https://www.airbnb.com/api/v2/calendar_months?key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=USD&locale=en&listing_id={0}&month={1}&year={2}&count=6&_format=with_conditions&guests={3}";
+        string urlTemplate = "https://www.airbnb.com/api/v2/calendar_months?_format=for_price_calculator_date_picker&count={0}&listing_id={1}&month={2}&year={3}&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=INR&locale=en";
 
         //Cooper home - 16676839
         private List<string> listingIds = new List<string>() { "16676839", "9199361", "8175972", "10593515", "13625030", "12891710", "11950530", "12742037", "9547197", "18395377", "4925118", "5601452", "13591122" };
+        //private List<string> listingIds = new List<string>()        {"7939975" };
         private StringBuilder bodyBuilder = new StringBuilder();
         private StringBuilder headerBuilder = new StringBuilder();
+        public string MailBody { get; set; }
 
         public void DownloadMain(List<string> listingIds, string urlTemplate)
         {
-            var month = 9;
+            var month = 12;
             var year = 2017;
-            var guests = 6;
+            var guests = 3;
+            MailOut mout = new MailOut();                            
             foreach (var listingId in listingIds)
             {
-                string url = string.Format(urlTemplate, listingId, month, year, guests);
-                DownloadFromAirbnb(listingId, url);
+                //string url = string.Format(urlTemplate, listingId, month, year, guests);
+                string output;
+                string url = string.Format(urlTemplate, guests,listingId,month,year);
+                DownloadFromAirbnb(listingId, url,out output);
+                if(output=="")
+                {
+                    continue;
+                }
+                Mail Mone = new Mail();
+                Mone.ListingId = listingId;
+                Mone.Month = month;
+                Mone.populate(output);
+                mout.MailListings.Add(Mone);
                 Task t = MyMethodAsync();      
             }
-
+            MailBody = mout.RetString();
         }
 
         public async Task MyMethodAsync()
@@ -120,7 +304,7 @@ namespace Mongo4
 
         public async Task<int> LongRunningOperationAsync() // assume we return an int from this long running operation 
         {
-            await Task.Delay(2000); //2 seconds delay
+            await Task.Delay(5000); //2 seconds delay
             return 1;
         }
 
@@ -130,10 +314,11 @@ namespace Mongo4
             //ProcessMain(listingIds, rootFolder);
         }
 
-        private void DownloadFromAirbnb(string listingId, string url)
+        private void DownloadFromAirbnb(string listingId, string url,out string output)
         {
 
             HttpWebResponse response;
+            output = "";
 
             //string url = "https://www.airbnb.com/api/v2/calendar_months?key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=USD&locale=en&listing_id=16676839&month=6&year=2017&count=3&_format=with_conditions";
             //string queryString = new System.Uri(url).Query;
@@ -143,17 +328,17 @@ namespace Mongo4
             if (Request_www_airbnb_com(url, out response))
             {
 
-                var encoding = UTF8Encoding.UTF8;
-                using (var reader = new System.IO.StreamReader(response.GetResponseStream(), encoding))
-                {
-                    string responseText = reader.ReadToEnd();                    
-                    Save(listingId, responseText);
+                var encoding = Encoding.GetEncoding(response.CharacterSet);
+                using (var responseStream = response.GetResponseStream()) { 
+                using (var reader = new StreamReader(responseStream, encoding))
+                    output= reader.ReadToEnd();
                 }
 
-                response.Close();
+            response.Close();
             }
 
         }
+
         public void Save(string listingId, string content)
         {
    
@@ -201,21 +386,17 @@ namespace Mongo4
 
             try
             {
-                //WebProxy proxy = new WebProxy("127.0.0.1", 8888);
-
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                //16676839
-                //request.Proxy = proxy;
+
+                request.KeepAlive = true;
                 request.Accept = "application/json, text/javascript, */*; q=0.01";
-                request.Headers.Add("x-csrf-token", @"V4$.airbnb.com$Im1tM2jDiT0$SZ20E7bTT7HmdsWUqFGPd9QgPQRYGrqQrdj9xHPFyD8=");
-                request.Headers.Add("x-requested-with", @"XMLHttpRequest");
-                request.Referer = "https://www.airbnb.com/rooms/9199361?location=Santa%20Clara%2C%20CA%2C%20United%20States&s=-n-9qTJp";
-                request.Headers.Set(HttpRequestHeader.AcceptLanguage, "en-US,en;q=0.5");
-                request.Headers.Set(HttpRequestHeader.AcceptEncoding, "gzip, deflate, peerdist");
-                request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; Touch; rv:11.0) like Gecko";
-                request.Headers.Set(HttpRequestHeader.Cookie, @"bev=1426028442_4xz%2BO1yaJqtluowu; _ga=GA1.2.187075194.1426028443; __ssid=2d331962-738a-4d51-9899-058862682edc; sdid=; ftv=1486940561242; vr_coupon=control; p2_aa_cdn_test_v2=treatment; i18n_google_nmt=treatment; p3_interactive_book_it_loading=treatment; p3_pdp_ia_reduce_redundancy=treatment; p3_pdp_ia_consolidate=control; p3_pdp_ia_location=control; mdr_browser=desktop; _gid=GA1.2.83740503.1496446037; p3_pdp_ia_nav=treatment; _csrf_token=V4%24.airbnb.com%24Im1tM2jDiT0%24SZ20E7bTT7HmdsWUqFGPd9QgPQRYGrqQrdj9xHPFyD8%3D; _user_attributes=%7B%22curr%22%3A%22USD%22%2C%22guest_exchange%22%3A1.0%2C%22device_profiling_session_id%22%3A%221496460251--0630b94545ed3cdd0e841d25%22%2C%22giftcard_profiling_session_id%22%3A%221496460251--53261e7d5e1f2c1edb45c8d3%22%2C%22reservation_profiling_session_id%22%3A%221496460251--2bae832bdbc8a3f9c50b5dec%22%7D; flags=268435456; _airbed_session_id=2b6674beff36f953ee1421a25431b0b9; _gat=1; _uetsid=_uetba689884");
-                request.Headers.Add("X-P2P-PeerDist", @"Version=1.1");
-                request.Headers.Add("X-P2P-PeerDistEx", @"MinContentInformation=1.0, MaxContentInformation=2.0");
+                request.Headers.Add("X-CSRF-Token", @"V4$.airbnb.com$fHjCyefp62k$vfFofoysz0krccodT-NTPwi6dY6Oc8TZYu9oNNS353E=");
+                request.Headers.Add("X-Requested-With", @"XMLHttpRequest");
+                request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36";
+                request.Referer = "https://www.airbnb.com/rooms/16676839?location=Los%20Angeles%2C%20CA%2C%20United%20States&s=SjTF6t4i";
+                request.Headers.Set(HttpRequestHeader.AcceptEncoding, "gzip, deflate, br");
+                request.Headers.Set(HttpRequestHeader.AcceptLanguage, "en-CA,en-GB;q=0.9,en-US;q=0.8,en;q=0.7");
+                request.Headers.Set(HttpRequestHeader.Cookie, @"bev=1514549109_4pSmBrr6dJvFlt5Z; _csrf_token=V4%24.airbnb.com%24fHjCyefp62k%24vfFofoysz0krccodT-NTPwi6dY6Oc8TZYu9oNNS353E%3D; jitney_client_session_id=28b348e1-cf9f-4beb-ad87-d3bb8568938b; jitney_client_session_created_at=1514549109; _user_attributes=%7B%22curr%22%3A%22INR%22%2C%22guest_exchange%22%3A63.979525%2C%22device_profiling_session_id%22%3A%221514549110--ce3066d7bc2195821f25c54f%22%2C%22giftcard_profiling_session_id%22%3A%221514549110--674e7d23b8eb2365dd714f53%22%2C%22reservation_profiling_session_id%22%3A%221514549110--4525b9b3fb9d43091729e1ef%22%7D; flags=268697600; b47c37150=control; mdr_browser=desktop; sdid=; ftv=1514549107780; cbkp=3; AMP_TOKEN=%24NOT_FOUND; _ga=GA1.2.241556216.1514549109; _gid=GA1.2.873486276.1514549109; __ssid=00c16da8-4467-4d88-8e9e-053f75961d16; jitney_client_session_updated_at=1514549119; has_predicted_user_langs=1; _gat=1; _gat_UA-2725447-23=1; _uetsid=_uet27d678c9; jitney_client_session_updated_at=1514549508");
                 request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
                 response = (HttpWebResponse)request.GetResponse();
@@ -242,4 +423,4 @@ namespace Mongo4
         }
 
     }
-};
+}
