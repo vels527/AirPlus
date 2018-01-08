@@ -126,6 +126,28 @@ namespace Mongo4
                 }
             }
         }
+        public void Sort()
+        {
+           for (int i=0;i<this.days.Count-1;i++)
+            {
+                for(int j=i+1;j< this.days.Count; j++)
+                {
+                    if(this.days[i].date> this.days[j].date)
+                    {
+                        DayName swap = this.days[j];
+                        this.days[j] = this.days[i];
+                        this.days[i] = swap;
+                    }
+                    else if(this.days[i].date == this.days[j].date)
+                    {
+                        DayName swap = this.days[j];
+                        this.days[j] = this.days[i];
+                        this.days[i] = swap;                        
+                        this.days.RemoveAt(j--);                        
+                    }
+                }
+            }
+        }
         public Mail()
         {
             days = new List<DayName>();
@@ -142,37 +164,48 @@ namespace Mongo4
             strb.Append("<td style='border:1px solid black'>");
             strb.Append(@"</td>");
             string monthNom = "";
+            List<string> repeatString = new List<string>();
             foreach (Mail m in MailListings)
-            {                
+            {
+                m.Sort();
                 foreach (var dates in m.days)
                 {
                     if (monthNom != MonthName(dates.date.Month).mon)
                     {
                         monthNom = MonthName(dates.date.Month).mon;
+                        if (repeatString.Contains(monthNom))
+                        {
+                            //continue;                                                        
+                        }
+                        else
+                        {
+                            strb.Append("<td style='border:1px solid black'>" + monthNom + @"</td>");
+                            repeatString.Add(monthNom);
+                        }
                     }
                     else{
-                        continue;
+                        //continue;                        
                     }
-                    strb.Append("<td style='border:1px solid black'>" + monthNom+@"</td>");
-                    for (int i = 1; i <= MonthName(dates.date.Month).days; i++)
-                    {
-                        strb.Append("<td style='border:1px solid black'>" + Convert.ToString(i) + @"</td>");
-                    }
-                }             
+                    strb.Append("<td style='border:1px solid black'>" + Convert.ToString(dates.date.Day) + @"</td>");
+                }
+                break;
             }
             strb.Append(@"</tr>");
             strb.Append(@"<tr></tr>");
             foreach (Mail m in MailListings)
             {
+                m.Sort();
                 strb.Append("<tr>");
-                strb.Append("<td style='border-bottom:1px solid black'>" + m.ListingId+@"</td><td></td>");
-                foreach (var dates in m.days)
+                strb.Append("<td style='border-bottom:1px solid black'>" + m.ListingId+@"</td>");
+                int monindex = 0;
+                for (int r=0;r<m.days.Count;r++)
                 {
-                    EachMonth ec = MonthName(dates.date.Month);                    
-                    for (int i = 1; i <= ec.days; i++)
+                    if (monindex != m.days[r].date.Month)
                     {
-                        strb.Append("<td style='border-bottom:1px solid black'>" + Convert.ToString(dates.available) + @"</td>");
+                        monindex = m.days[r].date.Month;
+                        strb.Append("<td></td>");
                     }
+                    strb.Append("<td style='border-bottom:1px solid black'>" + Convert.ToString(m.days[r].available) + @"</td>");
                 }
                 strb.Append(@"</tr>");
             }
@@ -249,6 +282,7 @@ namespace Mongo4
         public Boolean available { get; set; }
         
         public DateTime date { get; set; }
+
     }
 
     public class codeEvaler
@@ -267,8 +301,8 @@ namespace Mongo4
 
         public void DownloadMain(List<string> listingIds, string urlTemplate)
         {
-            var month = 12;
-            var year = 2017;
+            var month = 1;
+            var year = 2018;
             var guests = 3;
             MailOut mout = new MailOut();                            
             foreach (var listingId in listingIds)
