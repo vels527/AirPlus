@@ -205,7 +205,14 @@ namespace Mongo4
                         monindex = m.days[r].date.Month;
                         strb.Append("<td></td>");
                     }
-                    strb.Append("<td style='border-bottom:1px solid black'>" + Convert.ToString(m.days[r].available) + @"</td>");
+                    if (m.days[r].available)
+                    {
+                        strb.Append("<td style='border-bottom:1px solid black;background-color:green;'></td>");
+                    }
+                    else
+                    {
+                        strb.Append("<td style='border-bottom:1px solid black;background-color:red;'></td>");
+                    }
                 }
                 strb.Append(@"</tr>");
             }
