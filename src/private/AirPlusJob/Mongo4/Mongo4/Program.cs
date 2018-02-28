@@ -109,14 +109,11 @@ namespace Mongo4
         public string ListingId { get; set; }
         public void populate(string content)
         {
-            DateTime dtx = new DateTime();
-            dtx = DateTime.Now;
 
             dynamic json = JsonConvert.DeserializeObject(content);
             for (int i = 0; i < json["calendar_months"].Count; i++)
             {
                 var oneDoc = json["calendar_months"];
-                this.datetaken = DateTime.Now;
                 for (int j = 0; j < json["calendar_months"][i].days.Count; j++)
                 {
                     DayName oneday = new DayName();
@@ -148,9 +145,14 @@ namespace Mongo4
                 }
             }
         }
+        public void PopulatePrice(string pricestr)
+        {
+
+        }
         public Mail()
         {
             days = new List<DayName>();
+            this.datetaken = DateTime.Now;
         }
     }
     public class MailOut
@@ -292,6 +294,14 @@ namespace Mongo4
 
     }
 
+    public class DayPrice
+    {
+        public Double price { get; set; }
+
+        public DateTime date { get; set; }
+
+    }
+
     public class codeEvaler
     {
 
@@ -299,6 +309,7 @@ namespace Mongo4
 //"https://www.airbnb.com/api/v2/calendar_months?key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=USD&locale=en&listing_id={0}&month={1}&year={2}&count=6&_format=with_conditions&guests={3}";
         string urlTemplate = "https://www.airbnb.com/api/v2/calendar_months?_format=for_price_calculator_date_picker&count={0}&listing_id={1}&month={2}&year={3}&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=INR&locale=en";
 
+        string urlPriceTemplate = "https://www.airbnb.co.in/api/v2/pdp_listing_booking_details?force_boost_unc_priority_message_type=&guests={0}&listing_id={1}&show_smart_promotion=0&_format=for_web_with_date&_interaction_type=pageload&_intents=p3_book_it&_parent_request_uuid=d7cdc14f-f110-43aa-accd-03918cb52be2&_p3_impression_id=p3_1516182527_ZjCNtdJhJV2Qha5s&check_in={2}&check_out={3}&number_of_adults={4}&number_of_children=0&number_of_infants=0&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=USD&locale=en-US";
         //Cooper home - 16676839
         private List<string> listingIds = new List<string>() { "16676839", "9199361", "8175972", "10593515", "13625030", "12891710", "11950530", "12742037", "9547197", "18395377", "4925118", "5601452", "13591122" };
         //private List<string> listingIds = new List<string>()        {"7939975" };
@@ -326,12 +337,32 @@ namespace Mongo4
                 Mone.ListingId = listingId;
                 Mone.Month = month;
                 Mone.populate(output);
+
+                /*For price population the URL and logic is different.*/
+
                 mout.MailListings.Add(Mone);
                 Task t = MyMethodAsync();      
             }
             MailBody = mout.RetString();
         }
 
+        public void ProcessMain(List<string> listingIds, string urlTemplate)
+        {
+            var month = 1;
+            var year = 2018;
+            var guests = 3;
+            DateTime dateTime_checkin = new DateTime(2018, 1, 1, 0, 0, 0);
+            DateTime dateTime_checkout = dateTime_checkin.AddDays(7);
+            string strCheckInDate = Convert.ToString(dateTime_checkin.Year) + "-" + (dateTime_checkin.Month>9? Convert.ToString(dateTime_checkin.Month):("0"+ Convert.ToString(dateTime_checkin.Month))) + "-" + (dateTime_checkin.Day > 9 ? Convert.ToString(dateTime_checkin.Day) : ("0" + Convert.ToString(dateTime_checkin.Day)));
+            string strCheckOutDate = Convert.ToString(dateTime_checkout.Year) + "-" + (dateTime_checkout.Month > 9 ? Convert.ToString(dateTime_checkout.Month) : ("0" + Convert.ToString(dateTime_checkout.Month))) + "-" + (dateTime_checkout.Day > 9 ? Convert.ToString(dateTime_checkout.Day) : ("0" + Convert.ToString(dateTime_checkout.Day)));
+            string url = string.Format(urlTemplate, guests, listingIds.ElementAt<string>(0), strCheckInDate, strCheckOutDate, guests);
+            string output;
+            DownloadPriceFromAirbnb(listingIds.ElementAt<string>(0),url,out output);
+            if(output=="")
+            {
+
+            }
+        }
         public async Task MyMethodAsync()
         {
             Task<int> longRunningTask = LongRunningOperationAsync();
@@ -352,7 +383,7 @@ namespace Mongo4
         public void Eval()
         {
             DownloadMain(listingIds, urlTemplate);
-            //ProcessMain(listingIds, rootFolder);
+            ProcessMain(listingIds, urlPriceTemplate);
         }
 
         private void DownloadFromAirbnb(string listingId, string url,out string output)
@@ -378,6 +409,25 @@ namespace Mongo4
             response.Close();
             }
 
+        }
+
+        private void DownloadPriceFromAirbnb(string listingId,string url,out string output)
+        {
+            HttpWebResponse response;
+            output = "";
+
+            if (Request_price_www_airbnb_com(url, out response))
+            {
+
+                var encoding = Encoding.GetEncoding(response.CharacterSet);
+                using (var responseStream = response.GetResponseStream())
+                {
+                    using (var reader = new StreamReader(responseStream, encoding))
+                        output = reader.ReadToEnd();
+                }
+
+                response.Close();
+            }
         }
 
         public void Save(string listingId, string content)
@@ -457,6 +507,52 @@ namespace Mongo4
                     response.Close();
                 }
                 
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool Request_price_www_airbnb_com(string url, out HttpWebResponse response)
+        {
+            response = null;
+
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+
+                request.KeepAlive = true;
+                request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:58.0) Gecko/20100101 Firefox/58.0";
+                request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+                //request.Headers.Add("x-csrf-token", @"V4$.airbnb.co.in$8bKHkLat8Uw$_nO5fnfVTpCusqgmwb45wQjHJBrMdj8UPDQxos2uMhY=");
+                //request.Headers.Add("X-Requested-With", @"XMLHttpRequest");
+                request.Headers.Add("DNT", @"1");
+                request.Headers.Add("Upgrade-Insecure-Requests", @"1");
+                //request.Referer = "https://www.airbnb.com/rooms/16676839?location=Los%20Angeles%2C%20CA%2C%20United%20States&s=SjTF6t4i";
+                //request.Referer = "https://www.airbnb.co.in/rooms/16676839?adults=3&guests=3&location=Los%20Angeles%2C%20CA%2C%20United%20States&check_in=2018-01-01&s=QgEFpeLJ&check_out=2018-01-08";
+                request.Headers.Set(HttpRequestHeader.AcceptEncoding, "gzip, deflate, br");
+                request.Headers.Set(HttpRequestHeader.AcceptLanguage, "en-US,en;q=0.5");
+                request.Headers.Set(HttpRequestHeader.Cookie, @"jitney_client_session_id=2ec02ac9-ae35-4e45-9a5a-ba58dd45e773; jitney_client_session_created_at=1519825056; jitney_client_session_updated_at=1519825330");
+                request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+                response = (HttpWebResponse)request.GetResponse();
+            }
+            catch (WebException e)
+            {
+                if (e.Status == WebExceptionStatus.ProtocolError)
+                {
+                    response = (HttpWebResponse)e.Response;
+                    return false;
+                }
+                else return false;
+            }
+            catch (Exception)
+            {
+                if (response != null)
+                {
+                    response.Close();
+                }
+
                 return false;
             }
 
