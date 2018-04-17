@@ -119,6 +119,25 @@ namespace Mongo4
                     DayName oneday = new DayName();
                     oneday.available = Convert.ToBoolean(json["calendar_months"][i].days[j]["available"].Value);
                     oneday.date = Convert.ToDateTime(json["calendar_months"][i].days[j]["date"].Value);
+                    codeEvaler codePrice = new codeEvaler();
+                    var guests = 3;
+                    DateTime dateTime_checkin = oneday.date;
+                    DateTime dateTime_checkout = dateTime_checkin.AddDays(1);
+                    string strCheckInDate = Convert.ToString(dateTime_checkin.Year) + "-" + (dateTime_checkin.Month > 9 ? Convert.ToString(dateTime_checkin.Month) : ("0" + Convert.ToString(dateTime_checkin.Month))) + "-" + (dateTime_checkin.Day > 9 ? Convert.ToString(dateTime_checkin.Day) : ("0" + Convert.ToString(dateTime_checkin.Day)));
+                    string strCheckOutDate = Convert.ToString(dateTime_checkout.Year) + "-" + (dateTime_checkout.Month > 9 ? Convert.ToString(dateTime_checkout.Month) : ("0" + Convert.ToString(dateTime_checkout.Month))) + "-" + (dateTime_checkout.Day > 9 ? Convert.ToString(dateTime_checkout.Day) : ("0" + Convert.ToString(dateTime_checkout.Day)));
+                    string url = string.Format(codePrice.urlPriceTemplate, guests, ListingId, strCheckInDate, strCheckOutDate, guests);
+                    string output;
+                    codePrice.DownloadPriceFromAirbnb(ListingId, url, out output);
+                    if (output == "")
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        dynamic jsonPrice= JsonConvert.DeserializeObject(output);
+                        long priceThatDay=jsonPrice["pdp_listing_booking_details"][0]["base_price_breakdown"][0]["amount"].Value;
+                        oneday.price = Convert.ToDouble(priceThatDay);
+                    }
                     days.Add(oneday);
                 }
             }
@@ -209,11 +228,11 @@ namespace Mongo4
                     }
                     if (m.days[r].available)
                     {
-                        strb.Append("<td style='border-bottom:1px solid black;background-color:green;'></td>");
+                        strb.Append("<td style='border-bottom:1px solid black;background-color:green;'>"+m.days[r].price+"</td>");
                     }
                     else
                     {
-                        strb.Append("<td style='border-bottom:1px solid black;background-color:red;'></td>");
+                        strb.Append("<td style='border-bottom:1px solid black;background-color:red;'>" + m.days[r].price + "</td>");
                     }
                 }
                 strb.Append(@"</tr>");
@@ -292,6 +311,8 @@ namespace Mongo4
         
         public DateTime date { get; set; }
 
+        public Double price { get; set; }
+
     }
 
     public class DayPrice
@@ -309,7 +330,7 @@ namespace Mongo4
 //"https://www.airbnb.com/api/v2/calendar_months?key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=USD&locale=en&listing_id={0}&month={1}&year={2}&count=6&_format=with_conditions&guests={3}";
         string urlTemplate = "https://www.airbnb.com/api/v2/calendar_months?_format=for_price_calculator_date_picker&count={0}&listing_id={1}&month={2}&year={3}&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=INR&locale=en";
 
-        string urlPriceTemplate = "https://www.airbnb.co.in/api/v2/pdp_listing_booking_details?force_boost_unc_priority_message_type=&guests={0}&listing_id={1}&show_smart_promotion=0&_format=for_web_with_date&_interaction_type=pageload&_intents=p3_book_it&_parent_request_uuid=d7cdc14f-f110-43aa-accd-03918cb52be2&_p3_impression_id=p3_1516182527_ZjCNtdJhJV2Qha5s&check_in={2}&check_out={3}&number_of_adults={4}&number_of_children=0&number_of_infants=0&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=USD&locale=en-US";
+        public string urlPriceTemplate = "https://www.airbnb.co.in/api/v2/pdp_listing_booking_details?guests={0}&listing_id={1}&show_smart_promotion=0&_format=for_web_with_date&_interaction_type=pageload&_intents=p3_book_it&_parent_request_uuid=d7cdc14f-f110-43aa-accd-03918cb52be2&_p3_impression_id=p3_1516182527_ZjCNtdJhJV2Qha5s&check_in={2}&check_out={3}&number_of_adults={4}&number_of_children=0&number_of_infants=0&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=USD&locale=en-US";
         //Cooper home - 16676839
         private List<string> listingIds = new List<string>() { "16676839", "9199361", "8175972", "10593515", "13625030", "12891710", "11950530", "12742037", "9547197", "18395377", "4925118", "5601452", "13591122" };
         //private List<string> listingIds = new List<string>()        {"7939975" };
@@ -319,7 +340,7 @@ namespace Mongo4
 
         public void DownloadMain(List<string> listingIds, string urlTemplate)
         {
-            var month = 1;
+            var month = 4;
             var year = 2018;
             var guests = 3;
             MailOut mout = new MailOut();                            
@@ -348,11 +369,11 @@ namespace Mongo4
 
         public void ProcessMain(List<string> listingIds, string urlTemplate)
         {
-            var month = 1;
+            var month = 4;
             var year = 2018;
             var guests = 3;
             DateTime dateTime_checkin = new DateTime(2018, 1, 1, 0, 0, 0);
-            DateTime dateTime_checkout = dateTime_checkin.AddDays(7);
+            DateTime dateTime_checkout = dateTime_checkin.AddDays(6);
             string strCheckInDate = Convert.ToString(dateTime_checkin.Year) + "-" + (dateTime_checkin.Month>9? Convert.ToString(dateTime_checkin.Month):("0"+ Convert.ToString(dateTime_checkin.Month))) + "-" + (dateTime_checkin.Day > 9 ? Convert.ToString(dateTime_checkin.Day) : ("0" + Convert.ToString(dateTime_checkin.Day)));
             string strCheckOutDate = Convert.ToString(dateTime_checkout.Year) + "-" + (dateTime_checkout.Month > 9 ? Convert.ToString(dateTime_checkout.Month) : ("0" + Convert.ToString(dateTime_checkout.Month))) + "-" + (dateTime_checkout.Day > 9 ? Convert.ToString(dateTime_checkout.Day) : ("0" + Convert.ToString(dateTime_checkout.Day)));
             string url = string.Format(urlTemplate, guests, listingIds.ElementAt<string>(0), strCheckInDate, strCheckOutDate, guests);
@@ -383,7 +404,7 @@ namespace Mongo4
         public void Eval()
         {
             DownloadMain(listingIds, urlTemplate);
-            ProcessMain(listingIds, urlPriceTemplate);
+            //ProcessMain(listingIds, urlPriceTemplate);
         }
 
         private void DownloadFromAirbnb(string listingId, string url,out string output)
@@ -411,7 +432,7 @@ namespace Mongo4
 
         }
 
-        private void DownloadPriceFromAirbnb(string listingId,string url,out string output)
+        public void DownloadPriceFromAirbnb(string listingId,string url,out string output)
         {
             HttpWebResponse response;
             output = "";
