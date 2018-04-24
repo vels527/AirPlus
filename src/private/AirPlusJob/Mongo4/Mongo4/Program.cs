@@ -118,26 +118,7 @@ namespace Mongo4
                 {
                     DayName oneday = new DayName();
                     oneday.available = Convert.ToBoolean(json["calendar_months"][i].days[j]["available"].Value);
-                    oneday.date = Convert.ToDateTime(json["calendar_months"][i].days[j]["date"].Value);
-                    codeEvaler codePrice = new codeEvaler();
-                    var guests = 3;
-                    DateTime dateTime_checkin = oneday.date;
-                    DateTime dateTime_checkout = dateTime_checkin.AddDays(1);
-                    string strCheckInDate = Convert.ToString(dateTime_checkin.Year) + "-" + (dateTime_checkin.Month > 9 ? Convert.ToString(dateTime_checkin.Month) : ("0" + Convert.ToString(dateTime_checkin.Month))) + "-" + (dateTime_checkin.Day > 9 ? Convert.ToString(dateTime_checkin.Day) : ("0" + Convert.ToString(dateTime_checkin.Day)));
-                    string strCheckOutDate = Convert.ToString(dateTime_checkout.Year) + "-" + (dateTime_checkout.Month > 9 ? Convert.ToString(dateTime_checkout.Month) : ("0" + Convert.ToString(dateTime_checkout.Month))) + "-" + (dateTime_checkout.Day > 9 ? Convert.ToString(dateTime_checkout.Day) : ("0" + Convert.ToString(dateTime_checkout.Day)));
-                    string url = string.Format(codePrice.urlPriceTemplate, guests, ListingId, strCheckInDate, strCheckOutDate, guests);
-                    string output;
-                    codePrice.DownloadPriceFromAirbnb(ListingId, url, out output);
-                    if (output == "")
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        dynamic jsonPrice= JsonConvert.DeserializeObject(output);
-                        long priceThatDay=jsonPrice["pdp_listing_booking_details"][0]["base_price_breakdown"][0]["amount"].Value;
-                        oneday.price = Convert.ToDouble(priceThatDay);
-                    }
+                    oneday.date = Convert.ToDateTime(json["calendar_months"][i].days[j]["date"].Value);                    
                     days.Add(oneday);
                 }
             }
@@ -164,9 +145,41 @@ namespace Mongo4
                 }
             }
         }
-        public void PopulatePrice(string pricestr)
+        public void PopulatePrice()
         {
-
+            for (int i = 0; i < this.days.Count;)
+            {                
+                codeEvaler codePrice = new codeEvaler();
+                var guests = 3;
+                DateTime dateTime_checkin = this.days[i].date;
+                DateTime dateTime_checkout = dateTime_checkin.AddDays(5);
+                string strCheckInDate = Convert.ToString(dateTime_checkin.Year) + "-" + (dateTime_checkin.Month > 9 ? Convert.ToString(dateTime_checkin.Month) : ("0" + Convert.ToString(dateTime_checkin.Month))) + "-" + (dateTime_checkin.Day > 9 ? Convert.ToString(dateTime_checkin.Day) : ("0" + Convert.ToString(dateTime_checkin.Day)));
+                string strCheckOutDate = Convert.ToString(dateTime_checkout.Year) + "-" + (dateTime_checkout.Month > 9 ? Convert.ToString(dateTime_checkout.Month) : ("0" + Convert.ToString(dateTime_checkout.Month))) + "-" + (dateTime_checkout.Day > 9 ? Convert.ToString(dateTime_checkout.Day) : ("0" + Convert.ToString(dateTime_checkout.Day)));
+                string url = string.Format(codePrice.urlPriceTemplate, guests, ListingId, strCheckInDate, strCheckOutDate, guests);
+                string output;
+                codePrice.DownloadPriceFromAirbnb(ListingId, url, out output);
+                if (output == "")
+                {
+                    continue;
+                }
+                else
+                {
+                    dynamic jsonPrice = JsonConvert.DeserializeObject(output);
+                    for (int k = 0; k < 5; k++)
+                    {
+                        if (i >= this.days.Count)
+                        {
+                            break;
+                        }
+                        this.days[i++].price = Convert.ToDouble(jsonPrice["pdp_listing_booking_details"][0]["base_price_breakdown"][k]["amount"].Value);                        
+                    }
+                    if (i >= this.days.Count)
+                    {
+                        break;
+                    }
+                }
+                for (int iK = 0; iK < 1000000; iK++) ;             
+            }
         }
         public Mail()
         {
@@ -358,7 +371,8 @@ namespace Mongo4
                 Mone.ListingId = listingId;
                 Mone.Month = month;
                 Mone.populate(output);
-
+                Mone.Sort();
+                Mone.PopulatePrice();
                 /*For price population the URL and logic is different.*/
 
                 mout.MailListings.Add(Mone);
@@ -367,23 +381,6 @@ namespace Mongo4
             MailBody = mout.RetString();
         }
 
-        public void ProcessMain(List<string> listingIds, string urlTemplate)
-        {
-            var month = 4;
-            var year = 2018;
-            var guests = 3;
-            DateTime dateTime_checkin = new DateTime(2018, 1, 1, 0, 0, 0);
-            DateTime dateTime_checkout = dateTime_checkin.AddDays(6);
-            string strCheckInDate = Convert.ToString(dateTime_checkin.Year) + "-" + (dateTime_checkin.Month>9? Convert.ToString(dateTime_checkin.Month):("0"+ Convert.ToString(dateTime_checkin.Month))) + "-" + (dateTime_checkin.Day > 9 ? Convert.ToString(dateTime_checkin.Day) : ("0" + Convert.ToString(dateTime_checkin.Day)));
-            string strCheckOutDate = Convert.ToString(dateTime_checkout.Year) + "-" + (dateTime_checkout.Month > 9 ? Convert.ToString(dateTime_checkout.Month) : ("0" + Convert.ToString(dateTime_checkout.Month))) + "-" + (dateTime_checkout.Day > 9 ? Convert.ToString(dateTime_checkout.Day) : ("0" + Convert.ToString(dateTime_checkout.Day)));
-            string url = string.Format(urlTemplate, guests, listingIds.ElementAt<string>(0), strCheckInDate, strCheckOutDate, guests);
-            string output;
-            DownloadPriceFromAirbnb(listingIds.ElementAt<string>(0),url,out output);
-            if(output=="")
-            {
-
-            }
-        }
         public async Task MyMethodAsync()
         {
             Task<int> longRunningTask = LongRunningOperationAsync();
