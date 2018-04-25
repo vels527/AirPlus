@@ -35,7 +35,7 @@ namespace Mongo4
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("siva@kustotech.in", "siva");
             var subject = "Morning Airplus Calendar Month";
-            var to = new EmailAddress("siva@kustotech.in", "saran");
+            var to = new EmailAddress("saran@kustotech.in", "saran");
             //var plainTextContent = "and easy to do anywhere, even with C#";
             var htmlContent = cde.MailBody; ;
             var msg = MailHelper.CreateSingleEmail(from, to, subject, "Hi", htmlContent);
@@ -345,7 +345,7 @@ namespace Mongo4
 
         public string urlPriceTemplate = "https://www.airbnb.co.in/api/v2/pdp_listing_booking_details?guests={0}&listing_id={1}&show_smart_promotion=0&_format=for_web_with_date&_interaction_type=pageload&_intents=p3_book_it&_parent_request_uuid=d7cdc14f-f110-43aa-accd-03918cb52be2&_p3_impression_id=p3_1516182527_ZjCNtdJhJV2Qha5s&check_in={2}&check_out={3}&number_of_adults={4}&number_of_children=0&number_of_infants=0&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=USD&locale=en-US";
         //Cooper home - 16676839
-        private List<string> listingIds = new List<string>() { "16676839", "9199361", "8175972", "10593515", "13625030", "12891710", "11950530", "12742037", "9547197", "18395377", "4925118", "5601452", "13591122" };
+        private List<string> listingIds = new List<string>() { "16676839", "9199361", "8175972", "13625030", "12891710","9547197", "4925118" };
         //private List<string> listingIds = new List<string>()        {"7939975" };
         private StringBuilder bodyBuilder = new StringBuilder();
         private StringBuilder headerBuilder = new StringBuilder();
@@ -353,8 +353,9 @@ namespace Mongo4
 
         public void DownloadMain(List<string> listingIds, string urlTemplate)
         {
-            var month = 4;
-            var year = 2018;
+            DateTime d = DateTime.Today;
+            var month = d.Month;
+            var year = d.Year;
             var guests = 3;
             MailOut mout = new MailOut();                            
             foreach (var listingId in listingIds)
