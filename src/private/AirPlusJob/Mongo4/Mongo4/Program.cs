@@ -39,6 +39,7 @@ namespace Mongo4
             //var plainTextContent = "and easy to do anywhere, even with C#";
             var htmlContent = cde.MailBody; ;
             var msg = MailHelper.CreateSingleEmail(from, to, subject, "Hi", htmlContent);
+            msg.AddCc("siva@kustotech.in", "siva");
             var response = await client.SendEmailAsync(msg);
         }
         static void Main(string[] args)
