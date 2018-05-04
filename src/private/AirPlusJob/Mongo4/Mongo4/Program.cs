@@ -35,7 +35,7 @@ namespace Mongo4
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("siva@kustotech.in", "siva");
             var subject = "Morning Airplus Calendar Month";
-            var to = new EmailAddress("siva@kustotech.in", "saran");
+            var to = new EmailAddress("saran@kustotech.in", "saran");
             //var plainTextContent = "and easy to do anywhere, even with C#";
             var htmlContent = cde.MailBody; ;
             var msg = MailHelper.CreateSingleEmail(from, to, subject, "Hi", htmlContent);
