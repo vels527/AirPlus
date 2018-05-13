@@ -42,7 +42,7 @@ namespace Mongo4
             msg.AddCc("siva@kustotech.in", "siva");
             var response = await client.SendEmailAsync(msg);
         }
-        static void Main(string[] args)
+        static void Main(string[] args) 
         {
             Execute().Wait();
         }
