@@ -35,7 +35,7 @@ namespace AirbnbGuestList
 
         EmailAddress from = new EmailAddress("siva@kustotech.in", "siva");
         public string subject = "Reminder Check In - Check Out";
-        EmailAddress to = new EmailAddress("sivanathanb@gmail.com", "saran");
+        EmailAddress to = new EmailAddress("saran@kustotech.in", "saran");
         EmailAddress cc = new EmailAddress("siva@kustotech.in", "siva");
         public Guest()
         {
@@ -116,13 +116,16 @@ namespace AirbnbGuestList
                 guest.SendMail().Wait();
                 return false;
             }
-            else if(!(checkInGuest.Message is null))
+            else
             {
-                checkInGuest.SendMail().Wait();
-            }
-            else if (!(checkOutGuest.Message is null))
-            {
-                checkOutGuest.SendMail().Wait();
+                if (!(checkInGuest.Message is null))
+                {
+                    checkInGuest.SendMail().Wait();
+                }
+                if (!(checkOutGuest.Message is null))
+                {
+                    checkOutGuest.SendMail().Wait();
+                }
             }
             return true;
         }
