@@ -11,6 +11,8 @@ using SendGrid.Helpers.Mail;
 using System.Threading;
 using System.Net.Http;
 using System.Net;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace AirbnbGuestList
 {
@@ -34,8 +36,7 @@ namespace AirbnbGuestList
                 using (var responseStream = response.GetResponseStream())
                 {
                     using (var reader = new StreamReader(responseStream, encoding))
-                        output = reader.ReadToEnd();
-                    dynamic json = JsonConvert.DeserializeObject(output);                    
+                        output = reader.ReadToEnd();                                   
                 }
                 response.Close();
             }
@@ -48,8 +49,20 @@ namespace AirbnbGuestList
 
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://www.airbnb.co.in/api/v2/calendar_days?key=d306zoyjsyarp7ifhu67rjxn52tv0t20&_format=host_calendar_detailed&listing_id=16676839&start_date=2018-06-30&end_date=2018-07-31");
-
+                DateTime startdate = DateTime.Now;
+                int month = startdate.Month;
+                string startmonth = month < 10 ? "0" + Convert.ToString(month) : Convert.ToString(month);
+                string startday = startdate.Day < 10 ? "0" + Convert.ToString(startdate.Day) :Convert.ToString(startdate.Day);
+                string strstartdate = Convert.ToString(startdate.Year) + "-" + startmonth + "-" +startday;
+                DateTime enddate = startdate.AddMonths(1);
+                month = enddate.Month;
+                string endmonth= month < 10 ? "0" + Convert.ToString(month) : Convert.ToString(month);
+                string endday= enddate.Day < 10 ? "0" + Convert.ToString(enddate.Day) : Convert.ToString(enddate.Day);
+                string strenddate = Convert.ToString(enddate.Year) + "-" + endmonth + "-" + endday;
+                string listingid = "16676839";
+                string URL = @"https://www.airbnb.co.in/api/v2/calendar_days?key=d306zoyjsyarp7ifhu67rjxn52tv0t20&_format=host_calendar_detailed&listing_id={0}&start_date={1}&end_date={2}";
+                string urlcalendardays = String.Format(URL, listingid, strstartdate, strenddate);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlcalendardays);
                 request.Referer = "https://www.airbnb.co.in/multicalendar/16676839";
                 request.Headers.Set(HttpRequestHeader.AcceptLanguage, "en-US,en-GB;q=0.7,en;q=0.3");
                 request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 Edge/16.16299";
@@ -78,27 +91,70 @@ namespace AirbnbGuestList
 
     public class Guest
     {
-        string apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
-        public static int i = 0;
-        SendGridClient client;
+
         public string FirstName { get; set; }
         public string FullName { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public string Message { get; set; }
+        public long AirplusId { get; set; }
+
+        public Guest()
+        {
+            
+
+        }
+
+    }
+    public class Property
+    {
+
+    }
+    public class GuestList
+    {
+        public List<Guest> Guests;
+        string apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+        SendGridClient client;
+        public string Message {
+            get {
+                StringBuilder strb = new StringBuilder();
+                strb.Append("<Table>");
+                strb.Append("<tr>");
+                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Guest Name</td>");
+                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check In</td>");
+                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check Out</td>");
+                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check In</td>");
+                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check Out</td>");
+                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Status</td>");
+                
+                
+                if (Guests.Count() > 0)
+                {
+                    
+                    foreach(Guest g in Guests)
+                    {
+                        strb.Append("<tr>");
+                        strb.Append(@"<td style='border-bottom:1px solid black'>" + g.FirstName+@"</td>");
+                        strb.Append(@"<td style='border-bottom:1px solid black'>" + g.StartDate + @"</td>");
+                        strb.Append(@"<td style='border-bottom:1px solid black'>" + g.EndDate + @"</td>");
+                        strb.Append(@"<td style='border-bottom:1px solid black'></td>");
+                        strb.Append(@"<td style='border-bottom:1px solid black'></td>");
+                        strb.Append(@"<td style='border-bottom:1px solid black'></td>");
+                        strb.Append(@"</tr>");
+                    }
+                    
+                }
+                strb.Append(@"</Table>");
+                return strb.ToString();
+            } }
 
         EmailAddress from = new EmailAddress("siva@kustotech.in", "siva");
         public string subject = "Reminder Check In - Check Out";
         EmailAddress to = new EmailAddress("saran@kustotech.in", "saran");
         EmailAddress cc = new EmailAddress("siva@kustotech.in", "siva");
-        public Guest()
+        public GuestList()
         {
+            Guests = new List<Guest>();
             client = new SendGridClient(apiKey);
-            i++;
-            if (i > 2)
-            {
-                return;
-            }
         }
         public async Task SendMail()
         {
@@ -106,17 +162,6 @@ namespace AirbnbGuestList
             msg.AddCc(cc);
             var response = await client.SendEmailAsync(msg);
 
-        }
-    }
-    public class GuestList
-    {
-        public List<Guest> Guests { get; set; }
-        public Guest checkOutGuest { get; set; }
-        public Guest checkInGuest { get; set; }
-        public GuestList()
-        {
-            checkInGuest = new Guest();
-            checkOutGuest = new Guest();
         }
         public bool processJSON(string JSON)
         {
@@ -129,58 +174,37 @@ namespace AirbnbGuestList
                 var doc = jsonDays[i];
                 string docDate = doc["date"];
                 string docAvailable = doc["available"];
-                string tomorrowStr = Convert.ToString(tomorrow.Year) + "-" + (tomorrow.Month > 9 ? Convert.ToString(tomorrow.Month) : ("0" + Convert.ToString(tomorrow.Month))) + "-" + (tomorrow.Day > 9 ? Convert.ToString(tomorrow.Day) : ("0" + Convert.ToString(tomorrow.Day)));
                 if (docAvailable=="False")
                 {
                     string startDate = doc["reservation"]["start_date"];
                     string endDate = doc["reservation"]["end_date"];
-                    if (tomorrowStr == startDate && checkInGuest.Message is null)
+                    Guest guest = new Guest();
+                    guest.FullName = doc["reservation"]["guest"]["full_name"];
+                    guest.FirstName = doc["reservation"]["guest"]["first_name"];
+                    guest.AirplusId = Convert.ToInt64(doc["reservation"]["guest"]["id"]);
+                    guest.StartDate = Convert.ToDateTime(startDate);
+                    guest.EndDate = Convert.ToDateTime(endDate);
+                    Guest another = new Guest();
+                    another.AirplusId = 0;
+                    if (Guests.Count()==0)
                     {
-                        Guest guest = new Guest();
-                        guest.FullName = doc["reservation"]["guest"]["full_name"];
-                        guest.FirstName =doc["reservation"]["guest"]["first_name"];
-                        guest.Message = "Send Check in Mail for " + guest.FullName + ".He is checking in on "+ tomorrowStr;
-                        guest.subject = "Check in Mail Reminder";
-                        //guest.CheckOutMail = "";
-                        checkInGuest = guest;
+                        Guests.Add(guest);
                     }
-                    else if (tomorrowStr == endDate && checkOutGuest.Message is null)
+                    else
                     {
-                        Guest guest = new Guest();
-                        guest.FullName = doc["reservation"]["guest"]["full_name"];
-                        guest.FirstName = doc["reservation"]["guest"]["first_name"];
-                        //guest.CheckInMail = "";
-                        guest.subject = "Check out Mail Reminder";
-                        guest.Message = "Send Check out Mail for " + guest.FullName + ".He is checking out on " + tomorrowStr;
-                        checkOutGuest = guest;
-                    }
-                    if (!(checkOutGuest.Message is null) && !(checkInGuest.Message is null))
-                    {
-                        break;
+                        another = Guests.Find(e => (e.AirplusId == Convert.ToInt64(doc["reservation"]["guest"]["id"])));
+                        if (another is null)
+                        {
+                            Guests.Add(guest);
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
                 }
             }
-            if (checkOutGuest.Message is null
-                && checkInGuest.Message is null)
-            {
-                Guest guest = new Guest();
-                guest.FullName = "";
-                guest.FirstName = "";
-                guest.Message = "Today no checkout or check in mail.";
-                guest.SendMail().Wait();
-                return false;
-            }
-            else
-            {
-                if (!(checkInGuest.Message is null))
-                {
-                    checkInGuest.SendMail().Wait();
-                }
-                if (!(checkOutGuest.Message is null))
-                {
-                    checkOutGuest.SendMail().Wait();
-                }
-            }
+            SendMail().Wait();
             return true;
         }
     }
