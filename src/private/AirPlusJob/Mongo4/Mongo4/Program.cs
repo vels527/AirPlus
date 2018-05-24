@@ -35,11 +35,11 @@ namespace Mongo4
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("siva@kustotech.in", "siva");
             var subject = "Morning Airplus Calendar Month";
-            var to = new EmailAddress("saran@kustotech.in", "saran");
+            var to = new EmailAddress("sivanathanb@gmail.com", "saran");
             //var plainTextContent = "and easy to do anywhere, even with C#";
             var htmlContent = cde.MailBody; ;
             var msg = MailHelper.CreateSingleEmail(from, to, subject, "Hi", htmlContent);
-            msg.AddCc("siva@kustotech.in", "siva");
+            //msg.AddCc("siva@kustotech.in", "siva");
             var response = await client.SendEmailAsync(msg);
         }
         static void Main(string[] args) 
@@ -172,7 +172,7 @@ namespace Mongo4
                         {
                             break;
                         }
-                        this.days[i++].price = Convert.ToDouble(jsonPrice["pdp_listing_booking_details"][0]["base_price_breakdown"][k]["amount"].Value);                        
+                        this.days[i++].price = Convert.ToDouble(jsonPrice["pdp_listing_booking_details"][0]["p3_display_rate"]["amount"].Value);                           
                     }
                     if (i >= this.days.Count)
                     {
