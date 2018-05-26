@@ -24,6 +24,7 @@ namespace AirbnbGuestList
             string jsonContent = program.MakeRequests();
             GuestList guestList = new GuestList();
             guestList.processJSON(jsonContent);
+            guestList.UpdateTable();
         }
         public string MakeRequests()
         {
@@ -97,7 +98,8 @@ namespace AirbnbGuestList
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public long AirplusId { get; set; }
-
+        public long ListingId { get; set; }
+        
         public Guest()
         {
             
@@ -133,12 +135,12 @@ namespace AirbnbGuestList
                     foreach(Guest g in Guests)
                     {
                         strb.Append("<tr>");
-                        strb.Append(@"<td style='border-bottom:1px solid black'>" + g.FirstName+@"</td>");
-                        strb.Append(@"<td style='border-bottom:1px solid black'>" + g.StartDate + @"</td>");
-                        strb.Append(@"<td style='border-bottom:1px solid black'>" + g.EndDate + @"</td>");
-                        strb.Append(@"<td style='border-bottom:1px solid black'></td>");
-                        strb.Append(@"<td style='border-bottom:1px solid black'></td>");
-                        strb.Append(@"<td style='border-bottom:1px solid black'></td>");
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + g.FirstName+@"</td>");
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + g.StartDate.ToShortDateString() + @"</td>");
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + g.EndDate.ToShortDateString() + @"</td>");
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid blackss'></td>");
                         strb.Append(@"</tr>");
                     }
                     
@@ -163,6 +165,79 @@ namespace AirbnbGuestList
             var response = await client.SendEmailAsync(msg);
 
         }
+        public void UpdateTable()
+        {
+            if (Guests.Count() > 0)
+            {
+                try {
+                    SqlConnection connection = new SqlConnection(@"Server=SIVA-LAPTOP-1\SQLEXPRESS;Database=Airplus;User Id=sa1;Password=pass1942;");
+                    connection.Open();
+                    StringBuilder sbr = new StringBuilder();
+                    foreach (Guest g in Guests)
+                    {
+                        try {
+                            int airplusid = -1;
+                            int k = -1;
+                            string selectAir = @"
+SELECT count(1) from [Airplus].[dbo].[Guest] where Airplusid=" + g.AirplusId + ";";
+                            SqlCommand cmdselectAIR = new SqlCommand(selectAir, connection);
+                            airplusid = (int)cmdselectAIR.ExecuteScalar();
+                            if (airplusid == 0) {
+                                string insertString = @"
+INSERT INTO [Airplus].[dbo].[Guest]
+           ([AirplusId]
+           ,[FullName]
+           ,[FirstName]
+)
+     VALUES
+           (" + g.AirplusId + ",\'" + g.FullName + "\',\'" + g.FirstName + "\');";
+
+                                SqlCommand cmd = new SqlCommand(insertString, connection);
+
+                                k = cmd.ExecuteNonQuery(); }
+
+                            //sbr.Append(insertString);
+                            int guestid = -1;
+                            int propertyid = -1;
+
+                            string selectString = @"
+SELECT guest_id from [Airplus].[dbo].[Guest] where Airplusid=" + g.AirplusId + ";";
+                            SqlCommand cmdselect = new SqlCommand(selectString, connection);
+                            guestid = (int)cmdselect.ExecuteScalar();
+                            string selectProperty = @"
+                            SELECT property_id from [Airplus].[dbo].[Property] where ListingId=" + g.ListingId + ";";
+                            SqlCommand cmdproperty = new SqlCommand(selectProperty, connection);
+                            propertyid = (int)cmdproperty.ExecuteScalar();
+                            string insertGuestProperty = @"INSERT INTO [Airplus].[dbo].[GuestProperty]
+           ([Guest_Id]
+           ,[Property_Id]
+           ,[CCompanyId]
+           ,[CheckIn]
+           ,[CheckOut]
+           ,[RequestedCheckIn]
+           ,[RequestedCheckOut]
+           ,[CCompanyTiming]
+           ,[CStatus]
+           ,[RecordTIme])
+     VALUES
+           (" + guestid + "," + propertyid + ",1,'" + g.StartDate + "','" + g.EndDate + "',null,null,null,null,null)";
+                            SqlCommand cmdguestproperty = new SqlCommand(insertGuestProperty, connection);
+                            cmdguestproperty.ExecuteNonQuery();
+
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    
+                }
+                }
+        }
         public bool processJSON(string JSON)
         {
             DateTime today = DateTime.Now;
@@ -182,6 +257,7 @@ namespace AirbnbGuestList
                     guest.FullName = doc["reservation"]["guest"]["full_name"];
                     guest.FirstName = doc["reservation"]["guest"]["first_name"];
                     guest.AirplusId = Convert.ToInt64(doc["reservation"]["guest"]["id"]);
+                    guest.ListingId= Convert.ToInt64(doc["reservation"]["hosting_id"]);
                     guest.StartDate = Convert.ToDateTime(startDate);
                     guest.EndDate = Convert.ToDateTime(endDate);
                     Guest another = new Guest();
