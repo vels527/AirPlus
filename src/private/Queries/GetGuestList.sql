@@ -8,8 +8,14 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+IF EXISTS(SELECT 1 FROM SYS.PROCEDURES WHERE NAME='GetGuestsList')
+BEGIN
 
+  DROP PROCEDURE [dbo].[GetGuestsList]
 
+END
+
+GO
 CREATE PROCEDURE [dbo].[GetGuestsList]
 @user VARCHAR(100)
 AS
@@ -20,9 +26,12 @@ select
   P.HostId,
   G.FullName,
   G.FirstName,
+  ISNULL(CONVERT(varchar,GP.RequestedCheckIn,101),'') AS RequestedCheckIn,
+  ISNULL(CONVERT(varchar,GP.RequestedCheckOut,101),'') AS RequestedCheckOut,
   convert(varchar, GP.CheckIn, 101) AS CheckIN,
    convert(varchar, GP.CheckOut, 101) AS CheckOut,
-   ISNULL(SC.StatusValue,'Empty') AS StatusCode
+   ISNULL(SC.StatusValue,'Empty') AS StatusCode,
+   ISNULL(GP.REMARKS,'') AS Remarks
 from Guest G
   left join GuestProperty GP
     on G.Guest_Id=GP.Guest_Id
