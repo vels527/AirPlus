@@ -11,7 +11,8 @@ LastName VARCHAR(150),
 Age INT,
 DOB DateTime,
 Email VARCHAR(250),
-Phone VARCHAR(250)
+Phone VARCHAR(250),
+REMARKS VARCHAR(350)
 );
 Create Table Host(
 HostId INT IDENTITY(1,1) PRIMARY KEY,
