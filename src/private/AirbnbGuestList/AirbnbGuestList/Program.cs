@@ -170,7 +170,7 @@ namespace AirbnbGuestList
             if (Guests.Count() > 0)
             {
                 try {
-                    SqlConnection connection = new SqlConnection(@"Server=SIVA-LAPTOP-1\SQLEXPRESS;Database=Airplus;User Id=sa1;Password=pass1942;");
+                    SqlConnection connection = new SqlConnection(@"Server=168.62.37.24;Database=Airplus;User Id=sa;Password=piss1982#40;");
                     connection.Open();
                     StringBuilder sbr = new StringBuilder();
                     foreach (Guest g in Guests)
@@ -220,7 +220,7 @@ SELECT guest_id from [Airplus].[dbo].[Guest] where Airplusid=" + g.AirplusId + "
            ,[CStatus]
            ,[RecordTIme])
      VALUES
-           (" + guestid + "," + propertyid + ",1,'" + g.StartDate + "','" + g.EndDate + "',null,null,null,null,null)";
+           (" + guestid + "," + propertyid + ",1,'" + g.StartDate + "','" + g.EndDate + "',null,null,null,null,'"+DateTime.Now+"')";
                             SqlCommand cmdguestproperty = new SqlCommand(insertGuestProperty, connection);
                             cmdguestproperty.ExecuteNonQuery();
 
