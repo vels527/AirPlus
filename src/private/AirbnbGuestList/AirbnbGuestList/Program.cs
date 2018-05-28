@@ -50,12 +50,13 @@ namespace AirbnbGuestList
 
             try
             {
-                DateTime startdate = DateTime.Now;
+                DateTime Median = DateTime.Now;
+                DateTime startdate = Median.AddMonths(-1);
                 int month = startdate.Month;
                 string startmonth = month < 10 ? "0" + Convert.ToString(month) : Convert.ToString(month);
                 string startday = startdate.Day < 10 ? "0" + Convert.ToString(startdate.Day) :Convert.ToString(startdate.Day);
                 string strstartdate = Convert.ToString(startdate.Year) + "-" + startmonth + "-" +startday;
-                DateTime enddate = startdate.AddMonths(1);
+                DateTime enddate = Median.AddMonths(1);
                 month = enddate.Month;
                 string endmonth= month < 10 ? "0" + Convert.ToString(month) : Convert.ToString(month);
                 string endday= enddate.Day < 10 ? "0" + Convert.ToString(enddate.Day) : Convert.ToString(enddate.Day);
@@ -134,6 +135,10 @@ namespace AirbnbGuestList
                     
                     foreach(Guest g in Guests)
                     {
+                        if (g.EndDate < DateTime.Now.AddDays(-1))
+                        {
+                            continue;
+                        }
                         strb.Append("<tr>");
                         strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + g.FirstName+@"</td>");
                         strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + g.StartDate.ToShortDateString() + @"</td>");
