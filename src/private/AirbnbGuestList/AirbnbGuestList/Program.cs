@@ -50,12 +50,13 @@ namespace AirbnbGuestList
 
             try
             {
-                DateTime startdate = DateTime.Now;
+                DateTime Median = DateTime.Now;
+                DateTime startdate = Median.AddMonths(-1);
                 int month = startdate.Month;
                 string startmonth = month < 10 ? "0" + Convert.ToString(month) : Convert.ToString(month);
                 string startday = startdate.Day < 10 ? "0" + Convert.ToString(startdate.Day) :Convert.ToString(startdate.Day);
                 string strstartdate = Convert.ToString(startdate.Year) + "-" + startmonth + "-" +startday;
-                DateTime enddate = startdate.AddMonths(1);
+                DateTime enddate = Median.AddMonths(1);
                 month = enddate.Month;
                 string endmonth= month < 10 ? "0" + Convert.ToString(month) : Convert.ToString(month);
                 string endday= enddate.Day < 10 ? "0" + Convert.ToString(enddate.Day) : Convert.ToString(enddate.Day);
@@ -134,6 +135,10 @@ namespace AirbnbGuestList
                     
                     foreach(Guest g in Guests)
                     {
+                        if (g.EndDate < DateTime.Now.AddDays(-1))
+                        {
+                            continue;
+                        }
                         strb.Append("<tr>");
                         strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + g.FirstName+@"</td>");
                         strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + g.StartDate.ToShortDateString() + @"</td>");
@@ -170,7 +175,7 @@ namespace AirbnbGuestList
             if (Guests.Count() > 0)
             {
                 try {
-                    SqlConnection connection = new SqlConnection(@"Server=SIVA-LAPTOP-1\SQLEXPRESS;Database=Airplus;User Id=sa1;Password=pass1942;");
+                    SqlConnection connection = new SqlConnection(@"Server=168.62.37.24;Database=Airplus;User Id=sa;Password=piss1982#40;");
                     connection.Open();
                     StringBuilder sbr = new StringBuilder();
                     foreach (Guest g in Guests)
@@ -220,7 +225,7 @@ SELECT guest_id from [Airplus].[dbo].[Guest] where Airplusid=" + g.AirplusId + "
            ,[CStatus]
            ,[RecordTIme])
      VALUES
-           (" + guestid + "," + propertyid + ",1,'" + g.StartDate + "','" + g.EndDate + "',null,null,null,null,null)";
+           (" + guestid + "," + propertyid + ",1,'" + g.StartDate + "','" + g.EndDate + "',null,null,null,null,'"+DateTime.Now+"')";
                             SqlCommand cmdguestproperty = new SqlCommand(insertGuestProperty, connection);
                             cmdguestproperty.ExecuteNonQuery();
 
