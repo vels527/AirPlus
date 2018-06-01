@@ -22,11 +22,13 @@
                 <td>&nbsp;</td>
             </tr>
             </table>
+        <p >
+            <asp:PlaceHolder ID="GuestHolder" runat="server"></asp:PlaceHolder>
+            &nbsp;</p>
         <p>
 
-            <asp:GridView ID="GridView1" runat="server">
-            </asp:GridView>
-            s</p>
+            <asp:Button ID="btn_update" runat="server" OnClick="btn_update_Click" Text="Update" />
+        </p>
     </div>
 
 </asp:Content>
