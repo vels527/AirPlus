@@ -14,7 +14,7 @@ namespace WebAirplus
         
         static Datalayer()
         {
-            conn = new SqlConnection(@"Server=168.62.37.24;Database=Airplus;User Id=sa;Password=piss1982#40;");            
+            conn = new SqlConnection(@"Server=168.62.37.24,1433;Network Library=DBMSSOCN;Initial Catalog=Airplus;User Id=sa2;Password=pass82#42$;");            
         }
         public static bool Authenticate(string username,string password)
         {
@@ -51,6 +51,18 @@ namespace WebAirplus
             da.Fill(ds);
             conn.Close();
             return ds;
+        }
+        public static void UpdateGuestProperty(DataTable dt)
+        {
+            conn.Open();
+            SqlCommand cmd = new SqlCommand("UpdateGuestProperty", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            SqlParameter param = cmd.Parameters.AddWithValue("@Guest",dt);
+            param.SqlDbType = SqlDbType.Structured;
+            param.TypeName = "dbo.GUESTTYPETABLE";
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            //return false;
         }
     }
 }
