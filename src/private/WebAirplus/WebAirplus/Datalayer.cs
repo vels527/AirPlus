@@ -14,7 +14,7 @@ namespace WebAirplus
         
         static Datalayer()
         {
-            conn = new SqlConnection(@"Server=168.62.37.24,1433;Network Library=DBMSSOCN;Initial Catalog=Airplus;User Id=sa2;Password=pass82#42$;");            
+            conn = new SqlConnection(@"Server=40.117.152.24,1433;Network Library=DBMSSOCN;Initial Catalog=Airplus;User Id=sa2;Password=pass82#42$;");            
         }
         public static bool Authenticate(string username,string password)
         {
