@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Data;
 using System.Data.SqlClient;
+using System.Web.Configuration;
 
 
 namespace WebAirplus
@@ -14,7 +15,11 @@ namespace WebAirplus
         
         static Datalayer()
         {
-            conn = new SqlConnection(@"Server=40.117.152.24,1433;Network Library=DBMSSOCN;Initial Catalog=Airplus;User Id=sa2;Password=pass82#42$;");            
+#if DEBUG
+            conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["GuestConnectionString"].ConnectionString);
+#else
+            conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["ProdConnectionString"].ConnectionString);
+#endif            
         }
         public static bool Authenticate(string username,string password)
         {
