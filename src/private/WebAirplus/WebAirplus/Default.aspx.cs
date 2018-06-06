@@ -11,6 +11,7 @@ using System.Drawing;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Text;
+using System.Configuration;
 
 namespace WebAirplus
 {
@@ -517,7 +518,11 @@ namespace WebAirplus
             string subject = "Reminder Check In - Check Out";
             EmailAddress to = new EmailAddress("saran@kustotech.in", "saran");
             EmailAddress cc = new EmailAddress("siva@kustotech.in", "siva");
+#if DEBUG
             string apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+#else
+            string apiKey = ConfigurationManager.AppSettings["SENDGRID_API_KEY"];
+#endif
             var msg = MailHelper.CreateSingleEmail(from, to, subject, "Hi", strb.ToString());
             msg.AddCc(cc);
             var client = new SendGridClient(apiKey);
