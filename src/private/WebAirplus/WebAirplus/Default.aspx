@@ -28,6 +28,7 @@
         <p>
 
             <asp:Button ID="btn_update" runat="server" OnClick="btn_update_Click" Text="Update" />
+            <asp:Button ID="btn_email" runat="server" OnClick="btn_email_Click" Text="Email" />
         </p>
     </div>
 

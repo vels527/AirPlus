@@ -8,12 +8,15 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using WebAirplus;
 using System.Drawing;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using System.Text;
 
 namespace WebAirplus
 {
     public partial class _Default : Page
     {
-        protected void StatusChange(object sender,EventArgs e)
+        protected void StatusChange(object sender, EventArgs e)
         {
             //Label1.Text = sender.["ID"];
             var propertyInfo = sender.GetType().GetProperty("ID");
@@ -40,8 +43,8 @@ namespace WebAirplus
             table.ID = "GuestTable";
             table.Width = Unit.Percentage(100);
             TableRow TopRow = new TableRow();
-            string[] topvalues = { "FullName", "Check In", "Check Out", "Requested Check In", "Requested Check Out","Check Out Cleaning","Remarks", "Status" };
-            int toplabelid=0;
+            string[] topvalues = { "FullName", "Check In", "Check Out", "Requested Check In", "Requested Check Out", "Check Out Cleaning", "Remarks", "Status" };
+            int toplabelid = 0;
             foreach (string s in topvalues)
             {
                 TableCell c = new TableCell();
@@ -49,7 +52,7 @@ namespace WebAirplus
 
                 l.ID = "toplab" + Convert.ToString(toplabelid++);
                 l.Text = s;
-                l.Attributes.CssStyle.Add("font-wight","bold");
+                l.Attributes.CssStyle.Add("font-wight", "bold");
                 l.Attributes.CssStyle.Add("color", "Black");
                 l.Attributes.CssStyle.Add("background-color", "Yellow");
                 l.Attributes.CssStyle.Add("padding-left", "5px");
@@ -60,14 +63,14 @@ namespace WebAirplus
                 c.BorderColor = Color.Black;
                 c.BackColor = Color.Yellow;
                 c.ForeColor = Color.Black;
-                
+
                 TopRow.Cells.Add(c);
             }
             table.Rows.Add(TopRow);
-           
-             
+
+
             int leavetoprow = 0;
-            foreach(DataRow dr in data.Rows)
+            foreach (DataRow dr in data.Rows)
             {
                 TableRow tr = new TableRow();
                 tr.Attributes.CssStyle.Add("height", "100px");
@@ -80,18 +83,18 @@ namespace WebAirplus
                     tr.Attributes.CssStyle.Add("background-color", "#FFE4B5	");
                 }
 
-                int[] labelsArray = { 3, 7,8};
+                int[] labelsArray = { 3, 7, 8 };
                 int[] calArray = { 5, 6, 10 };
                 int[] dropdownArray = { 9 };
-                int[] textArray = {11 };
+                int[] textArray = { 11 };
                 int[] sequence = { 3, 7, 8, 5, 6, 10, 11, 9 };
-                for (int i = 0; i <sequence.Length; i++)
+                for (int i = 0; i < sequence.Length; i++)
                 {
-                    int selitem=sequence[i];
+                    int selitem = sequence[i];
                     TableCell c = new TableCell();
                     if (labelsArray.Contains(selitem))
                     {
-                        
+
                         Label l = new Label();
                         l.ID = "midrow" + Convert.ToString(leavetoprow) + Convert.ToString(i);
                         l.Text = Convert.ToString(dr[selitem]);
@@ -100,18 +103,18 @@ namespace WebAirplus
                             DateTime d1 = Convert.ToDateTime(dr[7]);
                             DateTime d2 = Convert.ToDateTime(dr[8]);
                             DateTime nowdate = DateTime.Now;
-                            if(nowdate>=d1 && nowdate <= d2)
+                            if (nowdate >= d1 && nowdate <= d2)
                             {
-                                l.Attributes.CssStyle.Add("font-weight","bold");
+                                l.Attributes.CssStyle.Add("font-weight", "bold");
                             }
                         }
                         c.Controls.Add(l);
-                        
+
                     }
                     else if (textArray.Contains(selitem))
                     {
                         TextBox t = new TextBox();
-                        t.ID= "text" + "_" + Convert.ToString(dr[0]) + "_" + Convert.ToString(dr[1]) + "_" + Convert.ToString(dr[2])+"_"+selitem;
+                        t.ID = "text" + "_" + Convert.ToString(dr[0]) + "_" + Convert.ToString(dr[1]) + "_" + Convert.ToString(dr[2]) + "_" + selitem;
                         GuestValues.textFields.Add(t.ID);
                         t.Text = Convert.ToString(dr[selitem]);
                         //t.Attributes.CssStyle.Add("color", "Black");
@@ -129,7 +132,7 @@ namespace WebAirplus
                         {
                             daynow = Convert.ToString(dr[8]);
                         }
-                        t.ID = "cal" + "_" + Convert.ToString(dr[0]) + "_" + Convert.ToString(dr[1]) + "_" + Convert.ToString(dr[2]) + "_" + selitem+"_"+daynow;
+                        t.ID = "cal" + "_" + Convert.ToString(dr[0]) + "_" + Convert.ToString(dr[1]) + "_" + Convert.ToString(dr[2]) + "_" + selitem + "_" + daynow;
                         GuestValues.textFields.Add(t.ID);
                         t.TextMode = TextBoxMode.Time;
                         if (Convert.ToString(dr[selitem]) == "")
@@ -143,7 +146,7 @@ namespace WebAirplus
                         //t.Attributes.CssStyle.Add("color", "Black");
                         c.Controls.Add(t);
                     }
-                    else if(dropdownArray.Contains(selitem))
+                    else if (dropdownArray.Contains(selitem))
                     {
                         DropDownList statusdrop = new DropDownList();
                         statusdrop.DataTextField = "StatusValue";
@@ -176,7 +179,7 @@ namespace WebAirplus
                     }
                     tr.Cells.Add(c);
                 }
-                table.Rows.Add(tr);                
+                table.Rows.Add(tr);
             }
             GuestHolder.Controls.Add(table);
 
@@ -243,13 +246,13 @@ namespace WebAirplus
             column.ColumnName = "Remarks";
             // Add the Column to the DataColumnCollection.
             dt.Columns.Add(column);
-            Dictionary<string,GuestInsert> guestlist = new Dictionary<string, GuestInsert>();
+            Dictionary<string, GuestInsert> guestlist = new Dictionary<string, GuestInsert>();
             foreach (string s in GuestValues.textFields)
             {
                 var textcontrol = tab.FindControl(s);
                 TextBox t;
                 DropDownList ddl;
-                string index="";
+                string index = "";
                 GuestInsert guest = new GuestInsert();
                 if (textcontrol is null)
                 {
@@ -301,15 +304,15 @@ namespace WebAirplus
                             guest.GuestId = Convert.ToInt32(pkarray[1]);
                             guest.PropertyId = Convert.ToInt32(pkarray[2]);
                             guest.HostId = Convert.ToInt32(pkarray[3]);
-                            string date= Convert.ToString(pkarray[5]);
+                            string date = Convert.ToString(pkarray[5]);
                             index = "row_" + pkarray[1] + "_" + pkarray[2] + "_" + pkarray[3];
                             string time = t.Text;
                             DateTime dDate = new DateTime();
                             if (time != "")
                             {
-                                if (time.IndexOf(":")!=-1)
+                                if (time.IndexOf(":") != -1)
                                 {
-                                    dDate = Convert.ToDateTime(date+' '+ time);
+                                    dDate = Convert.ToDateTime(date + ' ' + time);
                                 }
                                 else
                                 {
@@ -424,7 +427,7 @@ namespace WebAirplus
 
                 }
             }
-            foreach(GuestInsert gGuest in guestlist.Values)
+            foreach (GuestInsert gGuest in guestlist.Values)
             {
                 DataRow row = dt.NewRow();
                 row["GuestId"] = gGuest.GuestId;
@@ -464,10 +467,62 @@ namespace WebAirplus
                     row["StatusCode"] = gGuest.status;
                 }
                 row["Remarks"] = gGuest.Remarks;
-                
+
                 dt.Rows.Add(row);
             }
             Datalayer.UpdateGuestProperty(dt);
         }
+
+        protected void btn_email_Click(object sender, EventArgs e)
+        {
+            DataSet dataset = Datalayer.GetUserList(Convert.ToString(Session["UserName"]));
+            DataTable data = dataset.Tables[0];
+            DataTable statuscode_data = dataset.Tables[1];
+            StringBuilder strb = new StringBuilder();
+            strb.Append("<Table>");
+            strb.Append("<tr>");
+            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Guest Name</td>");
+            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check In</td>");
+            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check Out</td>");
+            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check In</td>");
+            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check Out</td>");
+            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Status</td>");
+            int[] sequence = { 3, 7, 8, 5, 6, 10, 11, 9 };
+
+            foreach (DataRow dr in data.Rows)
+            {
+                strb.Append("<tr>");
+                strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[3]) + @"</td>");
+                strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[7]) + @"</td>");
+                strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[8]) + @"</td>");
+                strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
+                strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
+                bool isnotstatus = true;
+                foreach (DataRow d in statuscode_data.Rows)
+                {
+                    if (Convert.ToString(d[1]) == Convert.ToString(dr[9]))
+                    {
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(d[1]) + @"</td>");
+                        isnotstatus = false;
+                        break;
+                    }
+                }
+                if (isnotstatus)
+                {
+                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+                }
+                strb.Append(@"</tr>");
+            }
+            strb.Append(@"</Table>");
+            EmailAddress from = new EmailAddress("siva@kustotech.in", "siva");
+            string subject = "Reminder Check In - Check Out";
+            EmailAddress to = new EmailAddress("saran@kustotech.in", "saran");
+            EmailAddress cc = new EmailAddress("siva@kustotech.in", "siva");
+            string apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, "Hi", strb.ToString());
+            msg.AddCc(cc);
+            var client = new SendGridClient(apiKey);
+            var response = client.SendEmailAsync(msg);
     }
+}
 }
