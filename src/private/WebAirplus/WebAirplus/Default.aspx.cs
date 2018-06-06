@@ -40,7 +40,7 @@ namespace WebAirplus
             table.ID = "GuestTable";
             table.Width = Unit.Percentage(100);
             TableRow TopRow = new TableRow();
-            string[] topvalues = { "FullName", "Check In", "Check Out", "Requested Check In", "Requested Check Out", "Status","Check Out Cleaning","Remarks"};
+            string[] topvalues = { "FullName", "Check In", "Check Out", "Requested Check In", "Requested Check Out","Check Out Cleaning","Remarks", "Status" };
             int toplabelid=0;
             foreach (string s in topvalues)
             {
@@ -69,10 +69,6 @@ namespace WebAirplus
             int leavetoprow = 0;
             foreach(DataRow dr in data.Rows)
             {
-                if (leavetoprow++ == 0)
-                {
-                    continue;
-                }
                 TableRow tr = new TableRow();
                 tr.Attributes.CssStyle.Add("height", "100px");
                 if (leavetoprow % 2 == 0)
@@ -88,21 +84,29 @@ namespace WebAirplus
                 int[] calArray = { 5, 6, 10 };
                 int[] dropdownArray = { 9 };
                 int[] textArray = {11 };
-                int[] sequence = {3,7,8,5,6,9,10,11 };
+                int[] sequence = { 3, 7, 8, 5, 6, 10, 11, 9 };
                 for (int i = 0; i <sequence.Length; i++)
                 {
                     int selitem=sequence[i];
                     TableCell c = new TableCell();
                     if (labelsArray.Contains(selitem))
                     {
+                        
                         Label l = new Label();
                         l.ID = "midrow" + Convert.ToString(leavetoprow) + Convert.ToString(i);
                         l.Text = Convert.ToString(dr[selitem]);
-                        //l.Attributes.CssStyle.Add("color", "Black");
-                        //l.Attributes.CssStyle.Add("padding-left", "5px");
-                        //l.Attributes.CssStyle.Add("padding-right", "5px");
-                        //c.BackColor = Color.LightYellow;
+                        if (selitem == 3)
+                        {
+                            DateTime d1 = Convert.ToDateTime(dr[7]);
+                            DateTime d2 = Convert.ToDateTime(dr[8]);
+                            DateTime nowdate = DateTime.Now;
+                            if(nowdate>=d1 && nowdate <= d2)
+                            {
+                                l.Attributes.CssStyle.Add("font-weight","bold");
+                            }
+                        }
                         c.Controls.Add(l);
+                        
                     }
                     else if (textArray.Contains(selitem))
                     {
@@ -116,16 +120,25 @@ namespace WebAirplus
                     else if (calArray.Contains(selitem))
                     {
                         TextBox t = new TextBox();
-                        t.ID = "cal" + "_" + Convert.ToString(dr[0]) + "_" + Convert.ToString(dr[1]) + "_" + Convert.ToString(dr[2]) + "_" + selitem;
-                        GuestValues.textFields.Add(t.ID);
-                        t.TextMode = TextBoxMode.DateTime;
-                        if (Convert.ToString(dr[selitem]) == "")
+                        string daynow;
+                        if (selitem == 5)
                         {
-                            t.Text = "00/00/0000 00:00:00";
+                            daynow = Convert.ToString(dr[7]);
                         }
                         else
                         {
-                            t.Text = Convert.ToString(dr[selitem]);
+                            daynow = Convert.ToString(dr[8]);
+                        }
+                        t.ID = "cal" + "_" + Convert.ToString(dr[0]) + "_" + Convert.ToString(dr[1]) + "_" + Convert.ToString(dr[2]) + "_" + selitem+"_"+daynow;
+                        GuestValues.textFields.Add(t.ID);
+                        t.TextMode = TextBoxMode.Time;
+                        if (Convert.ToString(dr[selitem]) == "")
+                        {
+                            t.Text = "";
+                        }
+                        else
+                        {
+                            t.Text = Convert.ToString(dr[selitem]).Split('/')[2].Split(':')[0].Split(' ')[1] + ":" + Convert.ToString(dr[selitem]).Split('/')[2].Split(':')[1];
                         }
                         //t.Attributes.CssStyle.Add("color", "Black");
                         c.Controls.Add(t);
@@ -288,37 +301,19 @@ namespace WebAirplus
                             guest.GuestId = Convert.ToInt32(pkarray[1]);
                             guest.PropertyId = Convert.ToInt32(pkarray[2]);
                             guest.HostId = Convert.ToInt32(pkarray[3]);
+                            string date= Convert.ToString(pkarray[5]);
                             index = "row_" + pkarray[1] + "_" + pkarray[2] + "_" + pkarray[3];
-                            string date = t.Text;
+                            string time = t.Text;
                             DateTime dDate = new DateTime();
-                            if (date != "")
+                            if (time != "")
                             {
-                                if (date.IndexOf("/")!=-1)
+                                if (time.IndexOf(":")!=-1)
                                 {
-                                    string[] dateArray = date.Split('/');
-                                    if (dateArray.Length > 2)
-                                    {
-                                        string month = dateArray[0];
-                                        string day = dateArray[1];
-                                        string Year = dateArray[2];
-                                        //if (String.IsNullOrEmpty(dateArray[3]))
-                                        //{
-
-                                        //}
-                                        if (Convert.ToInt32(month) == 0 || Convert.ToInt32(day) == 0)
-                                        {
-                                            
-                                        }
-                                        else
-                                        {
-                                            dDate = Convert.ToDateTime(date);
-                                        }
-
-                                    }
+                                    dDate = Convert.ToDateTime(date+' '+ time);
                                 }
                                 else
                                 {
-                                    System.Web.HttpContext.Current.Response.Write(@"<SCRIPT LANGUAGE=""JavaScript"">alert('Please check the date format')</SCRIPT>");
+                                    System.Web.HttpContext.Current.Response.Write(@"<SCRIPT LANGUAGE=""JavaScript"">alert('Please check the time format')</SCRIPT>");
                                     t.Focus();
                                     return;
                                 }
@@ -328,7 +323,7 @@ namespace WebAirplus
                                     guestlist.TryGetValue(index, out g);
                                     if (g is null)
                                     {
-                                        switch (pkarray[lastIndex])
+                                        switch (pkarray[4])
                                         {
                                             case "5":
 
@@ -360,7 +355,7 @@ namespace WebAirplus
                                     }
                                     else
                                     {
-                                        switch (pkarray[lastIndex])
+                                        switch (pkarray[4])
                                         {
                                             case "5":
 
