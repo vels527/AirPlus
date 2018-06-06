@@ -487,7 +487,6 @@ namespace WebAirplus
             strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check In</td>");
             strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check Out</td>");
             strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Status</td>");
-            int[] sequence = { 3, 7, 8, 5, 6, 10, 11, 9 };
 
             foreach (DataRow dr in data.Rows)
             {
