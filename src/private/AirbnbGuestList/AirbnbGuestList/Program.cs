@@ -26,6 +26,7 @@ namespace AirbnbGuestList
             GuestList guestList = new GuestList();
             guestList.processJSON(jsonContent);
             guestList.UpdateTable();
+            guestList.SendMail().Wait();
         }
         public string MakeRequests()
         {
@@ -122,6 +123,19 @@ namespace AirbnbGuestList
         SendGridClient client;
         public string Message {
             get {
+                SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["Prod"].ConnectionString);
+                connection.Open();
+                SqlDataAdapter da = new SqlDataAdapter();
+                DataSet ds = new DataSet("Users");
+                SqlCommand cmd = new SqlCommand("GetGuestsList", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@user", SqlDbType.VarChar, 100));
+                cmd.Parameters[0].Value = "saran";
+                da.SelectCommand = cmd;
+                da.Fill(ds);
+                DataSet dataset = ds;
+                DataTable data = dataset.Tables[0];
+                DataTable statuscode_data = dataset.Tables[1];
                 StringBuilder strb = new StringBuilder();
                 strb.Append("<Table>");
                 strb.Append("<tr>");
@@ -131,27 +145,30 @@ namespace AirbnbGuestList
                 strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check In</td>");
                 strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check Out</td>");
                 strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Status</td>");
-                
-                
-                if (Guests.Count() > 0)
+
+                foreach (DataRow dr in data.Rows)
                 {
-                    
-                    foreach(Guest g in Guests)
+                    strb.Append("<tr>");
+                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[3]) + @"</td>");
+                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[7]) + @"</td>");
+                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[8]) + @"</td>");
+                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
+                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
+                    bool isnotstatus = true;
+                    foreach (DataRow d in statuscode_data.Rows)
                     {
-                        if (g.EndDate < DateTime.Now.AddDays(-1))
+                        if (Convert.ToString(d[1]) == Convert.ToString(dr[9]))
                         {
-                            continue;
+                            strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(d[1]) + @"</td>");
+                            isnotstatus = false;
+                            break;
                         }
-                        strb.Append("<tr>");
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + g.FirstName+@"</td>");
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + g.StartDate.ToShortDateString() + @"</td>");
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + g.EndDate.ToShortDateString() + @"</td>");
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>"+g.RequestedStartDate.ToShortTimeString()+@"</td>");
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>"+g.RequestedEndDate.ToShortTimeString()+@"</td>");
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid blackss'></td>");
-                        strb.Append(@"</tr>");
                     }
-                    
+                    if (isnotstatus)
+                    {
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+                    }
+                    strb.Append(@"</tr>");
                 }
                 strb.Append(@"</Table>");
                 return strb.ToString();
@@ -291,7 +308,7 @@ SELECT guest_id from [Airplus].[dbo].[Guest] where Airplusid=" + g.AirplusId + "
                     }
                 }
             }
-            SendMail().Wait();
+            
             return true;
         }
     }
