@@ -71,7 +71,7 @@ namespace WebAirplus
             {
                 TableRow tr = new TableRow();
                 tr.Attributes.CssStyle.Add("height", "100px");
-                if (leavetoprow % 2 == 0)
+                if (leavetoprow++ % 2 == 0)
                 {
                     tr.Attributes.CssStyle.Add("background-color", "#FFFFE0");
                 }

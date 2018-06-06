@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Net;
 using System.Data;
 using System.Data.SqlClient;
+using System.Configuration;
 
 namespace AirbnbGuestList
 {
@@ -98,6 +99,8 @@ namespace AirbnbGuestList
         public string FullName { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public DateTime RequestedStartDate { get; set; }
+        public DateTime RequestedEndDate { get; set; }
         public long AirplusId { get; set; }
         public long ListingId { get; set; }
         
@@ -143,8 +146,8 @@ namespace AirbnbGuestList
                         strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + g.FirstName+@"</td>");
                         strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + g.StartDate.ToShortDateString() + @"</td>");
                         strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + g.EndDate.ToShortDateString() + @"</td>");
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>"+g.RequestedStartDate.ToShortTimeString()+@"</td>");
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>"+g.RequestedEndDate.ToShortTimeString()+@"</td>");
                         strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid blackss'></td>");
                         strb.Append(@"</tr>");
                     }
@@ -175,7 +178,7 @@ namespace AirbnbGuestList
             if (Guests.Count() > 0)
             {
                 try {
-                    SqlConnection connection = new SqlConnection(@"Server=40.117.152.24,1433;Network Library=DBMSSOCN;Initial Catalog=Airplus;User Id=sa2;Password=pass82#42$;");
+                    SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["Prod"].ConnectionString);
                     connection.Open();
                     StringBuilder sbr = new StringBuilder();
                     foreach (Guest g in Guests)
@@ -225,7 +228,7 @@ SELECT guest_id from [Airplus].[dbo].[Guest] where Airplusid=" + g.AirplusId + "
            ,[CStatus]
            ,[RecordTIme])
      VALUES
-           (" + guestid + "," + propertyid + ",1,'" + g.StartDate + "','" + g.EndDate + "',null,null,null,null,'"+DateTime.Now+"')";
+           (" + guestid + "," + propertyid + ",1,'" + g.StartDate + "','" + g.EndDate + "','"+g.RequestedStartDate +"','"+g.RequestedEndDate+ "',null,null,'"+DateTime.Now+"')";
                             SqlCommand cmdguestproperty = new SqlCommand(insertGuestProperty, connection);
                             cmdguestproperty.ExecuteNonQuery();
 
@@ -265,6 +268,9 @@ SELECT guest_id from [Airplus].[dbo].[Guest] where Airplusid=" + g.AirplusId + "
                     guest.ListingId= Convert.ToInt64(doc["reservation"]["hosting_id"]);
                     guest.StartDate = Convert.ToDateTime(startDate);
                     guest.EndDate = Convert.ToDateTime(endDate);
+                    guest.RequestedStartDate = guest.StartDate.AddHours(16);
+                    guest.RequestedEndDate = guest.EndDate.AddHours(11);
+                    
                     Guest another = new Guest();
                     another.AirplusId = 0;
                     if (Guests.Count()==0)

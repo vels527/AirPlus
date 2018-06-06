@@ -26,11 +26,12 @@ select
   P.HostId,
   G.FullName,
   G.FirstName,
-  ISNULL(CONVERT(varchar,GP.RequestedCheckIn,101),'') AS RequestedCheckIn,
-  ISNULL(CONVERT(varchar,GP.RequestedCheckOut,101),'') AS RequestedCheckOut,
+  ISNULL(convert(varchar,GP.RequestedCheckIn,101)+' '+convert(varchar,GP.RequestedCheckIn,8),'') AS RequestedCheckIn,
+  ISNULL(convert(varchar,GP.RequestedCheckOut,101)+' '+convert(varchar,GP.RequestedCheckOut,8),'') AS RequestedCheckOut,
   convert(varchar, GP.CheckIn, 101) AS CheckIN,
    convert(varchar, GP.CheckOut, 101) AS CheckOut,
    ISNULL(SC.StatusValue,'Empty') AS StatusCode,
+   ISNULL(convert(varchar,GP.CCompanyTiming,101)+' '+convert(varchar,GP.CCompanyTiming,8),'') AS RequestedCheckOut,
    ISNULL(GP.REMARKS,'') AS Remarks
 from Guest G
   left join GuestProperty GP
@@ -42,7 +43,12 @@ from Guest G
   inner join Host H
     on P.HostId=H.HostId
 	  AND H.username=@user
-order by GP.CheckIn	  
+Where (GP.CStatus	is null 
+        or GP.CStatus=1)
+  OR ((GP.CStatus	is not null 
+        or GP.CStatus<>1)
+          AND (DATEDIFF(day,GP.CheckOut,GETDATE())<14))    	  
+order by GP.CheckIn	DESC
 	  
 
 select StatusCode_id,
