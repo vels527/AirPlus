@@ -41,7 +41,7 @@ USE [AIRPLUS]
 INSERT INTO [dbo].[StatusCode](StatusValue) VALUES ('Not Specified');
 INSERT INTO [dbo].[StatusCode](StatusValue) VALUES ('Welcome Message');
 INSERT INTO [dbo].[StatusCode](StatusValue) VALUES ('Reminder to Confirm Message');
-INSERT INTO [dbo].[StatusCode](StatusValue) VALUES ('Courtesy Welcome Message');
+INSERT INTO [dbo].[StatusCode](StatusValue) VALUES ('CheckIn Welcome Message');
 INSERT INTO [dbo].[StatusCode](StatusValue) VALUES ('Checkout Notification Message');
 INSERT INTO [dbo].[StatusCode](StatusValue) VALUES ('Thank You Message');
 INSERT INTO [dbo].[StatusCode](StatusValue) VALUES ('Write Review');

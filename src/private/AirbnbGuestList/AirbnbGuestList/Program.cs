@@ -119,7 +119,7 @@ namespace AirbnbGuestList
     public class GuestList
     {
         public List<Guest> Guests;
-        string apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+        string apiKey = Environment.GetEnvironmentVariable("SENDSEND");
         SendGridClient client;
         public string Message {
             get {
@@ -144,6 +144,8 @@ namespace AirbnbGuestList
                 strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check Out</td>");
                 strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check In</td>");
                 strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check Out</td>");
+                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Remarks</td>");
+                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Cleaning Timing</td>");
                 strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Status</td>");
 
                 foreach (DataRow dr in data.Rows)
@@ -154,6 +156,15 @@ namespace AirbnbGuestList
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[8]) + @"</td>");
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
+                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[11]) + @"</td>");
+                    if (Convert.ToString(dr[10]) != "")
+                    {
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[10]).ToShortTimeString() + @"</td>");
+                    }
+                    else
+                    {
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+                    }
                     bool isnotstatus = true;
                     foreach (DataRow d in statuscode_data.Rows)
                     {
@@ -166,7 +177,7 @@ namespace AirbnbGuestList
                     }
                     if (isnotstatus)
                     {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>Not Specified</td>");
                     }
                     strb.Append(@"</tr>");
                 }

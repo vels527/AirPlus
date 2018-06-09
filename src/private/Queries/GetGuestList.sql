@@ -1,4 +1,4 @@
-USE [Airplus]
+USE [AirplusDev]
 GO
 
 /****** Object:  StoredProcedure [dbo].[GetGuestsList]    Script Date: 05/28/2018 12:59:18 ******/
@@ -31,7 +31,7 @@ select
   convert(varchar, GP.CheckIn, 101) AS CheckIN,
    convert(varchar, GP.CheckOut, 101) AS CheckOut,
    ISNULL(SC.StatusValue,'Empty') AS StatusCode,
-   ISNULL(convert(varchar,GP.CCompanyTiming,101)+' '+convert(varchar,GP.CCompanyTiming,8),'') AS RequestedCheckOut,
+   ISNULL(convert(varchar,GP.CCompanyTiming,101)+' '+convert(varchar,GP.CCompanyTiming,8),'') AS CleaningCompanyTiming,
    ISNULL(GP.REMARKS,'') AS Remarks
 from Guest G
   left join GuestProperty GP
