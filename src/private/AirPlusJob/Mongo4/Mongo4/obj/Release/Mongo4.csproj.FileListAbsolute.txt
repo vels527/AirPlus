@@ -13,7 +13,6 @@ C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\bin\Release\Mon
 C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\bin\Release\Newtonsoft.Json.xml
 C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\bin\Release\SendGrid.pdb
 C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\bin\Release\SendGrid.xml
-C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Release\Mongo4.csprojAssemblyReference.cache
 C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Release\Mongo4.csproj.CoreCompileInputs.cache
 C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Release\Mongo4.csproj.CopyComplete
 C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Release\Mongo4.exe

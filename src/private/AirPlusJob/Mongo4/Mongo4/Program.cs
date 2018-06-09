@@ -31,7 +31,7 @@ namespace Mongo4
         {
             codeEvaler cde = new codeEvaler();
             cde.Eval();
-            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+            var apiKey = Environment.GetEnvironmentVariable("SENDSEND");
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("siva@kustotech.in", "siva");
             var subject = "Morning Airplus Calendar Month";
