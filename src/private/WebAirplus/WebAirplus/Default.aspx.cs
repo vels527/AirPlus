@@ -12,6 +12,7 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Text;
 using System.Configuration;
+using System.Threading.Tasks;
 
 namespace WebAirplus
 {
@@ -527,17 +528,32 @@ namespace WebAirplus
             strb.Append(@"</Table>");
             EmailAddress from = new EmailAddress("siva@kustotech.in", "siva");
             string subject = "Reminder Check In - Check Out";
-            EmailAddress to = new EmailAddress("saran@kustotech.in", "saran");
+            
             EmailAddress cc = new EmailAddress("siva@kustotech.in", "siva");
 #if DEBUG
             string apiKey = Environment.GetEnvironmentVariable("SENDSEND");
+            EmailAddress to = new EmailAddress("sivanathanb@gmail.com", "sivanathan");
 #else
             string apiKey = ConfigurationManager.AppSettings["SENDSEND"];
+            EmailAddress to = new EmailAddress("saran@kustotech.in", "saran");
 #endif
             var msg = MailHelper.CreateSingleEmail(from, to, subject, "Hi", strb.ToString());
             msg.AddCc(cc);
             var client = new SendGridClient(apiKey);
-            var response = client.SendEmailAsync(msg);
+            Task t=client.SendEmailAsync(msg);
+            t.Wait();
+            if (t.IsCompleted)
+            {
+                System.Web.HttpContext.Current.Response.Write(@"<SCRIPT LANGUAGE=""JavaScript"">alert('Email sent')</SCRIPT>");
+            }
+            else
+            {
+                System.Web.HttpContext.Current.Response.Write(@"<SCRIPT LANGUAGE=""JavaScript"">alert('Email not sent')</SCRIPT>");
+            }
+            //if (client.)
+            //{
+            //    System.Web.HttpContext.Current.Response.Write(@"<SCRIPT LANGUAGE=""JavaScript"">alert('Email sent')</SCRIPT>");
+            //}
     }
 }
 }
