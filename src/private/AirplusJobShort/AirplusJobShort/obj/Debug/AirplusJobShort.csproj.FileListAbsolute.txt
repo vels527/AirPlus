@@ -1,0 +1,12 @@
+C:\projects\Airplus\AirPlus\src\private\AirplusJobShort\AirplusJobShort\bin\Debug\AirplusJobShort.exe.config
+C:\projects\Airplus\AirPlus\src\private\AirplusJobShort\AirplusJobShort\bin\Debug\AirplusJobShort.exe
+C:\projects\Airplus\AirPlus\src\private\AirplusJobShort\AirplusJobShort\bin\Debug\AirplusJobShort.pdb
+C:\projects\Airplus\AirPlus\src\private\AirplusJobShort\AirplusJobShort\bin\Debug\Newtonsoft.Json.dll
+C:\projects\Airplus\AirPlus\src\private\AirplusJobShort\AirplusJobShort\bin\Debug\SendGrid.dll
+C:\projects\Airplus\AirPlus\src\private\AirplusJobShort\AirplusJobShort\bin\Debug\Newtonsoft.Json.xml
+C:\projects\Airplus\AirPlus\src\private\AirplusJobShort\AirplusJobShort\bin\Debug\SendGrid.pdb
+C:\projects\Airplus\AirPlus\src\private\AirplusJobShort\AirplusJobShort\bin\Debug\SendGrid.xml
+C:\projects\Airplus\AirPlus\src\private\AirplusJobShort\AirplusJobShort\obj\Debug\AirplusJobShort.csproj.CoreCompileInputs.cache
+C:\projects\Airplus\AirPlus\src\private\AirplusJobShort\AirplusJobShort\obj\Debug\AirplusJobShort.csproj.CopyComplete
+C:\projects\Airplus\AirPlus\src\private\AirplusJobShort\AirplusJobShort\obj\Debug\AirplusJobShort.exe
+C:\projects\Airplus\AirPlus\src\private\AirplusJobShort\AirplusJobShort\obj\Debug\AirplusJobShort.pdb

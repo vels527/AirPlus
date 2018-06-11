@@ -19,3 +19,4 @@ C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Rele
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Release\AirbnbGuestList.application
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\obj\Release\AirbnbGuestList.exe.manifest
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\obj\Release\AirbnbGuestList.application
+C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\obj\Release\AirbnbGuestList.csprojAssemblyReference.cache
