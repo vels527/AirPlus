@@ -16,7 +16,7 @@ INSERT INTO [dbo].[Host]
            ,'Saravanavel'
            ,'Balasubramanian'
 		   ,'saran'
-		    ,HASHBYTES('SHA2_512', 'vels@1982')
+		    ,HASHBYTES('SHA1', 'vels@1982')
            ,41
            ,'1978-07-22 13:40:28.997'
            ,'saran@kustotech.in'

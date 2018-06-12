@@ -535,7 +535,7 @@ namespace WebAirplus
             EmailAddress to = new EmailAddress("sivanathanb@gmail.com", "sivanathan");
 #else
             string apiKey = ConfigurationManager.AppSettings["SENDSEND"];
-            EmailAddress to = new EmailAddress("saran@kustotech.in", "saran");
+            EmailAddress to = new EmailAddress(Convert.ToString(Session["Email"]), "saran");
 #endif
             var msg = MailHelper.CreateSingleEmail(from, to, subject, "Hi", strb.ToString());
             msg.AddCc(cc);
@@ -550,10 +550,6 @@ namespace WebAirplus
             {
                 System.Web.HttpContext.Current.Response.Write(@"<SCRIPT LANGUAGE=""JavaScript"">alert('Email not sent')</SCRIPT>");
             }
-            //if (client.)
-            //{
-            //    System.Web.HttpContext.Current.Response.Write(@"<SCRIPT LANGUAGE=""JavaScript"">alert('Email sent')</SCRIPT>");
-            //}
     }
 }
 }

@@ -9,6 +9,11 @@ using System.Web.Configuration;
 
 namespace WebAirplus
 {
+    public class UserAuthenticate
+    {
+        public bool Authenticated=false;
+        public DataSet UserData;
+    }
     public static class Datalayer
     {
         private static SqlConnection conn;
@@ -21,27 +26,33 @@ namespace WebAirplus
             conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["ProdConnectionString"].ConnectionString);
 #endif            
         }
-        public static bool Authenticate(string username,string password)
+        public static UserAuthenticate Authenticate(string username,string password)
         {
             conn.Open();
+            DataSet ds = new DataSet("User");
+            SqlDataAdapter da = new SqlDataAdapter();
             SqlCommand cmd = new SqlCommand("AuthenticateUser", conn);
+            UserAuthenticate user = new UserAuthenticate();
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add(new SqlParameter("@username", SqlDbType.VarChar, 100));
             cmd.Parameters.Add(new SqlParameter("@pass", SqlDbType.VarChar, 100));
             cmd.Parameters[0].Value = username;
             cmd.Parameters[1].Value = password;
-            var returnParameter = cmd.Parameters.Add("@ReturnVal", SqlDbType.Int);
-            returnParameter.Direction = ParameterDirection.ReturnValue;
-            cmd.ExecuteNonQuery();
-            int authvalue=(int)returnParameter.Value;
+            da.SelectCommand = cmd;
+            da.Fill(ds);
+            user.UserData = ds;
+            if(Convert.ToInt32(ds.Tables[0].Rows[0][0])<1)
+            {
+                user.Authenticated = false;
+            }
+            else
+            {
+                user.Authenticated = true;
+            }
 
             conn.Close();
-            if (authvalue > 0)
-            {
-               
-                return true;
-            }
-            return false;
+
+            return user;
         }
         public static DataSet GetUserList(string user)
         {

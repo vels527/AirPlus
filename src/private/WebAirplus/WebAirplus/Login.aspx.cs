@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data;
 
 namespace WebAirplus
 {
@@ -21,11 +22,15 @@ namespace WebAirplus
                 error_lbl.Text = "Please enter all necessary details";
                 return;
             }
-            bool Authenticated = Datalayer.Authenticate(User_Txt.Text, Pass_Txt.Text);
-            if (Authenticated)
+            UserAuthenticate Authenticated = Datalayer.Authenticate(User_Txt.Text, Pass_Txt.Text);
+            
+            if (Authenticated.Authenticated)
             {
-                Session["Autheenticate"] = Authenticated;
-                Session["UserName"] = User_Txt.Text;
+                DataTable dt = Authenticated.UserData.Tables[1];
+                DataRow row = dt.Rows[0];
+                Session["Authenticate"] = true;
+                Session["UserName"] = row["UserName"];
+                Session["Email"] = row["Email"];
                 Response.Redirect("Default.aspx");
             }
         }
