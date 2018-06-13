@@ -2,6 +2,7 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <link href="Content/default.css" rel="stylesheet" />
+    <script src="Scripts/Default.js"></script>
     <div class="jumbotron">
         <h1>GUEST USER LISTS
         </h1>
@@ -30,6 +31,7 @@
             <asp:Button ID="btn_update" runat="server" OnClick="btn_update_Click" Text="Update" />
             <asp:Button ID="btn_email" runat="server" OnClick="btn_email_Click" Text="Email" />
         </p>
+        <asp:UpdatePanel ID="UpdatePanel1" runat="server"></asp:UpdatePanel>
     </div>
 
 </asp:Content>

@@ -175,3 +175,4 @@ C:\projects\Airplus\AirPlus\src\private\WebAirplus\WebAirplus\obj\Debug\WebAirpl
 C:\projects\Airplus\AirPlus\src\private\WebAirplus\WebAirplus\bin\SendGrid.dll
 C:\projects\Airplus\AirPlus\src\private\WebAirplus\WebAirplus\bin\SendGrid.pdb
 C:\projects\Airplus\AirPlus\src\private\WebAirplus\WebAirplus\bin\SendGrid.xml
+C:\projects\Airplus\AirPlus\src\private\WebAirplus\WebAirplus\obj\Debug\WebAirplus.csprojAssemblyReference.cache

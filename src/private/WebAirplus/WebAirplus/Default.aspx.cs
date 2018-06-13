@@ -13,6 +13,7 @@ using SendGrid.Helpers.Mail;
 using System.Text;
 using System.Configuration;
 using System.Threading.Tasks;
+using System.Web.Services;
 
 namespace WebAirplus
 {
@@ -44,6 +45,7 @@ namespace WebAirplus
             //table.
             table.ID = "GuestTable";
             table.Width = Unit.Percentage(100);
+            
             TableRow TopRow = new TableRow();
             string[] topvalues = { "FullName", "Check In", "Check Out", "Requested Check In", "Requested Check Out", "Check Out Cleaning", "Remarks", "Status" };
             int toplabelid = 0;
@@ -475,8 +477,11 @@ namespace WebAirplus
             Datalayer.UpdateGuestProperty(dt);
         }
 
+
+
         protected void btn_email_Click(object sender, EventArgs e)
         {
+            btn_update_Click(btn_update,new EventArgs());
             DataSet dataset = Datalayer.GetUserList(Convert.ToString(Session["UserName"]));
             DataTable data = dataset.Tables[0];
             DataTable statuscode_data = dataset.Tables[1];
