@@ -68,6 +68,20 @@ namespace WebAirplus
             conn.Close();
             return ds;
         }
+        public static DataSet GetUserListHistory(string user)
+        {
+            SqlDataAdapter da = new SqlDataAdapter();
+            DataSet ds = new DataSet("Users");
+            conn.Open();
+            SqlCommand cmd = new SqlCommand("GetGuestsListHistory", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@user", SqlDbType.VarChar, 100));
+            cmd.Parameters[0].Value = user;
+            da.SelectCommand = cmd;
+            da.Fill(ds);
+            conn.Close();
+            return ds;
+        }
         public static void UpdateGuestProperty(DataTable dt)
         {
             conn.Open();

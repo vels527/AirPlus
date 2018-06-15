@@ -232,10 +232,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/11/2014 15:26:04</publishTime>
     </File>
     <File Include="bin/WebAirplus.dll">
-      <publishTime>06/13/2018 17:03:39</publishTime>
+      <publishTime>06/14/2018 19:53:37</publishTime>
     </File>
     <File Include="bin/WebAirplus.pdb">
-      <publishTime>06/13/2018 17:03:39</publishTime>
+      <publishTime>06/14/2018 19:53:37</publishTime>
     </File>
     <File Include="bin/WebGrease.dll">
       <publishTime>01/23/2014 13:57:34</publishTime>
@@ -300,8 +300,14 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Global.asax">
       <publishTime>05/24/2018 20:24:59</publishTime>
     </File>
+    <File Include="History.aspx">
+      <publishTime>06/14/2018 19:53:28</publishTime>
+    </File>
     <File Include="Login.aspx">
       <publishTime>05/24/2018 21:30:20</publishTime>
+    </File>
+    <File Include="LogOut.aspx">
+      <publishTime>06/14/2018 17:36:46</publishTime>
     </File>
     <File Include="Scripts/bootstrap.js">
       <publishTime>05/24/2018 20:25:15</publishTime>
@@ -397,7 +403,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/24/2018 20:25:19</publishTime>
     </File>
     <File Include="Site.Master">
-      <publishTime>06/13/2018 15:14:52</publishTime>
+      <publishTime>06/14/2018 18:00:21</publishTime>
     </File>
     <File Include="Site.Mobile.Master">
       <publishTime>05/24/2018 20:25:20</publishTime>
@@ -406,7 +412,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/24/2018 20:25:20</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>06/13/2018 17:03:49</publishTime>
+      <publishTime>06/14/2018 19:53:45</publishTime>
     </File>
   </ItemGroup>
 </Project>
