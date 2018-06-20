@@ -40,15 +40,6 @@ namespace WebAirplus {
         protected global::System.Web.UI.WebControls.Button btn_email;
         
         /// <summary>
-        /// btn_next control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_next;
-        
-        /// <summary>
         /// btn_previous control.
         /// </summary>
         /// <remarks>
@@ -56,5 +47,14 @@ namespace WebAirplus {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btn_previous;
+        
+        /// <summary>
+        /// btn_next control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btn_next;
     }
 }

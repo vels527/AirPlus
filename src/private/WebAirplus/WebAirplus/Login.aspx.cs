@@ -14,7 +14,11 @@ namespace WebAirplus
         {
 
         }
-
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+            if (Request.Browser.IsMobileDevice)
+                MasterPageFile = "~/Site.Mobile.Master";
+        }
         protected void Submit_btn_Click(object sender, EventArgs e)
         {
             if (User_Txt.Text == "" || Pass_Txt.Text == "")
