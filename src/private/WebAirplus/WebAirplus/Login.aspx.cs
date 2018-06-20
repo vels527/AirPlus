@@ -35,7 +35,14 @@ namespace WebAirplus
                 Session["Authenticate"] = true;
                 Session["UserName"] = row["UserName"];
                 Session["Email"] = row["Email"];
-                Response.Redirect("Default.aspx");
+                if (Request.Browser.IsMobileDevice)
+                {
+                    Response.Redirect("Default_Mobile.aspx");
+                }
+                else
+                {
+                    Response.Redirect("Default.aspx");
+                }
             }
         }
     }
