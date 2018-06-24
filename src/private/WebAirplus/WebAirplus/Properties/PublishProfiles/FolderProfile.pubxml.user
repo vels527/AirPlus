@@ -232,10 +232,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/11/2014 15:26:04</publishTime>
     </File>
     <File Include="bin/WebAirplus.dll">
-      <publishTime>06/15/2018 18:41:50</publishTime>
+      <publishTime>06/20/2018 18:18:49</publishTime>
     </File>
     <File Include="bin/WebAirplus.pdb">
-      <publishTime>06/15/2018 18:41:50</publishTime>
+      <publishTime>06/20/2018 18:18:49</publishTime>
     </File>
     <File Include="bin/WebGrease.dll">
       <publishTime>01/23/2014 13:57:34</publishTime>
@@ -273,11 +273,17 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Content/default.css">
       <publishTime>06/03/2018 20:01:02</publishTime>
     </File>
+    <File Include="Content/Mobile.css">
+      <publishTime>06/20/2018 18:11:04</publishTime>
+    </File>
     <File Include="Content/Site.css">
       <publishTime>05/24/2018 20:24:59</publishTime>
     </File>
     <File Include="Default.aspx">
-      <publishTime>06/13/2018 15:19:39</publishTime>
+      <publishTime>06/16/2018 10:16:49</publishTime>
+    </File>
+    <File Include="Default_Mobile.aspx">
+      <publishTime>06/20/2018 18:12:06</publishTime>
     </File>
     <File Include="favicon.ico">
       <publishTime>05/24/2018 20:24:59</publishTime>
@@ -301,10 +307,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/24/2018 20:24:59</publishTime>
     </File>
     <File Include="History.aspx">
-      <publishTime>06/14/2018 19:53:28</publishTime>
+      <publishTime>06/16/2018 10:18:10</publishTime>
     </File>
     <File Include="Login.aspx">
-      <publishTime>05/24/2018 21:30:20</publishTime>
+      <publishTime>06/20/2018 16:16:00</publishTime>
     </File>
     <File Include="LogOut.aspx">
       <publishTime>06/14/2018 17:36:46</publishTime>
@@ -406,7 +412,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/14/2018 18:00:21</publishTime>
     </File>
     <File Include="Site.Mobile.Master">
-      <publishTime>05/24/2018 20:25:20</publishTime>
+      <publishTime>06/20/2018 18:10:13</publishTime>
     </File>
     <File Include="ViewSwitcher.ascx">
       <publishTime>05/24/2018 20:25:20</publishTime>

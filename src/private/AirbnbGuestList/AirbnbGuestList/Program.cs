@@ -14,6 +14,8 @@ using System.Net;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using Ical.Net;
+using Ical.Net.CalendarComponents;
 
 namespace AirbnbGuestList
 {
@@ -24,7 +26,8 @@ namespace AirbnbGuestList
             Program program = new Program();
             string jsonContent = program.MakeRequests();
             GuestList guestList = new GuestList();
-            guestList.processJSON(jsonContent);
+            guestList.ProcessIcal(jsonContent);
+            //guestList.processJSON(jsonContent);
             guestList.UpdateTable();
             guestList.SendMail().Wait();
             guestList.SendMailASAP().Wait();
@@ -33,7 +36,7 @@ namespace AirbnbGuestList
         {
             HttpWebResponse response;
             string output="";
-            if (Request_www_airbnb_co_in(out response))
+            if (Request_www_airbnb_cal(out response))
             {
                 //var encoding = Encoding.GetEncoding(response.CharacterSet);
                 var encoding = Encoding.UTF8;
@@ -46,7 +49,36 @@ namespace AirbnbGuestList
             }
             return output;
         }
+        private bool Request_www_airbnb_cal(out HttpWebResponse response)
+        {
+            response = null;
 
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://www.airbnb.co.in/calendar/ical/16676839.ics?s=99cb654609ced6fad98836cd168ffce7");
+
+                request.KeepAlive = true;
+                request.Headers.Add("Upgrade-Insecure-Requests", @"1");
+                request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36";
+                request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8";
+                request.Headers.Set(HttpRequestHeader.AcceptEncoding, "gzip, deflate, br");
+                request.Headers.Set(HttpRequestHeader.AcceptLanguage, "en-CA,en-GB;q=0.9,en-US;q=0.8,en;q=0.7");
+
+                response = (HttpWebResponse)request.GetResponse();
+            }
+            catch (WebException e)
+            {
+                if (e.Status == WebExceptionStatus.ProtocolError) response = (HttpWebResponse)e.Response;
+                else return false;
+            }
+            catch (Exception)
+            {
+                if (response != null) response.Close();
+                return false;
+            }
+
+            return true;
+        }
         private bool Request_www_airbnb_co_in(out HttpWebResponse response)
         {
             response = null;
@@ -394,6 +426,33 @@ SELECT guest_id from [Airplus].[dbo].[Guest] where Airplusid=" + g.AirplusId + "
                     
                 }
                 }
+        }
+        public void ProcessIcal(string calendarInfo)
+        {
+            var calobjects = Calendar.Load(calendarInfo);
+            var events = calobjects.Events;
+            foreach(CalendarEvent e in events)
+            {
+                Guest g = new Guest();
+                g.StartDate= e.DtStart.Date;
+                g.EndDate = e.DtEnd.Date;
+                string[] Names = e.Summary.Split(' ');
+                if (!String.IsNullOrEmpty(Names[0]))
+                {
+                    g.FirstName = Names[0];
+                }
+                for(int i = 0; i < Names.Length - 1; i++)
+                {
+                    g.FullName += Names[i];
+                    if (i == Names.Length - 1)
+                    {
+                        break;
+                    }
+                    g.FullName += " ";
+                }
+                g.ListingId = 16676839;
+                Guests.Add(g);
+            }
         }
         public bool processJSON(string JSON)
         {
