@@ -175,3 +175,4 @@ C:\projects\Airplus\AirPlus\src\private\WebAirplus\WebAirplus\obj\Debug\WebAirpl
 C:\projects\Airplus\AirPlus\src\private\WebAirplus\WebAirplus\obj\Debug\WebAirplus.csproj.CopyComplete
 C:\projects\Airplus\AirPlus\src\private\WebAirplus\WebAirplus\obj\Debug\WebAirplus.dll
 C:\projects\Airplus\AirPlus\src\private\WebAirplus\WebAirplus\obj\Debug\WebAirplus.pdb
+C:\projects\Airplus\AirPlus\src\private\WebAirplus\WebAirplus\obj\Debug\WebAirplus.csprojAssemblyReference.cache

@@ -30,6 +30,7 @@ Create Table Property(
 Property_Id INT IDENTITY(1,1) PRIMARY KEY,
 Listingid INT,
 PropertyAddress VARCHAR(500),
+ICSURL VARCHAR(MAX),
 HostId INT,
 CONSTRAINT FK_Property_Host FOREIGN KEY (HostId) REFERENCES Host (HostId) 
 );
@@ -54,3 +55,15 @@ CONSTRAINT FK_Guest_Property FOREIGN KEY (Property_Id) REFERENCES Property (Prop
 CONSTRAINT FK_Guest_Company FOREIGN KEY (CCompanyId) REFERENCES CleaningCompany (CompanyId),
 CONSTRAINT PK_Guest_Property PRIMARY KEY (Guest_Id,Property_Id,CheckIn,CheckOut)
 );
+
+CREATE TYPE [dbo].[GUESTTYPETABLE] AS TABLE(
+	[GuestId] [int] NULL,
+	[PropertyId] [int] NULL,
+	[HostId] [int] NULL,
+	[RequestedCheckIn] [datetime] NULL,
+	[RequestedCheckOut] [datetime] NULL,
+	[CheckOutCleaning] [datetime] NULL,
+	[StatusCode] [int] NULL,
+	[Remarks] [varchar](350) NULL
+)
+GO

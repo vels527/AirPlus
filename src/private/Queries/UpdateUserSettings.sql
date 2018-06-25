@@ -1,0 +1,42 @@
+USE [Airplus]
+GO
+
+/****** Object:  StoredProcedure [dbo].[UpdateUserSettings]    Script Date: 05/28/2018 12:59:18 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+IF EXISTS(SELECT 1 FROM SYS.PROCEDURES WHERE NAME='UpdateUserSettings')
+BEGIN
+
+  DROP PROCEDURE [dbo].[UpdateUserSettings]
+
+END
+
+GO
+CREATE PROCEDURE UpdateUserSettings
+@Guest dbo.GUESTTYPETABLE READONLY 
+AS
+BEGIN
+
+Update GP
+SET GP.RequestedCheckIN=GT.REQUESTEDCHECKIN,
+GP.RequestedCheckOut=GT.REQUESTEDCHECKOUT,
+GP.CStatus=GT.STATUSCODE,
+GP.REMARKS=GT.REMARKS,
+GP.CCompanyTiming=GT.CHECKOUTCLEANING
+FROM GuestProperty GP
+JOIN @Guest GT ON
+GP.Guest_ID=GT.GUESTID AND
+GP.Property_ID=GT.PROPERTYID 
+JOIN PROPERTY P ON
+P.Property_Id=GP.Property_Id
+AND P.HostId=GT.HOSTID 
+
+ 
+END
+
+
+GO
