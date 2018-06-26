@@ -201,7 +201,6 @@ namespace WebAirplus
             var tab = parenttab.FindControl("GuestTable");//
             DataTable dt = new DataTable("GUESTTYPETABLE");
             DataColumn column;
-            DataRow[] rows;
 
             column = new DataColumn();
             column.DataType = System.Type.GetType("System.Int32");

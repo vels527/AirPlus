@@ -64,7 +64,8 @@ namespace WebAirplus
             }
             foreach (DataRow r in data.Rows)
             {
-                int j = 0;
+                int j = Convert.ToInt32(r[6]);
+                i=7;
                 foreach (string s in repvalues)
                 {
                     string id = s.IndexOf(' ') > 0 ? String.Join("", s.Split(' ')) : s;
@@ -105,7 +106,6 @@ namespace WebAirplus
                     AllRow.Cells.Add(tcell);
                     table.Rows.Add(AllRow);
                 }
-                j++;
                 SettingHolder.Controls.Add(table);
             }
         }
@@ -219,7 +219,7 @@ namespace WebAirplus
                             H.FirstName = textControl.Text;
                             break;
                         case "LastName":
-                            H.FullName = textControl.Text;
+                            H.LastName = textControl.Text;
                             break;
                         case "Age":
                             H.Age = Convert.ToInt32(textControl.Text);
@@ -242,6 +242,25 @@ namespace WebAirplus
                 textControl.Enabled = false;
             }
             H.Listings = listingsall;
+            H.username = Convert.ToString(Session["UserName"]);
+            Datalayer.UpdateSettings(H);
+            foreach (TableRow c in tablecontrols)
+            {
+                var controlT = c.Cells[1].Controls[0];
+                var idName = controlT.ID;
+                if (idName.IndexOf("toplab") > -1)
+                {
+                    continue;
+                }
+                var textControl = controlT as TextBox;
+                textControl.Enabled = false;
+            }
+            EditBtn.Enabled = true;
+            EditBtn.Visible = true;
+            CancelBtn.Visible = false;
+            CancelBtn.Enabled = false;
+            UpdateBtn.Visible = false;
+            UpdateBtn.Enabled = false;
         }
     }
 }

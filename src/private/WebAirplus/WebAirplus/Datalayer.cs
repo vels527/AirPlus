@@ -96,6 +96,77 @@ namespace WebAirplus
             conn.Close();
             return ds;
         }
+        public static void UpdateSettings(Host host)
+        {
+            conn.Open();
+            SqlCommand cmd = new SqlCommand("UpdateUserSettings", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@FullName", SqlDbType.VarChar, 250));
+            cmd.Parameters[0].Value = host.FullName;
+            cmd.Parameters.Add(new SqlParameter("@FirstName", SqlDbType.VarChar, 150));
+            cmd.Parameters[1].Value = host.FirstName;
+            cmd.Parameters.Add(new SqlParameter("@LastName", SqlDbType.VarChar, 150));
+            cmd.Parameters[2].Value = host.LastName;
+            cmd.Parameters.Add(new SqlParameter("@username", SqlDbType.VarChar, 100));
+            cmd.Parameters[3].Value = host.username;
+            cmd.Parameters.Add(new SqlParameter("@Age", SqlDbType.Int));
+            cmd.Parameters[4].Value = host.Age;
+            cmd.Parameters.Add(new SqlParameter("@Email", SqlDbType.VarChar, 250));
+            cmd.Parameters[5].Value = host.Email;
+            cmd.Parameters.Add(new SqlParameter("@Phone", SqlDbType.VarChar, 250));
+            cmd.Parameters[6].Value = host.Phone;
+            DataTable dt = new DataTable("LISTTYPETABLE");
+            DataColumn column;
+
+            column = new DataColumn();
+            column.DataType = System.Type.GetType("System.Int32");
+            column.ColumnName = "Property_Id";
+            dt.Columns.Add(column);
+
+            column = new DataColumn();
+            column.DataType = System.Type.GetType("System.Int32");
+            column.ColumnName = "ListingId";
+            dt.Columns.Add(column);
+
+            column = new DataColumn();
+            column.DataType = System.Type.GetType("System.String");
+            column.ColumnName = "PropertyAddress";
+            dt.Columns.Add(column);
+
+            column = new DataColumn();
+            column.DataType = System.Type.GetType("System.String");
+            column.ColumnName = "ICSURL";
+            dt.Columns.Add(column);
+
+            foreach (Listing L in host.Listings)
+            {
+                DataRow row = dt.NewRow();
+                row["Property_Id"]=L.Id;
+                row["ListingId"] = L.ListingId;
+                if(L.PropertyAddress == null)
+                {
+                    row["PropertyAddress"] = DBNull.Value;
+                }
+                else
+                {
+                    row["PropertyAddress"] = L.PropertyAddress;
+                }
+                if (L.IcalUrl == null)
+                {
+                    row["ICSURL"] = DBNull.Value;
+                }
+                else
+                {
+                    row["ICSURL"] = L.IcalUrl;
+                }
+                dt.Rows.Add(row);
+            }
+            cmd.Parameters.Add(new SqlParameter("@List", SqlDbType.Structured));
+            cmd.Parameters[7].Value = dt;
+            cmd.Parameters[7].TypeName = "dbo.LISTTYPETABLE";
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
         public static void UpdateGuestProperty(DataTable dt)
         {
             conn.Open();
