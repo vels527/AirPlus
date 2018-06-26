@@ -27,6 +27,7 @@ Select
   H.Age,
   H.Email,
   H.Phone,
+  P.Property_Id,
   P.ListingId,
   P.PropertyAddress,
   P.ICSURL
