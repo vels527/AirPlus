@@ -15,27 +15,56 @@ BEGIN
 
 END
 
+IF EXISTS(SELECT 1 FROM SYS.TABLE_TYPES WHERE [NAME]='LISTTYPETABLE')
+BEGIN
+	DROP TYPE [DBO].[LISTTYPETABLE]
+END
+
+CREATE TYPE [dbo].[LISTTYPETABLE] AS TABLE(
+	[Property_Id] [int] NULL,
+	[ListingId] [int] NULL,
+	[PropertyAddress] [varchar](500) NULL,
+	[ICSURL] [varchar](MAX) NULL
+)
+GO
+
 GO
 CREATE PROCEDURE UpdateUserSettings
-@Guest dbo.GUESTTYPETABLE READONLY 
+ @FullName VARCHAR(250),
+ @FirstName VARCHAR(150),
+ @LastName VARCHAR(150),
+ @username VARCHAR(100),
+ @Age INT,
+ @Email VARCHAR(250),
+ @Phone VARCHAR(250),
+ @List dbo.LISTTYPETABLE READONLY 
 AS
 BEGIN
 
-Update GP
-SET GP.RequestedCheckIN=GT.REQUESTEDCHECKIN,
-GP.RequestedCheckOut=GT.REQUESTEDCHECKOUT,
-GP.CStatus=GT.STATUSCODE,
-GP.REMARKS=GT.REMARKS,
-GP.CCompanyTiming=GT.CHECKOUTCLEANING
-FROM GuestProperty GP
-JOIN @Guest GT ON
-GP.Guest_ID=GT.GUESTID AND
-GP.Property_ID=GT.PROPERTYID 
-JOIN PROPERTY P ON
-P.Property_Id=GP.Property_Id
-AND P.HostId=GT.HOSTID 
+  DECLARE @HostId INT
 
+  UPDATE [dbo].[Host]
+    SET  [FullName] = @FullName
+        ,[FirstName] = @FirstName
+        ,[LastName] = @LastName
+        ,[Age] = @Age
+        ,[Email] = @Email
+        ,[Phone] = @Phone
+    WHERE [username] = @username
  
+  SELECT 
+    @HostId=MAX(HostId) 
+  FROM [dbo].[Host]
+  WHERE [username] = @username
+  
+  UPDATE P
+    SET P.ICSURL=L.ICSURL,
+	    P.PropertyAddress=L.PropertyAddress,
+		P.Listingid=L.ListingId
+  FROM PROPERTY P
+    LEFT JOIN @List L
+	  ON P.Property_Id=L.Property_Id
+  WHERE P.HostId=@HostId
 END
 
 
