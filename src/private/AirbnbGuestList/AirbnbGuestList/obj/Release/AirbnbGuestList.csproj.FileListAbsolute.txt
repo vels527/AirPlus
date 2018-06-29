@@ -19,4 +19,10 @@ C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Rele
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Release\AirbnbGuestList.application
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\obj\Release\AirbnbGuestList.exe.manifest
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\obj\Release\AirbnbGuestList.application
-C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\obj\Release\AirbnbGuestList.csprojAssemblyReference.cache
+C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Release\Ical.Net.dll
+C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Release\NodaTime.dll
+C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Release\System.Reflection.TypeExtensions.dll
+C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Release\System.Runtime.Serialization.Primitives.dll
+C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Release\Ical.Net.pdb
+C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Release\Ical.Net.xml
+C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Release\NodaTime.xml

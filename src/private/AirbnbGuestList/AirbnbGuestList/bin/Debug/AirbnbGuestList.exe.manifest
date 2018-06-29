@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AirbnbGuestList.exe" size="34256">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AirbnbGuestList.exe" size="38352">
       <assemblyIdentity name="AirbnbGuestList" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>JMhggfTl8kjJ0+AJU72vfcl57szBDxuBVJg6dbaJSvI=</dsig:DigestValue>
+        <dsig:DigestValue>Jwvn0hs50JPepfhVfI8PvxvxIjf3iNHSseJBQ4vLTCc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -185,13 +185,13 @@
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="AirbnbGuestList.exe.config" size="1019">
+  <file name="AirbnbGuestList.exe.config" size="1210">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>C8GrrfZaLDmJo7bh/chIGMdPaNARhNgDJ2FVJqti7Ys=</dsig:DigestValue>
+      <dsig:DigestValue>CKygN7LhufaBaM/SmdMadSOgFIkqP53+x34tbwMamFU=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

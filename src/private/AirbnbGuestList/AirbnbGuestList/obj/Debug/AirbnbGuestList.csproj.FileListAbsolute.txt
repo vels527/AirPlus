@@ -46,7 +46,6 @@ C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Debu
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Debug\AirbnbGuestList.application
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\obj\Debug\AirbnbGuestList.exe.manifest
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\obj\Debug\AirbnbGuestList.application
-C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\obj\Debug\AirbnbGuestList.csprojAssemblyReference.cache
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Debug\Ical.Net.dll
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Debug\NodaTime.dll
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Debug\System.Reflection.TypeExtensions.dll
@@ -54,3 +53,4 @@ C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Debu
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Debug\Ical.Net.pdb
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Debug\Ical.Net.xml
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Debug\NodaTime.xml
+C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\obj\Debug\AirbnbGuestList.csprojAssemblyReference.cache

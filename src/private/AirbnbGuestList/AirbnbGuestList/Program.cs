@@ -24,19 +24,50 @@ namespace AirbnbGuestList
         static void Main(string[] args)
         {
             Program program = new Program();
-            string jsonContent = program.MakeRequests();
-            GuestList guestList = new GuestList();
-            guestList.ProcessIcal(jsonContent);
-            //guestList.processJSON(jsonContent);
-            guestList.UpdateTable();
-            guestList.SendMail().Wait();
-            guestList.SendMailASAP().Wait();
+            DataTable dt_property = program.GetProperties();
+            foreach(DataRow dr in dt_property.Rows)
+            {
+                string URL = Convert.ToString(dr[1]);
+                long ListingId = Convert.ToInt64(dr[0]);
+                string jsonContent = program.MakeRequests(URL);
+                GuestList guestList = new GuestList();
+                guestList.ProcessIcal(jsonContent,ListingId);
+                //guestList.processJSON(jsonContent);
+                guestList.UpdateTable();
+                //guestList.SendMail().Wait();
+                //guestList.SendMailASAP().Wait();
+                guestList.Request_account_pushed_co().Wait();
+            }
+
         }
-        public string MakeRequests()
+        public DataTable GetProperties()
+        {
+            SqlConnection connection = new SqlConnection(ConnString);
+            connection.Open();
+            SqlDataAdapter da = new SqlDataAdapter();
+            DataSet ds = new DataSet("PropertyList");
+            SqlCommand cmd = new SqlCommand("GetPropertyList", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            da.SelectCommand = cmd;
+            da.Fill(ds);
+            return ds.Tables[0];
+        }
+        public string ConnString
+        {
+            get
+            {
+#if DEBUG
+                return ConfigurationManager.ConnectionStrings["Dev"].ConnectionString;
+#else
+            return ConfigurationManager.ConnectionStrings["Prod"].ConnectionString;
+#endif
+            }
+        }
+        public string MakeRequests(string URL)
         {
             HttpWebResponse response;
             string output="";
-            if (Request_www_airbnb_cal(out response))
+            if (Request_www_airbnb_cal(out response,URL))
             {
                 //var encoding = Encoding.GetEncoding(response.CharacterSet);
                 var encoding = Encoding.UTF8;
@@ -49,13 +80,13 @@ namespace AirbnbGuestList
             }
             return output;
         }
-        private bool Request_www_airbnb_cal(out HttpWebResponse response)
+        private bool Request_www_airbnb_cal(out HttpWebResponse response,string URL)
         {
             response = null;
 
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://www.airbnb.co.in/calendar/ical/16676839.ics?s=99cb654609ced6fad98836cd168ffce7");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
 
                 request.KeepAlive = true;
                 request.Headers.Add("Upgrade-Insecure-Requests", @"1");
@@ -131,6 +162,8 @@ namespace AirbnbGuestList
 
         public string FirstName { get; set; }
         public string FullName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public DateTime RequestedStartDate { get; set; }
@@ -143,22 +176,133 @@ namespace AirbnbGuestList
             
 
         }
-
     }
-    public class Property
-    {
 
-    }
     public class GuestList
     {
         public List<Guest> Guests;
         string apiKey = Environment.GetEnvironmentVariable("SENDSEND");
         SendGridClient client;
+        public string ConnString
+        {
+            get
+            {
+#if DEBUG
+                return ConfigurationManager.ConnectionStrings["Dev"].ConnectionString;
+#else
+            return ConfigurationManager.ConnectionStrings["Prod"].ConnectionString;
+#endif
+            }
+        }
+        public DataTable GuestTable
+        {
+            get
+            {
+                DataTable dt = new DataTable("GUESTPROPERTYTYPETABLE");
+                DataColumn columnFullName = new DataColumn("FullName", Type.GetType("System.String"));
+                dt.Columns.Add(columnFullName);
+                DataColumn columnFirstName = new DataColumn("FirstName", Type.GetType("System.String"));
+                dt.Columns.Add(columnFirstName);
+                DataColumn columnEmail = new DataColumn("Email", Type.GetType("System.String"));
+                dt.Columns.Add(columnEmail);
+                DataColumn columnPhone = new DataColumn("Phone", Type.GetType("System.String"));
+                dt.Columns.Add(columnPhone);
+                DataColumn columnListing = new DataColumn("ListingID", Type.GetType("System.Int32"));
+                dt.Columns.Add(columnListing);
+                DataColumn columnCheckIn = new DataColumn("CHECKIN", Type.GetType("System.DateTime"));
+                dt.Columns.Add(columnCheckIn);
+                DataColumn columnCheckOut = new DataColumn("CHECKOUT", Type.GetType("System.DateTime"));
+                dt.Columns.Add(columnCheckOut);
+                foreach (Guest g in Guests)
+                {
+                    DataRow dr = dt.NewRow();
+                    dr["FullName"]=g.FullName;
+                    dr["FirstName"] = g.FirstName;
+                    dr["ListingID"] = g.ListingId;
+                    dr["CHECKIN"]= g.StartDate;
+                    dr["CHECKOUT"] = g.EndDate;
+                    if (g.Email is null)
+                    {
+                        dr["Email"]= DBNull.Value;
+                    }
+                    else
+                    {
+                        dr["Email"] = g.Email;
+                    }
+                    if (g.Phone is null)
+                    {
+                        dr["Phone"] = DBNull.Value;
+                    }
+                    else
+                    {
+                        dr["Phone"] = g.Phone;
+                    }
+                    dt.Rows.Add(dr);
+                }
+                return dt;
+            }
+        }
+        public string MessageForNotification
+        {
+            get
+            {
+                SqlConnection connection = new SqlConnection(ConnString);
+                connection.Open();
+                SqlDataAdapter da = new SqlDataAdapter();
+                DataSet ds = new DataSet("Users");
+                SqlCommand cmd = new SqlCommand("GetGuestsListForToday", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@user", SqlDbType.VarChar, 100));
+                cmd.Parameters[0].Value = "saran";
+                da.SelectCommand = cmd;
+                da.Fill(ds);
+                DataSet dataset = ds;
+                DataTable data = dataset.Tables[0];
+                DataTable data_1 = dataset.Tables[1];
+                StringBuilder strb = new StringBuilder();
+                strb.Append("Check IN for ");
+                
+                foreach (DataRow dr in data.Rows)
+                {
+                    strb.Append(Convert.ToString(dr[3]));
+                    strb.Append(" on ");
+                    strb.Append(Convert.ToString(dr[7]));
+                    strb.Append(" check out on ");
+                    strb.Append(Convert.ToString(dr[8]));
+                    strb.Append(" with cleaning at ");
+                    if (Convert.ToString(dr[10]) != "")
+                        strb.Append(Convert.ToDateTime(dr[10]).ToShortTimeString());
+                    strb.Append(" Remarks: ");
+                    strb.Append(Convert.ToString(dr[11]));
+                    break;
+                }
+                strb.Append("\n");
+                strb.Append("Check Out for ");
+
+
+                foreach (DataRow dr in data_1.Rows)
+                {
+                    strb.Append(Convert.ToString(dr[3]));
+                    strb.Append(" on ");
+                    strb.Append(Convert.ToString(dr[7]));
+                    strb.Append(" check out on ");
+                    strb.Append(Convert.ToString(dr[8]));
+                    strb.Append(" with cleaning at ");
+                    if (Convert.ToString(dr[10]) != "")
+                        strb.Append(Convert.ToDateTime(dr[10]).ToShortTimeString());
+                    strb.Append(" Remarks: ");
+                    strb.Append(Convert.ToString(dr[11]));
+                    break;
+                }
+                strb.Append("\n");
+                return strb.ToString();
+            }
+        }
         public string MessageForDay
         {
             get
             {
-                SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["Prod"].ConnectionString);
+                SqlConnection connection = new SqlConnection(ConnString);
                 connection.Open();
                 SqlDataAdapter da = new SqlDataAdapter();
                 DataSet ds = new DataSet("Users");
@@ -270,7 +414,7 @@ namespace AirbnbGuestList
         }
         public string Message {
             get {
-                SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["Prod"].ConnectionString);
+                SqlConnection connection = new SqlConnection(ConnString);
                 connection.Open();
                 SqlDataAdapter da = new SqlDataAdapter();
                 DataSet ds = new DataSet("Users");
@@ -332,7 +476,7 @@ namespace AirbnbGuestList
                 return strb.ToString();
             } }
 
-        EmailAddress from = new EmailAddress("siva@kustotech.in", "siva");
+        EmailAddress from = new EmailAddress("airplus@kustotech.in", "airplus");
         public string subject = "Reminder Check In - Check Out";
         EmailAddress to = new EmailAddress("saran@kustotech.in", "saran");
         EmailAddress cc = new EmailAddress("siva@kustotech.in", "siva");
@@ -358,85 +502,40 @@ namespace AirbnbGuestList
         {
             if (Guests.Count() > 0)
             {
-                try {
-                    SqlConnection connection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["Prod"].ConnectionString);
+                try
+                {
+                    SqlConnection connection = new SqlConnection(ConnString);
                     connection.Open();
-                    StringBuilder sbr = new StringBuilder();
-                    foreach (Guest g in Guests)
-                    {
-                        try {
-                            int airplusid = -1;
-                            int k = -1;
-                            string selectAir = @"
-SELECT count(1) from [Airplus].[dbo].[Guest] where Airplusid=" + g.AirplusId + ";";
-                            SqlCommand cmdselectAIR = new SqlCommand(selectAir, connection);
-                            airplusid = (int)cmdselectAIR.ExecuteScalar();
-                            if (airplusid == 0) {
-                                string insertString = @"
-INSERT INTO [Airplus].[dbo].[Guest]
-           ([AirplusId]
-           ,[FullName]
-           ,[FirstName]
-)
-     VALUES
-           (" + g.AirplusId + ",\'" + g.FullName + "\',\'" + g.FirstName + "\');";
-
-                                SqlCommand cmd = new SqlCommand(insertString, connection);
-
-                                k = cmd.ExecuteNonQuery(); }
-
-                            //sbr.Append(insertString);
-                            int guestid = -1;
-                            int propertyid = -1;
-
-                            string selectString = @"
-SELECT guest_id from [Airplus].[dbo].[Guest] where Airplusid=" + g.AirplusId + ";";
-                            SqlCommand cmdselect = new SqlCommand(selectString, connection);
-                            guestid = (int)cmdselect.ExecuteScalar();
-                            string selectProperty = @"
-                            SELECT property_id from [Airplus].[dbo].[Property] where ListingId=" + g.ListingId + ";";
-                            SqlCommand cmdproperty = new SqlCommand(selectProperty, connection);
-                            propertyid = (int)cmdproperty.ExecuteScalar();
-                            string insertGuestProperty = @"INSERT INTO [Airplus].[dbo].[GuestProperty]
-           ([Guest_Id]
-           ,[Property_Id]
-           ,[CCompanyId]
-           ,[CheckIn]
-           ,[CheckOut]
-           ,[RequestedCheckIn]
-           ,[RequestedCheckOut]
-           ,[CCompanyTiming]
-           ,[CStatus]
-           ,[RecordTIme])
-     VALUES
-           (" + guestid + "," + propertyid + ",1,'" + g.StartDate + "','" + g.EndDate + "','"+g.RequestedStartDate +"','"+g.RequestedEndDate+ "',null,null,'"+DateTime.Now+"')";
-                            SqlCommand cmdguestproperty = new SqlCommand(insertGuestProperty, connection);
-                            cmdguestproperty.ExecuteNonQuery();
-
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-                    }
-
+                    SqlCommand cmd = new SqlCommand("InsertUpdateGuestList", connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlParameter param = cmd.Parameters.AddWithValue("@Guest", GuestTable);
+                    param.SqlDbType = SqlDbType.Structured;
+                    param.TypeName = "dbo.GUESTPROPERTYTYPETABLE";
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
                 }
                 catch (Exception e)
                 {
-                    
+                    //Logging
                 }
-                }
+            }
         }
-        public void ProcessIcal(string calendarInfo)
+        public void ProcessIcal(string calendarInfo,long ListingId)
         {
             var calobjects = Calendar.Load(calendarInfo);
             var events = calobjects.Events;
             foreach(CalendarEvent e in events)
             {
+                if(e.Location is null || e.DtStart.Date < DateTime.Now.AddMonths(-2))   //If No Guest or Guest stay was before 2 months from now
+                {
+                    continue;
+                }
                 Guest g = new Guest();
                 g.StartDate= e.DtStart.Date;
                 g.EndDate = e.DtEnd.Date;
-                string[] Names = e.Summary.Split(' ');
+                
+                //Take only valid part of name
+                string[] Names = e.Summary.Split(' '); 
                 if (!String.IsNullOrEmpty(Names[0]))
                 {
                     g.FirstName = Names[0];
@@ -450,7 +549,40 @@ SELECT guest_id from [Airplus].[dbo].[Guest] where Airplusid=" + g.AirplusId + "
                     }
                     g.FullName += " ";
                 }
-                g.ListingId = 16676839;
+
+                //Take PHONE and EMAIL
+                string[] values = e.Description.Split('\n');
+                bool phoneCheck = false;
+                bool emailCheck = false;
+                foreach (string s in values)
+                {
+                    if (s.IndexOf(":") > -1)
+                    {
+                        string[] keyvalue = s.Split(':');
+                        switch (keyvalue[0].ToLower())
+                        {
+                            case "phone":
+                                if (!String.IsNullOrEmpty(keyvalue[1])  && keyvalue[1].TrimStart(' ').IndexOf("+")==0)
+                                {
+                                    g.Phone = keyvalue[1].Trim();
+                                }
+                                phoneCheck = true;
+                                break;
+                            case "email":
+                                if (!String.IsNullOrEmpty(keyvalue[1]) && keyvalue[1].Trim().IndexOf("@") >0)
+                                {
+                                    g.Email = keyvalue[1].Trim();
+                                }
+                                emailCheck = true;
+                                break;
+                            default:
+                                continue;
+                        }
+                        if (phoneCheck && emailCheck) break;
+                    }
+                }
+
+                g.ListingId = ListingId;
                 Guests.Add(g);
             }
         }
@@ -501,6 +633,42 @@ SELECT guest_id from [Airplus].[dbo].[Guest] where Airplusid=" + g.AirplusId + "
             }
             
             return true;
+        }
+        public async Task Request_account_pushed_co()
+        {
+            try
+            {
+                var client = new HttpClient();
+
+                var requestContent = new FormUrlEncodedContent(new[] {
+                new KeyValuePair<string, string>("app_key", "P9cVh1ypGxkd1ISzstkg"),
+                new KeyValuePair<string, string>("app_secret", "bgcMm994HNegQpjSMGhNX0PHMBsuReNj8w035o7pnRuACuChniX7LsoYcoB1Xeqb"),
+                new KeyValuePair<string, string>("target_type", "app"),
+                new KeyValuePair<string, string>("content", this.MessageForNotification)
+                });
+
+                // Get the response.
+                HttpResponseMessage response = await client.PostAsync("https://api.pushed.co/1/push", requestContent);
+
+                // Get the response content.
+                HttpContent responseContent = response.Content;
+                // Get the stream of the content.
+                using (var reader = new StreamReader(await responseContent.ReadAsStreamAsync()))
+                {
+                    // Write the output.
+                    Console.WriteLine(await reader.ReadToEndAsync());
+                }
+            }
+            catch (WebException e)
+            {
+                if (e.Status == WebExceptionStatus.ProtocolError)
+                {
+                }
+            }
+
+            catch (Exception)
+            {
+            }
         }
     }
 }
