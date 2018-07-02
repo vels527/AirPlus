@@ -22,8 +22,12 @@ BEGIN
 
   SELECT 
     P.LISTINGID,
-    P.ICSURL
+    P.ICSURL,
+	H.Email,
+	H.FirstName
   FROM PROPERTY P
+    JOIN [Host] H
+      ON P.HostId=H.HostId	
   WHERE LISTINGID IS NOT NULL 
     AND ICSURL IS NOT NULL
 

@@ -17,7 +17,7 @@ END
 
 GO
 CREATE PROCEDURE [dbo].[GetGuestsListForToday]
-@user VARCHAR(100)
+@Listing INTEGER
 AS
 BEGIN
 select 
@@ -40,11 +40,9 @@ from Guest G
     on GP.CStatus=SC.StatusCode_Id
   inner join Property P
     on GP.Property_Id=P.Property_Id
-  inner join Host H
-    on P.HostId=H.HostId
-	  AND H.username=@user
 Where DATEDIFF(day,GETDATE(),GP.CheckIn)<2
-  AND DATEDIFF(day,GETDATE(),GP.CheckIn)>=0   	  
+  AND DATEDIFF(day,GETDATE(),GP.CheckIn)>=0 
+  AND P.Listingid=@Listing  
 order by GP.CheckIn	DESC
 	
 
@@ -69,11 +67,9 @@ from Guest G
     on GP.CStatus=SC.StatusCode_Id
   inner join Property P
     on GP.Property_Id=P.Property_Id
-  inner join Host H
-    on P.HostId=H.HostId
-	  AND H.username=@user
 Where DATEDIFF(day,GETDATE(),GP.CheckOut)<2 	  
-  AND DATEDIFF(day,GETDATE(),GP.CheckOut)>=0	   	  
+  AND DATEDIFF(day,GETDATE(),GP.CheckOut)>=0	
+  AND P.Listingid=@Listing  
 order by GP.CheckOut DESC
 	
 

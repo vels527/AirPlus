@@ -17,7 +17,7 @@ END
 
 GO
 CREATE PROCEDURE [dbo].[GetGuestsList]
-@user VARCHAR(100)
+@Listing INTEGER
 AS
 BEGIN
 select 
@@ -40,9 +40,7 @@ from Guest G
     on GP.CStatus=SC.StatusCode_Id
   inner join Property P
     on GP.Property_Id=P.Property_Id
-  inner join Host H
-    on P.HostId=H.HostId
-	  AND H.username=@user
+	  AND P.ListingId=@Listing
 Where (GP.CStatus	is null 
         or GP.CStatus=1)
   OR ((GP.CStatus	is not null 

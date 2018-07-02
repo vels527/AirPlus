@@ -29,13 +29,15 @@ namespace AirbnbGuestList
             {
                 string URL = Convert.ToString(dr[1]);
                 long ListingId = Convert.ToInt64(dr[0]);
+                string Email= Convert.ToString(dr[2]);
+                string Name= Convert.ToString(dr[3]);
                 string jsonContent = program.MakeRequests(URL);
-                GuestList guestList = new GuestList();
+                GuestList guestList = new GuestList(ListingId,Email,Name);
                 guestList.ProcessIcal(jsonContent,ListingId);
                 //guestList.processJSON(jsonContent);
                 guestList.UpdateTable();
-                //guestList.SendMail().Wait();
-                //guestList.SendMailASAP().Wait();
+                guestList.SendMail().Wait();
+                guestList.SendMailASAP().Wait();
                 guestList.Request_account_pushed_co().Wait();
             }
 
@@ -194,6 +196,10 @@ namespace AirbnbGuestList
 #endif
             }
         }
+        public long ListingId
+        {
+            get; set;
+        }
         public DataTable GuestTable
         {
             get
@@ -252,8 +258,8 @@ namespace AirbnbGuestList
                 DataSet ds = new DataSet("Users");
                 SqlCommand cmd = new SqlCommand("GetGuestsListForToday", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@user", SqlDbType.VarChar, 100));
-                cmd.Parameters[0].Value = "saran";
+                cmd.Parameters.Add(new SqlParameter("@Listing", SqlDbType.Int));
+                cmd.Parameters[0].Value = ListingId;
                 da.SelectCommand = cmd;
                 da.Fill(ds);
                 DataSet dataset = ds;
@@ -308,8 +314,8 @@ namespace AirbnbGuestList
                 DataSet ds = new DataSet("Users");
                 SqlCommand cmd = new SqlCommand("GetGuestsListForToday", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@user", SqlDbType.VarChar, 100));
-                cmd.Parameters[0].Value = "saran";
+                cmd.Parameters.Add(new SqlParameter("@Listing", SqlDbType.Int));
+                cmd.Parameters[0].Value = ListingId;
                 da.SelectCommand = cmd;
                 da.Fill(ds);
                 DataSet dataset = ds;
@@ -335,8 +341,14 @@ namespace AirbnbGuestList
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[3]) + @"</td>");
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[7]) + @"</td>");
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[8]) + @"</td>");
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
+
+                    if (Convert.ToString(dr[5]) != "")
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
+
+                    if (Convert.ToString(dr[6]) != "")
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
+
+
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[11]) + @"</td>");
                     if (Convert.ToString(dr[10]) != "")
                     {
@@ -420,8 +432,8 @@ namespace AirbnbGuestList
                 DataSet ds = new DataSet("Users");
                 SqlCommand cmd = new SqlCommand("GetGuestsList", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@user", SqlDbType.VarChar, 100));
-                cmd.Parameters[0].Value = "saran";
+                cmd.Parameters.Add(new SqlParameter("@Listing", SqlDbType.Int));
+                cmd.Parameters[0].Value = ListingId;
                 da.SelectCommand = cmd;
                 da.Fill(ds);
                 DataSet dataset = ds;
@@ -445,9 +457,15 @@ namespace AirbnbGuestList
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[3]) + @"</td>");
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[7]) + @"</td>");
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[8]) + @"</td>");
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
+
+                    if(Convert.ToString(dr[5]) != "")
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
+
+                    if (Convert.ToString(dr[6]) != "")
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
+
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[11]) + @"</td>");
+
                     if (Convert.ToString(dr[10]) != "")
                     {
                         strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[10]).ToShortTimeString() + @"</td>");
@@ -478,12 +496,14 @@ namespace AirbnbGuestList
 
         EmailAddress from = new EmailAddress("airplus@kustotech.in", "airplus");
         public string subject = "Reminder Check In - Check Out";
-        EmailAddress to = new EmailAddress("saran@kustotech.in", "saran");
+        EmailAddress to;
         EmailAddress cc = new EmailAddress("siva@kustotech.in", "siva");
-        public GuestList()
+        public GuestList(long listingId,string email,string fName)
         {
             Guests = new List<Guest>();
             client = new SendGridClient(apiKey);
+            ListingId = listingId;
+            to = new EmailAddress(email, fName);
         }
         public async Task SendMail()
         {
@@ -648,11 +668,16 @@ namespace AirbnbGuestList
                 });
 
                 // Get the response.
-                HttpResponseMessage response = await client.PostAsync("https://api.pushed.co/1/push", requestContent);
+                HttpResponseMessage response = await client.PostAsync(@"https://api.pushed.co/1/push", requestContent);
 
                 // Get the response content.
                 HttpContent responseContent = response.Content;
                 // Get the stream of the content.
+                for(int i=0; ; i++)
+                {
+                    if (i % 1000000 == 0)
+                        break;
+                }
                 using (var reader = new StreamReader(await responseContent.ReadAsStreamAsync()))
                 {
                     // Write the output.

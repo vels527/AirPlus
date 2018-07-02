@@ -1,4 +1,4 @@
-USE [Airplus]
+USE [AirplusDev]
 GO
 
 /****** Object:  StoredProcedure [dbo].[GetGuestsListHistory]    Script Date: 05/28/2018 12:59:18 ******/
@@ -17,7 +17,7 @@ END
 
 GO
 CREATE PROCEDURE [dbo].[GetGuestsListHistory]
-@user VARCHAR(100)
+@Listing INTEGER
 AS
 BEGIN
 select 
@@ -40,9 +40,7 @@ from Guest G
     on GP.CStatus=SC.StatusCode_Id
   inner join Property P
     on GP.Property_Id=P.Property_Id
-  inner join Host H
-    on P.HostId=H.HostId
-	  AND H.username=@user
+Where P.ListingId=@Listing
 order by GP.CheckIn	DESC
 	  
 
