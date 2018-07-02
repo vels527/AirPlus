@@ -266,7 +266,12 @@ namespace AirbnbGuestList
                 DataTable data = dataset.Tables[0];
                 DataTable data_1 = dataset.Tables[1];
                 StringBuilder strb = new StringBuilder();
-                strb.Append("Check IN for ");
+
+                if (data.Rows.Count > 0) //If empty no message
+                {
+                    strb.Append("Check IN for ");
+                }
+                
                 
                 foreach (DataRow dr in data.Rows)
                 {
@@ -275,32 +280,49 @@ namespace AirbnbGuestList
                     strb.Append(Convert.ToString(dr[7]));
                     strb.Append(" check out on ");
                     strb.Append(Convert.ToString(dr[8]));
-                    strb.Append(" with cleaning at ");
+                    
                     if (Convert.ToString(dr[10]) != "")
+                    {
+                        strb.Append(" with cleaning at ");
                         strb.Append(Convert.ToDateTime(dr[10]).ToShortTimeString());
-                    strb.Append(" Remarks: ");
-                    strb.Append(Convert.ToString(dr[11]));
-                    break;
+                    }
+
+                    if (Convert.ToString(dr[11]) != "")
+                    {
+                        strb.Append(" Remarks: ");
+                        strb.Append(Convert.ToString(dr[11]));
+                    }
+                    strb.Append("\n");
                 }
-                strb.Append("\n");
-                strb.Append("Check Out for ");
+                if (data_1.Rows.Count > 0) //If empty no message
+                {
+                    strb.Append("Check Out for ");
+                }
 
 
                 foreach (DataRow dr in data_1.Rows)
                 {
                     strb.Append(Convert.ToString(dr[3]));
                     strb.Append(" on ");
-                    strb.Append(Convert.ToString(dr[7]));
-                    strb.Append(" check out on ");
                     strb.Append(Convert.ToString(dr[8]));
-                    strb.Append(" with cleaning at ");
+
+                    strb.Append(" whose check in was on ");
+                    strb.Append(Convert.ToString(dr[7]));
+
                     if (Convert.ToString(dr[10]) != "")
+                    {
+                        strb.Append(" with cleaning at ");
                         strb.Append(Convert.ToDateTime(dr[10]).ToShortTimeString());
-                    strb.Append(" Remarks: ");
-                    strb.Append(Convert.ToString(dr[11]));
-                    break;
+                    }
+
+                    if (Convert.ToString(dr[11]) != "")
+                    {
+                        strb.Append(" Remarks: ");
+                        strb.Append(Convert.ToString(dr[11]));
+                    }
+                    strb.Append("\n");
                 }
-                strb.Append("\n");
+                
                 return strb.ToString();
             }
         }
@@ -405,8 +427,26 @@ namespace AirbnbGuestList
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[3]) + @"</td>");
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[7]) + @"</td>");
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[8]) + @"</td>");
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
+
+                    if (Convert.ToString(dr[5]) != "")
+                    {
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
+                    }
+                    else
+                    {
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+                    }
+
+                    if (Convert.ToString(dr[6]) != "")
+                    {
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
+                    }
+                    else
+                    {
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+                    }
+
+
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[11]) + @"</td>");
                     if (Convert.ToString(dr[10]) != "")
                     {
@@ -694,14 +734,17 @@ namespace AirbnbGuestList
                 // Get the response.
                 HttpResponseMessage response = await client.PostAsync(@"https://api.pushed.co/1/push", requestContent);
 
+                //delay
+                for (int i = 0; ; i++)
+                {
+                    if (i / 100000000 == 1)
+                        break;
+                }
+
                 // Get the response content.
                 HttpContent responseContent = response.Content;
                 // Get the stream of the content.
-                for(int i=0; ; i++)
-                {
-                    if (i % 1000000 == 0)
-                        break;
-                }
+
                 using (var reader = new StreamReader(await responseContent.ReadAsStreamAsync()))
                 {
                     // Write the output.
