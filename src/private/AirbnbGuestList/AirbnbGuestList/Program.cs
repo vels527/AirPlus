@@ -343,10 +343,22 @@ namespace AirbnbGuestList
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[8]) + @"</td>");
 
                     if (Convert.ToString(dr[5]) != "")
+                    {
                         strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
+                    }
+                    else
+                    {
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+                    }
 
                     if (Convert.ToString(dr[6]) != "")
+                    {
                         strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
+                    }
+                    else
+                    {
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+                    }
 
 
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[11]) + @"</td>");
@@ -459,10 +471,22 @@ namespace AirbnbGuestList
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[8]) + @"</td>");
 
                     if(Convert.ToString(dr[5]) != "")
+                    {
                         strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
+                    }
+                    else
+                    {
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+                    }    
 
                     if (Convert.ToString(dr[6]) != "")
+                    {
                         strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
+                    }
+                    else
+                    {
+                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+                    }  
 
                     strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[11]) + @"</td>");
 

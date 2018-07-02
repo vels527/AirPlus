@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AirbnbGuestList.exe" size="38352">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AirbnbGuestList.exe" size="38864">
       <assemblyIdentity name="AirbnbGuestList" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>EC4VmDnf8zVmfspmV4KA6AfRjK2j57baTAHArj3ybvw=</dsig:DigestValue>
+        <dsig:DigestValue>jkGmg7NUvLU1PUlqXnO29wFlK1rLJdypwftE6DHrRAY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
