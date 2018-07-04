@@ -40,7 +40,6 @@ namespace AirbnbGuestList
                 guestList.SendMailASAP().Wait();
                 guestList.Request_account_pushed_co().Wait();
             }
-
         }
         public DataTable GetProperties()
         {

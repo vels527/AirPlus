@@ -26,3 +26,4 @@ C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Rele
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Release\Ical.Net.pdb
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Release\Ical.Net.xml
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Release\NodaTime.xml
+C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\obj\Release\AirbnbGuestList.csprojAssemblyReference.cache
