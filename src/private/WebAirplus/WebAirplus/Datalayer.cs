@@ -66,6 +66,7 @@ namespace WebAirplus
             da.SelectCommand = cmd;
             da.Fill(ds);
             conn.Close();
+
             return ds;
         }
         public static DataSet GetUserListHistory(string user)

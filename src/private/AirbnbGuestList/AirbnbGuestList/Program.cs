@@ -177,6 +177,63 @@ namespace AirbnbGuestList
             
 
         }
+        public Guest(string Summary, string Description, DateTime startDate, DateTime endDate, long listingID)
+        {
+            try {
+                string[] Names = Summary.Split(' ');
+                if (!String.IsNullOrEmpty(Names[0]))
+                {
+                    FirstName = Names[0];
+                }
+                for (int i = 0; i < Names.Length - 1; i++)
+                {
+                    FullName += Names[i];
+                    if (i == Names.Length - 1)
+                    {
+                        break;
+                    }
+                    FullName += " ";
+                }
+                //Take PHONE and EMAIL
+                string[] values = Description.Split('\n');
+                bool phoneCheck = false;
+                bool emailCheck = false;
+                foreach (string s in values)
+                {
+                    if (s.IndexOf(":") > -1)
+                    {
+                        string[] keyvalue = s.Split(':');
+                        switch (keyvalue[0].ToLower())
+                        {
+                            case "phone":
+                                if (!String.IsNullOrEmpty(keyvalue[1]) && keyvalue[1].TrimStart(' ').IndexOf("+") == 0)
+                                {
+                                    Phone = keyvalue[1].Trim();
+                                }
+                                phoneCheck = true;
+                                break;
+                            case "email":
+                                if (!String.IsNullOrEmpty(keyvalue[1]) && keyvalue[1].Trim().IndexOf("@") > 0)
+                                {
+                                    Email = keyvalue[1].Trim();
+                                }
+                                emailCheck = true;
+                                break;
+                            default:
+                                continue;
+                        }
+                        if (phoneCheck && emailCheck) break;
+                    }
+                }
+                StartDate = startDate;
+                EndDate = endDate;
+                ListingId = listingID;
+            }
+            catch(Exception e)
+            {
+
+            }
+            }
     }
 
     public class GuestList
@@ -607,67 +664,8 @@ namespace AirbnbGuestList
         {
             var calobjects = Calendar.Load(calendarInfo);
             var events = calobjects.Events;
-            foreach(CalendarEvent e in events)
-            {
-                if(e.Location is null || e.DtStart.Date < DateTime.Now.AddMonths(-2))   //If No Guest or Guest stay was before 2 months from now
-                {
-                    continue;
-                }
-                Guest g = new Guest();
-                g.StartDate= e.DtStart.Date;
-                g.EndDate = e.DtEnd.Date;
-                
-                //Take only valid part of name
-                string[] Names = e.Summary.Split(' '); 
-                if (!String.IsNullOrEmpty(Names[0]))
-                {
-                    g.FirstName = Names[0];
-                }
-                for(int i = 0; i < Names.Length - 1; i++)
-                {
-                    g.FullName += Names[i];
-                    if (i == Names.Length - 1)
-                    {
-                        break;
-                    }
-                    g.FullName += " ";
-                }
-
-                //Take PHONE and EMAIL
-                string[] values = e.Description.Split('\n');
-                bool phoneCheck = false;
-                bool emailCheck = false;
-                foreach (string s in values)
-                {
-                    if (s.IndexOf(":") > -1)
-                    {
-                        string[] keyvalue = s.Split(':');
-                        switch (keyvalue[0].ToLower())
-                        {
-                            case "phone":
-                                if (!String.IsNullOrEmpty(keyvalue[1])  && keyvalue[1].TrimStart(' ').IndexOf("+")==0)
-                                {
-                                    g.Phone = keyvalue[1].Trim();
-                                }
-                                phoneCheck = true;
-                                break;
-                            case "email":
-                                if (!String.IsNullOrEmpty(keyvalue[1]) && keyvalue[1].Trim().IndexOf("@") >0)
-                                {
-                                    g.Email = keyvalue[1].Trim();
-                                }
-                                emailCheck = true;
-                                break;
-                            default:
-                                continue;
-                        }
-                        if (phoneCheck && emailCheck) break;
-                    }
-                }
-
-                g.ListingId = ListingId;
-                Guests.Add(g);
-            }
+            var guestFromLINQ = from e in events where (e.Location != null && e.DtStart.Date >= DateTime.Now.AddMonths(-2))   select new Guest(e.Summary,e.Description,e.DtStart.Date,e.DtEnd.Date,ListingId);
+            Guests = guestFromLINQ.ToList<Guest>();
         }
         public bool processJSON(string JSON)
         {
