@@ -111,6 +111,11 @@ namespace AirbnbGuestList
 
             return true;
         }
+
+        /*
+         * <para>Request_www_airbnb_co_in method will not be used as it requires airbnb credentials.Instead use Request_www_airbnb_cal </para>
+         */
+        [Obsolete]
         private bool Request_www_airbnb_co_in(out HttpWebResponse response)
         {
             response = null;
@@ -667,6 +672,11 @@ namespace AirbnbGuestList
             var guestFromLINQ = from e in events where (e.Location != null && e.DtStart.Date >= DateTime.Now.AddMonths(-2))   select new Guest(e.Summary,e.Description,e.DtStart.Date,e.DtEnd.Date,ListingId);
             Guests = guestFromLINQ.ToList<Guest>();
         }
+
+        /*
+         * <para>processJSON is obsolete as this flow uses airbnb crdentials.Instead use airbnbcal</para>
+         */
+        [Obsolete]
         public bool processJSON(string JSON)
         {
             DateTime today = DateTime.Now;
