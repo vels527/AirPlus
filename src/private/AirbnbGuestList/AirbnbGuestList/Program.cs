@@ -112,9 +112,8 @@ namespace AirbnbGuestList
             return true;
         }
 
-        /*
-         * <para>Request_www_airbnb_co_in method will not be used as it requires airbnb credentials.Instead use Request_www_airbnb_cal </para>
-         */
+        
+        ///<para>Request_www_airbnb_co_in method will not be used as it requires airbnb credentials.Instead use Request_www_airbnb_cal </para>
         [Obsolete]
         private bool Request_www_airbnb_co_in(out HttpWebResponse response)
         {
@@ -673,9 +672,8 @@ namespace AirbnbGuestList
             Guests = guestFromLINQ.ToList<Guest>();
         }
 
-        /*
-         * <para>processJSON is obsolete as this flow uses airbnb crdentials.Instead use airbnbcal</para>
-         */
+        
+        ///<para>processJSON is obsolete as this flow uses airbnb crdentials.Instead use airbnbcal</para>        
         [Obsolete]
         public bool processJSON(string JSON)
         {
