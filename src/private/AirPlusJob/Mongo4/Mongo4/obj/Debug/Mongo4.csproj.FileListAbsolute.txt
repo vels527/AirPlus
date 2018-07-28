@@ -66,3 +66,7 @@ C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Debug\Mongo
 C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Debug\Mongo4.exe
 C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Debug\Mongo4.pdb
 C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Debug\Mongo4.csprojAssemblyReference.cache
+C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\bin\Debug\Mongo4.exe.manifest
+C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\bin\Debug\Mongo4.application
+C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Debug\Mongo4.exe.manifest
+C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Debug\Mongo4.application

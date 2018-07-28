@@ -33,7 +33,7 @@ namespace Mongo4
             cde.Eval();
             var apiKey = Environment.GetEnvironmentVariable("SENDSEND");
             var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("siva@kustotech.in", "siva");
+            var from = new EmailAddress("airplus@kustotech.in", "siva");
             var subject = "Morning Airplus Calendar Month";
             var to = new EmailAddress("saran@kustotech.in", "saran");
             //var plainTextContent = "and easy to do anywhere, even with C#";
