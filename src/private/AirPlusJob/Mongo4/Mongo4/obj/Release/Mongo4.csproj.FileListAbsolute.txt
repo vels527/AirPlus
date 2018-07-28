@@ -17,3 +17,8 @@ C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Release\Mon
 C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Release\Mongo4.csproj.CopyComplete
 C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Release\Mongo4.exe
 C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Release\Mongo4.pdb
+C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\bin\Release\Mongo4.exe.manifest
+C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\bin\Release\Mongo4.application
+C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Release\Mongo4.exe.manifest
+C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Release\Mongo4.application
+C:\projects\Airplus\AirPlus\src\private\AirPlusJob\Mongo4\Mongo4\obj\Release\Mongo4.csprojAssemblyReference.cache

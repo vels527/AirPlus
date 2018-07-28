@@ -29,7 +29,7 @@ namespace Mongo4
     {
         static async Task Execute()
         {
-            codeEvaler cde = new codeEvaler();
+            codeEvaler cde = new codeEvaler();  
             cde.Eval();
             var apiKey = Environment.GetEnvironmentVariable("SENDSEND");
             var client = new SendGridClient(apiKey);
@@ -346,7 +346,7 @@ namespace Mongo4
 
         public string urlPriceTemplate = "https://www.airbnb.co.in/api/v2/pdp_listing_booking_details?guests={0}&listing_id={1}&show_smart_promotion=0&_format=for_web_with_date&_interaction_type=pageload&_intents=p3_book_it&_parent_request_uuid=d7cdc14f-f110-43aa-accd-03918cb52be2&_p3_impression_id=p3_1516182527_ZjCNtdJhJV2Qha5s&check_in={2}&check_out={3}&number_of_adults={4}&number_of_children=0&number_of_infants=0&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=USD&locale=en-US";
         //Cooper home - 16676839
-        private List<string> listingIds = new List<string>() { "16676839", "9199361", "8175972", "13625030", "12891710","9547197", "4925118" };
+        private List<string> listingIds = new List<string>() { "16676839", "9199361", "8175972", "13625030", "12891710", "9547197", "4925118", "18736556", "20732888", "22215326", "22549727", "25984854" };
         //private List<string> listingIds = new List<string>()        {"7939975" };
         private StringBuilder bodyBuilder = new StringBuilder();
         private StringBuilder headerBuilder = new StringBuilder();
