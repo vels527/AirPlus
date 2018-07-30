@@ -23,23 +23,41 @@ namespace AirbnbGuestList
     {
         static void Main(string[] args)
         {
-            Program program = new Program();
-            DataTable dt_property = program.GetProperties();
-            foreach(DataRow dr in dt_property.Rows)
+            try
             {
-                string URL = Convert.ToString(dr[1]);
-                long ListingId = Convert.ToInt64(dr[0]);
-                string Email= Convert.ToString(dr[2]);
-                string Name= Convert.ToString(dr[3]);
-                string jsonContent = program.MakeRequests(URL);
-                GuestList guestList = new GuestList(ListingId,Email,Name);
-                guestList.ProcessIcal(jsonContent,ListingId);
-                //guestList.processJSON(jsonContent);
-                guestList.UpdateTable();
-                guestList.SendMail().Wait();
-                guestList.SendMailASAP().Wait();
-                guestList.Request_account_pushed_co().Wait();
+                Program program = new Program();
+                DataTable dt_property = program.GetProperties();
+                FileInfo fileInfo = new FileInfo("./log4net.config");
+                log4net.Config.XmlConfigurator.Configure(fileInfo);
+                foreach (DataRow dr in dt_property.Rows)
+                {
+                    string URL = Convert.ToString(dr[1]);
+                    long ListingId = Convert.ToInt64(dr[0]);
+                    string Email = Convert.ToString(dr[2]);
+                    string Name = Convert.ToString(dr[3]);
+                    string jsonContent = program.MakeRequests(URL);
+                    GuestList guestList = new GuestList(ListingId, Email, Name);
+                    guestList.ProcessIcal(jsonContent, ListingId);
+                    //guestList.processJSON(jsonContent);
+                    guestList.UpdateTable();
+                    guestList.SendMail().Wait();
+                    guestList.SendMailASAP().Wait();
+                    guestList.Request_account_pushed_co().Wait();
+                    string listmsg = ListingId.ToString()+" processed.";
+                    Logger.Info(listmsg);
+                }
             }
+            catch(FileNotFoundException fe)
+            {
+                FileInfo fileInfo = new FileInfo("temp.txt");
+                FileStream fs = fileInfo.Create();
+                fs.Close();
+            }
+            catch(Exception ex)
+            {
+                Logger.Error(ex);
+            }
+            
         }
         public DataTable GetProperties()
         {
@@ -100,11 +118,13 @@ namespace AirbnbGuestList
             }
             catch (WebException e)
             {
+                Logger.Error("Ical Download Error",e);
                 if (e.Status == WebExceptionStatus.ProtocolError) response = (HttpWebResponse)e.Response;
                 else return false;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Logger.Error("Ical Download Error", e);
                 if (response != null) response.Close();
                 return false;
             }
@@ -631,16 +651,32 @@ namespace AirbnbGuestList
         }
         public async Task SendMail()
         {
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, "Hi", Message);
-            msg.AddCc(cc);
-            var response = await client.SendEmailAsync(msg);
+            try
+            {
+                var msg = MailHelper.CreateSingleEmail(from, to, subject, "Hi", Message);
+                msg.AddCc(cc);
+                var response = await client.SendEmailAsync(msg);
+            }
+            catch(Exception ex)
+            {
+                string Err = "Error when sending mail -" + this.ListingId;
+                Logger.Error(Err,ex);
+            }
         }
 
         public async Task SendMailASAP()
         {
-            var msg = MailHelper.CreateSingleEmail(from, to, "DAILY Check In - Check Out", "Hi", MessageForDay);
-            msg.AddCc(cc);
-            var response = await client.SendEmailAsync(msg);
+            try
+            {
+                var msg = MailHelper.CreateSingleEmail(from, to, "DAILY Check In - Check Out", "Hi", MessageForDay);
+                msg.AddCc(cc);
+                var response = await client.SendEmailAsync(msg);
+            }
+            catch (Exception ex)
+            {
+                string Err = "Error when sending mail -" + this.ListingId;
+                Logger.Error(Err, ex);
+            }
         }
         public void UpdateTable()
         {
@@ -660,16 +696,24 @@ namespace AirbnbGuestList
                 }
                 catch (Exception e)
                 {
-                    //Logging
+                    Logger.Error("Error when inserting or updating guests",e);
                 }
             }
         }
         public void ProcessIcal(string calendarInfo,long ListingId)
         {
-            var calobjects = Calendar.Load(calendarInfo);
-            var events = calobjects.Events;
-            var guestFromLINQ = from e in events where (e.Location != null && e.DtStart.Date >= DateTime.Now.AddMonths(-2))   select new Guest(e.Summary,e.Description,e.DtStart.Date,e.DtEnd.Date,ListingId);
-            Guests = guestFromLINQ.ToList<Guest>();
+            try
+            {
+                var calobjects = Calendar.Load(calendarInfo);
+                var events = calobjects.Events;
+                var guestFromLINQ = from e in events where (e.Location != null && e.DtStart.Date >= DateTime.Now.AddMonths(-2)) select new Guest(e.Summary, e.Description, e.DtStart.Date, e.DtEnd.Date, ListingId);
+                Guests = guestFromLINQ.ToList<Guest>();
+            }
+            catch(Exception e)
+            {
+                string exMsg = "Ical processing error for " + ListingId;
+                Logger.Error(exMsg,e);
+            }
         }
 
         
@@ -761,10 +805,12 @@ namespace AirbnbGuestList
                 if (e.Status == WebExceptionStatus.ProtocolError)
                 {
                 }
+                Logger.Error("Protocol Error in push notification",e);
             }
 
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.Error("Error in push notification",ex);
             }
         }
     }
