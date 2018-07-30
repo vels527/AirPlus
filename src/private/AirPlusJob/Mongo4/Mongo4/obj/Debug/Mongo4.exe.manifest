@@ -42,14 +42,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Mongo4.exe" size="38352">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="log4net.dll" size="276480">
+      <assemblyIdentity name="log4net" version="2.0.8.0" publicKeyToken="669E0DDF0BB1AA2A" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>r1YQxRXSJE25jGYmNiZMgXfomxr+QH+I/RikHWb25+I=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Mongo4.exe" size="39888">
       <assemblyIdentity name="Mongo4" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>zDedWb9q+qV0lEcMN/kZTggFiKAw35qFJM/o7vVpdyo=</dsig:DigestValue>
+        <dsig:DigestValue>9frUYlBdq7vST1JLS8UCVLl1+oQq9RxGA2fPgXFjfsk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -125,13 +137,13 @@
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="Mongo4.exe.config" size="544">
+  <file name="Mongo4.exe.config" size="550">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>piNRc74LqECkBOpsMDm4c/2p7ehh7fN8CjwA5ieF7Fo=</dsig:DigestValue>
+      <dsig:DigestValue>h+RzEU+zbu21Fk2I7lNRxTsLhlBNXLhVbWY4UlXUSJc=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

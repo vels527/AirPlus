@@ -20,7 +20,8 @@ using MongoDB.Driver.Core;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;   
+
 
 namespace Mongo4
 {
@@ -37,14 +38,38 @@ namespace Mongo4
             var subject = "Morning Airplus Calendar Month";
             var to = new EmailAddress("saran@kustotech.in", "saran");
             //var plainTextContent = "and easy to do anywhere, even with C#";
-            var htmlContent = cde.MailBody; ;
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, "Hi", htmlContent);
-            msg.AddCc("siva@kustotech.in", "siva");
-            var response = await client.SendEmailAsync(msg);
+            try
+            {
+                var htmlContent = cde.MailBody; ;
+                var msg = MailHelper.CreateSingleEmail(from, to, subject, "Hi", htmlContent);
+                msg.AddCc("siva@kustotech.in", "siva");
+                var response = await client.SendEmailAsync(msg);
+            }
+            catch(Exception e)
+            {
+                Logger.Error("Error in mail part",e);
+            }
         }
         static void Main(string[] args) 
         {
-            Execute().Wait();
+            try
+            {
+                FileInfo fileInfo = new FileInfo("./log4net.config");
+                log4net.Config.XmlConfigurator.Configure(fileInfo);
+                Execute().Wait();
+            }
+            catch(FileNotFoundException fe)
+            {
+                FileInfo fileInfo = new FileInfo("temp.txt");
+                FileStream fs=fileInfo.Create();
+                fs.Close();
+            }
+            catch (Exception ex)
+            {
+                //Console.WriteLine(ex.Message);
+                Logger.Error(ex);
+            }
+            
         }
     }
     [BsonDiscriminator("Price")]
@@ -367,6 +392,8 @@ namespace Mongo4
                 DownloadFromAirbnb(listingId, url,out output);
                 if(output=="")
                 {
+                    string infoMessage = "No output for listing " + listingId;
+                    Logger.Info(infoMessage);
                     continue;
                 }
                 Mail Mone = new Mail();
@@ -516,6 +543,7 @@ namespace Mongo4
             {
                 if (e.Status == WebExceptionStatus.ProtocolError)
                 {
+                    Logger.Error("check Request_www_airbnb_com for protocol error", e);
                     response = (HttpWebResponse)e.Response;
                     return false;
                 }
