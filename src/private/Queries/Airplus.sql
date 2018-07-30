@@ -4,7 +4,7 @@ GO
 use Airplus;
 Create Table Guest(
 Guest_Id INT IDENTITY(1,1) PRIMARY KEY,
-AirplusId BIGINT UNIQUE,
+AirplusId BIGINT,
 FullName VARCHAR(250),
 FirstName VARCHAR(150),
 LastName VARCHAR(150),
