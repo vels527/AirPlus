@@ -1,21 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using SendGrid;
-using SendGrid.Helpers.Mail;
-using System.Threading;
-using System.Net.Http;
 using System.Net;
 using System.Data;
-using System.Data.SqlClient;
-using System.Configuration;
-using Ical.Net;
-using Ical.Net.CalendarComponents;
 
 namespace AirbnbGuestList
 {
@@ -38,68 +25,50 @@ namespace AirbnbGuestList
                     string jsonContent = program.MakeRequests(URL);
                     GuestList guestList = new GuestList(ListingId, Email, Name);
                     guestList.ProcessIcal(jsonContent, ListingId);
-                    //guestList.processJSON(jsonContent);
                     guestList.UpdateTable();
                     guestList.SendMail().Wait();
                     guestList.SendMailASAP().Wait();
                     guestList.Request_account_pushed_co().Wait();
-                    string listmsg = ListingId.ToString()+" processed.";
+                    string listmsg = ListingId.ToString() + " processed.";
                     Logger.Info(listmsg);
                 }
             }
-            catch(FileNotFoundException fe)
+            catch (FileNotFoundException)
             {
-                FileInfo fileInfo = new FileInfo("temp.txt");
+                FileInfo fileInfo = new FileInfo("LoggerFileNotFound.txt");
                 FileStream fs = fileInfo.Create();
                 fs.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Error(ex);
             }
-            
+
         }
+
         public DataTable GetProperties()
         {
-            SqlConnection connection = new SqlConnection(ConnString);
-            connection.Open();
-            SqlDataAdapter da = new SqlDataAdapter();
-            DataSet ds = new DataSet("PropertyList");
-            SqlCommand cmd = new SqlCommand("GetPropertyList", connection);
-            cmd.CommandType = CommandType.StoredProcedure;
-            da.SelectCommand = cmd;
-            da.Fill(ds);
-            return ds.Tables[0];
+            return DataLayer.GetProperties();
         }
-        public string ConnString
-        {
-            get
-            {
-#if DEBUG
-                return ConfigurationManager.ConnectionStrings["Dev"].ConnectionString;
-#else
-            return ConfigurationManager.ConnectionStrings["Prod"].ConnectionString;
-#endif
-            }
-        }
+
         public string MakeRequests(string URL)
         {
             HttpWebResponse response;
-            string output="";
-            if (Request_www_airbnb_cal(out response,URL))
+            string output = "";
+            if (Request_www_airbnb_cal(out response, URL))
             {
                 //var encoding = Encoding.GetEncoding(response.CharacterSet);
                 var encoding = Encoding.UTF8;
                 using (var responseStream = response.GetResponseStream())
                 {
                     using (var reader = new StreamReader(responseStream, encoding))
-                        output = reader.ReadToEnd();                                   
+                        output = reader.ReadToEnd();
                 }
                 response.Close();
             }
             return output;
         }
-        private bool Request_www_airbnb_cal(out HttpWebResponse response,string URL)
+        private bool Request_www_airbnb_cal(out HttpWebResponse response, string URL)
         {
             response = null;
 
@@ -118,7 +87,7 @@ namespace AirbnbGuestList
             }
             catch (WebException e)
             {
-                Logger.Error("Ical Download Error",e);
+                Logger.Error("Ical Webexception Error", e);
                 if (e.Status == WebExceptionStatus.ProtocolError) response = (HttpWebResponse)e.Response;
                 else return false;
             }
@@ -132,7 +101,7 @@ namespace AirbnbGuestList
             return true;
         }
 
-        
+
         ///<para>Request_www_airbnb_co_in method will not be used as it requires airbnb credentials.Instead use Request_www_airbnb_cal </para>
         [Obsolete]
         private bool Request_www_airbnb_co_in(out HttpWebResponse response)
@@ -145,12 +114,12 @@ namespace AirbnbGuestList
                 DateTime startdate = Median.AddMonths(-1);
                 int month = startdate.Month;
                 string startmonth = month < 10 ? "0" + Convert.ToString(month) : Convert.ToString(month);
-                string startday = startdate.Day < 10 ? "0" + Convert.ToString(startdate.Day) :Convert.ToString(startdate.Day);
-                string strstartdate = Convert.ToString(startdate.Year) + "-" + startmonth + "-" +startday;
+                string startday = startdate.Day < 10 ? "0" + Convert.ToString(startdate.Day) : Convert.ToString(startdate.Day);
+                string strstartdate = Convert.ToString(startdate.Year) + "-" + startmonth + "-" + startday;
                 DateTime enddate = Median.AddMonths(1);
                 month = enddate.Month;
-                string endmonth= month < 10 ? "0" + Convert.ToString(month) : Convert.ToString(month);
-                string endday= enddate.Day < 10 ? "0" + Convert.ToString(enddate.Day) : Convert.ToString(enddate.Day);
+                string endmonth = month < 10 ? "0" + Convert.ToString(month) : Convert.ToString(month);
+                string endday = enddate.Day < 10 ? "0" + Convert.ToString(enddate.Day) : Convert.ToString(enddate.Day);
                 string strenddate = Convert.ToString(enddate.Year) + "-" + endmonth + "-" + endday;
                 string listingid = "16676839";
                 string URL = @"https://www.airbnb.co.in/api/v2/calendar_days?key=d306zoyjsyarp7ifhu67rjxn52tv0t20&_format=host_calendar_detailed&listing_id={0}&start_date={1}&end_date={2}";
@@ -179,639 +148,6 @@ namespace AirbnbGuestList
             }
 
             return true;
-        }
-    }
-
-    public class Guest
-    {
-
-        public string FirstName { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public DateTime RequestedStartDate { get; set; }
-        public DateTime RequestedEndDate { get; set; }
-        public long AirplusId { get; set; }
-        public long ListingId { get; set; }
-        
-        public Guest()
-        {
-            
-
-        }
-        public Guest(string Summary, string Description, DateTime startDate, DateTime endDate, long listingID)
-        {
-            try {
-                string[] Names = Summary.Split(' ');
-                if (!String.IsNullOrEmpty(Names[0]))
-                {
-                    FirstName = Names[0];
-                }
-                for (int i = 0; i < Names.Length - 1; i++)
-                {
-                    FullName += Names[i];
-                    if (i == Names.Length - 1)
-                    {
-                        break;
-                    }
-                    FullName += " ";
-                }
-                //Take PHONE and EMAIL
-                string[] values = Description.Split('\n');
-                bool phoneCheck = false;
-                bool emailCheck = false;
-                foreach (string s in values)
-                {
-                    if (s.IndexOf(":") > -1)
-                    {
-                        string[] keyvalue = s.Split(':');
-                        switch (keyvalue[0].ToLower())
-                        {
-                            case "phone":
-                                if (!String.IsNullOrEmpty(keyvalue[1]) && keyvalue[1].TrimStart(' ').IndexOf("+") == 0)
-                                {
-                                    Phone = keyvalue[1].Trim();
-                                }
-                                phoneCheck = true;
-                                break;
-                            case "email":
-                                if (!String.IsNullOrEmpty(keyvalue[1]) && keyvalue[1].Trim().IndexOf("@") > 0)
-                                {
-                                    Email = keyvalue[1].Trim();
-                                }
-                                emailCheck = true;
-                                break;
-                            default:
-                                continue;
-                        }
-                        if (phoneCheck && emailCheck) break;
-                    }
-                }
-                StartDate = startDate;
-                EndDate = endDate;
-                ListingId = listingID;
-            }
-            catch(Exception e)
-            {
-
-            }
-            }
-    }
-
-    public class GuestList
-    {
-        public List<Guest> Guests;
-        string apiKey = Environment.GetEnvironmentVariable("SENDSEND");
-        SendGridClient client;
-        public string ConnString
-        {
-            get
-            {
-#if DEBUG
-                return ConfigurationManager.ConnectionStrings["Dev"].ConnectionString;
-#else
-            return ConfigurationManager.ConnectionStrings["Prod"].ConnectionString;
-#endif
-            }
-        }
-        public long ListingId
-        {
-            get; set;
-        }
-        public DataTable GuestTable
-        {
-            get
-            {
-                DataTable dt = new DataTable("GUESTPROPERTYTYPETABLE");
-                DataColumn columnFullName = new DataColumn("FullName", Type.GetType("System.String"));
-                dt.Columns.Add(columnFullName);
-                DataColumn columnFirstName = new DataColumn("FirstName", Type.GetType("System.String"));
-                dt.Columns.Add(columnFirstName);
-                DataColumn columnEmail = new DataColumn("Email", Type.GetType("System.String"));
-                dt.Columns.Add(columnEmail);
-                DataColumn columnPhone = new DataColumn("Phone", Type.GetType("System.String"));
-                dt.Columns.Add(columnPhone);
-                DataColumn columnListing = new DataColumn("ListingID", Type.GetType("System.Int32"));
-                dt.Columns.Add(columnListing);
-                DataColumn columnCheckIn = new DataColumn("CHECKIN", Type.GetType("System.DateTime"));
-                dt.Columns.Add(columnCheckIn);
-                DataColumn columnCheckOut = new DataColumn("CHECKOUT", Type.GetType("System.DateTime"));
-                dt.Columns.Add(columnCheckOut);
-                foreach (Guest g in Guests)
-                {
-                    DataRow dr = dt.NewRow();
-                    dr["FullName"]=g.FullName;
-                    dr["FirstName"] = g.FirstName;
-                    dr["ListingID"] = g.ListingId;
-                    dr["CHECKIN"]= g.StartDate;
-                    dr["CHECKOUT"] = g.EndDate;
-                    if (g.Email is null)
-                    {
-                        dr["Email"]= DBNull.Value;
-                    }
-                    else
-                    {
-                        dr["Email"] = g.Email;
-                    }
-                    if (g.Phone is null)
-                    {
-                        dr["Phone"] = DBNull.Value;
-                    }
-                    else
-                    {
-                        dr["Phone"] = g.Phone;
-                    }
-                    dt.Rows.Add(dr);
-                }
-                return dt;
-            }
-        }
-        public string MessageForNotification
-        {
-            get
-            {
-                SqlConnection connection = new SqlConnection(ConnString);
-                connection.Open();
-                SqlDataAdapter da = new SqlDataAdapter();
-                DataSet ds = new DataSet("Users");
-                SqlCommand cmd = new SqlCommand("GetGuestsListForToday", connection);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@Listing", SqlDbType.Int));
-                cmd.Parameters[0].Value = ListingId;
-                da.SelectCommand = cmd;
-                da.Fill(ds);
-                DataSet dataset = ds;
-                DataTable data = dataset.Tables[0];
-                DataTable data_1 = dataset.Tables[1];
-                StringBuilder strb = new StringBuilder();
-
-                if (data.Rows.Count > 0) //If empty no message
-                {
-                    strb.Append("Check IN for ");
-                }
-                
-                
-                foreach (DataRow dr in data.Rows)
-                {
-                    strb.Append(Convert.ToString(dr[3]));
-                    strb.Append(" on ");
-                    strb.Append(Convert.ToString(dr[7]));
-                    strb.Append(" check out on ");
-                    strb.Append(Convert.ToString(dr[8]));
-                    
-                    if (Convert.ToString(dr[10]) != "")
-                    {
-                        strb.Append(" with cleaning at ");
-                        strb.Append(Convert.ToDateTime(dr[10]).ToShortTimeString());
-                    }
-
-                    if (Convert.ToString(dr[11]) != "")
-                    {
-                        strb.Append(" Remarks: ");
-                        strb.Append(Convert.ToString(dr[11]));
-                    }
-                    strb.Append("\n");
-                }
-                if (data_1.Rows.Count > 0) //If empty no message
-                {
-                    strb.Append("Check Out for ");
-                }
-
-
-                foreach (DataRow dr in data_1.Rows)
-                {
-                    strb.Append(Convert.ToString(dr[3]));
-                    strb.Append(" on ");
-                    strb.Append(Convert.ToString(dr[8]));
-
-                    strb.Append(" whose check in was on ");
-                    strb.Append(Convert.ToString(dr[7]));
-
-                    if (Convert.ToString(dr[10]) != "")
-                    {
-                        strb.Append(" with cleaning at ");
-                        strb.Append(Convert.ToDateTime(dr[10]).ToShortTimeString());
-                    }
-
-                    if (Convert.ToString(dr[11]) != "")
-                    {
-                        strb.Append(" Remarks: ");
-                        strb.Append(Convert.ToString(dr[11]));
-                    }
-                    strb.Append("\n");
-                }
-                
-                return strb.ToString();
-            }
-        }
-        public string MessageForDay
-        {
-            get
-            {
-                SqlConnection connection = new SqlConnection(ConnString);
-                connection.Open();
-                SqlDataAdapter da = new SqlDataAdapter();
-                DataSet ds = new DataSet("Users");
-                SqlCommand cmd = new SqlCommand("GetGuestsListForToday", connection);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@Listing", SqlDbType.Int));
-                cmd.Parameters[0].Value = ListingId;
-                da.SelectCommand = cmd;
-                da.Fill(ds);
-                DataSet dataset = ds;
-                DataTable data = dataset.Tables[0];
-                DataTable data_1 = dataset.Tables[1];
-                DataTable statuscode_data = dataset.Tables[2];
-                StringBuilder strb = new StringBuilder();
-                strb.Append("<P>Check IN");
-                strb.Append("<Table>");
-                strb.Append("<tr>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Guest Name</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check In</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check Out</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check In</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check Out</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Remarks</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Cleaning Timing</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Status</td>");
-
-                foreach (DataRow dr in data.Rows)
-                {
-                    strb.Append("<tr>");
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[3]) + @"</td>");
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[7]) + @"</td>");
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[8]) + @"</td>");
-
-                    if (Convert.ToString(dr[5]) != "")
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
-                    }
-                    else
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                    }
-
-                    if (Convert.ToString(dr[6]) != "")
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
-                    }
-                    else
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                    }
-
-
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[11]) + @"</td>");
-                    if (Convert.ToString(dr[10]) != "")
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[10]).ToShortTimeString() + @"</td>");
-                    }
-                    else
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                    }
-                    bool isnotstatus = true;
-                    foreach (DataRow d in statuscode_data.Rows)
-                    {
-                        if (Convert.ToString(d[1]) == Convert.ToString(dr[9]))
-                        {
-                            strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(d[1]) + @"</td>");
-                            isnotstatus = false;
-                            break;
-                        }
-                    }
-                    if (isnotstatus)
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>Not Specified</td>");
-                    }
-                    strb.Append(@"</tr>");
-                }
-                strb.Append(@"</Table>");
-                strb.Append("<P>Check Out");
-                strb.Append("<Table>");
-                strb.Append("<tr>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Guest Name</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check In</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check Out</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check In</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check Out</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Remarks</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Cleaning Timing</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Status</td>");
-
-                foreach (DataRow dr in data_1.Rows)
-                {
-                    strb.Append("<tr>");
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[3]) + @"</td>");
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[7]) + @"</td>");
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[8]) + @"</td>");
-
-                    if (Convert.ToString(dr[5]) != "")
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
-                    }
-                    else
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                    }
-
-                    if (Convert.ToString(dr[6]) != "")
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
-                    }
-                    else
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                    }
-
-
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[11]) + @"</td>");
-                    if (Convert.ToString(dr[10]) != "")
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[10]).ToShortTimeString() + @"</td>");
-                    }
-                    else
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                    }
-                    bool isnotstatus = true;
-                    foreach (DataRow d in statuscode_data.Rows)
-                    {
-                        if (Convert.ToString(d[1]) == Convert.ToString(dr[9]))
-                        {
-                            strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(d[1]) + @"</td>");
-                            isnotstatus = false;
-                            break;
-                        }
-                    }
-                    if (isnotstatus)
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>Not Specified</td>");
-                    }
-                    strb.Append(@"</tr>");
-                }
-                strb.Append(@"</Table>");
-                return strb.ToString();
-            }
-        }
-        public string Message {
-            get {
-                SqlConnection connection = new SqlConnection(ConnString);
-                connection.Open();
-                SqlDataAdapter da = new SqlDataAdapter();
-                DataSet ds = new DataSet("Users");
-                SqlCommand cmd = new SqlCommand("GetGuestsList", connection);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@Listing", SqlDbType.Int));
-                cmd.Parameters[0].Value = ListingId;
-                da.SelectCommand = cmd;
-                da.Fill(ds);
-                DataSet dataset = ds;
-                DataTable data = dataset.Tables[0];
-                DataTable statuscode_data = dataset.Tables[1];
-                StringBuilder strb = new StringBuilder();
-                strb.Append("<Table>");
-                strb.Append("<tr>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Guest Name</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check In</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check Out</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check In</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check Out</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Remarks</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Cleaning Timing</td>");
-                strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Status</td>");
-
-                foreach (DataRow dr in data.Rows)
-                {
-                    strb.Append("<tr>");
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[3]) + @"</td>");
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[7]) + @"</td>");
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[8]) + @"</td>");
-
-                    if(Convert.ToString(dr[5]) != "")
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
-                    }
-                    else
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                    }    
-
-                    if (Convert.ToString(dr[6]) != "")
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
-                    }
-                    else
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                    }  
-
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[11]) + @"</td>");
-
-                    if (Convert.ToString(dr[10]) != "")
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[10]).ToShortTimeString() + @"</td>");
-                    }
-                    else
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                    }
-                    bool isnotstatus = true;
-                    foreach (DataRow d in statuscode_data.Rows)
-                    {
-                        if (Convert.ToString(d[1]) == Convert.ToString(dr[9]))
-                        {
-                            strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(d[1]) + @"</td>");
-                            isnotstatus = false;
-                            break;
-                        }
-                    }
-                    if (isnotstatus)
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>Not Specified</td>");
-                    }
-                    strb.Append(@"</tr>");
-                }
-                strb.Append(@"</Table>");
-                return strb.ToString();
-            } }
-
-        EmailAddress from = new EmailAddress("airplus@kustotech.in", "airplus");
-        public string subject = "Reminder Check In - Check Out";
-        EmailAddress to;
-        EmailAddress cc = new EmailAddress("siva@kustotech.in", "siva");
-        public GuestList(long listingId,string email,string fName)
-        {
-            Guests = new List<Guest>();
-            client = new SendGridClient(apiKey);
-            ListingId = listingId;
-            to = new EmailAddress(email, fName);
-        }
-        public async Task SendMail()
-        {
-            try
-            {
-                var msg = MailHelper.CreateSingleEmail(from, to, subject, "Hi", Message);
-                msg.AddCc(cc);
-                var response = await client.SendEmailAsync(msg);
-            }
-            catch(Exception ex)
-            {
-                string Err = "Error when sending mail -" + this.ListingId;
-                Logger.Error(Err,ex);
-            }
-        }
-
-        public async Task SendMailASAP()
-        {
-            try
-            {
-                var msg = MailHelper.CreateSingleEmail(from, to, "DAILY Check In - Check Out", "Hi", MessageForDay);
-                msg.AddCc(cc);
-                var response = await client.SendEmailAsync(msg);
-            }
-            catch (Exception ex)
-            {
-                string Err = "Error when sending mail -" + this.ListingId;
-                Logger.Error(Err, ex);
-            }
-        }
-        public void UpdateTable()
-        {
-            if (Guests.Count() > 0)
-            {
-                try
-                {
-                    SqlConnection connection = new SqlConnection(ConnString);
-                    connection.Open();
-                    SqlCommand cmd = new SqlCommand("InsertUpdateGuestList", connection);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    SqlParameter param = cmd.Parameters.AddWithValue("@Guest", GuestTable);
-                    param.SqlDbType = SqlDbType.Structured;
-                    param.TypeName = "dbo.GUESTPROPERTYTYPETABLE";
-                    cmd.ExecuteNonQuery();
-                    connection.Close();
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("Error when inserting or updating guests",e);
-                }
-            }
-        }
-        public void ProcessIcal(string calendarInfo,long ListingId)
-        {
-            try
-            {
-                var calobjects = Calendar.Load(calendarInfo);
-                var events = calobjects.Events;
-                var guestFromLINQ = from e in events where (e.Location != null && e.DtStart.Date >= DateTime.Now.AddMonths(-2)) select new Guest(e.Summary, e.Description, e.DtStart.Date, e.DtEnd.Date, ListingId);
-                Guests = guestFromLINQ.ToList<Guest>();
-            }
-            catch(Exception e)
-            {
-                string exMsg = "Ical processing error for " + ListingId;
-                Logger.Error(exMsg,e);
-            }
-        }
-
-        
-        ///<para>processJSON is obsolete as this flow uses airbnb crdentials.Instead use airbnbcal</para>        
-        [Obsolete]
-        public bool processJSON(string JSON)
-        {
-            DateTime today = DateTime.Now;
-            DateTime tomorrow = today.AddDays(1);
-            dynamic jsonGuest = JsonConvert.DeserializeObject(JSON);
-            var jsonDays = jsonGuest["calendar_days"];
-            for(int i = 0; i < jsonDays.Count; i++)
-            {
-                var doc = jsonDays[i];
-                string docDate = doc["date"];
-                string docAvailable = doc["available"];
-                if (docAvailable=="False")
-                {
-                    string startDate = doc["reservation"]["start_date"];
-                    string endDate = doc["reservation"]["end_date"];
-                    Guest guest = new Guest();
-                    guest.FullName = doc["reservation"]["guest"]["full_name"];
-                    guest.FirstName = doc["reservation"]["guest"]["first_name"];
-                    guest.AirplusId = Convert.ToInt64(doc["reservation"]["guest"]["id"]);
-                    guest.ListingId= Convert.ToInt64(doc["reservation"]["hosting_id"]);
-                    guest.StartDate = Convert.ToDateTime(startDate);
-                    guest.EndDate = Convert.ToDateTime(endDate);
-                    guest.RequestedStartDate = guest.StartDate.AddHours(16);
-                    guest.RequestedEndDate = guest.EndDate.AddHours(11);
-                    
-                    Guest another = new Guest();
-                    another.AirplusId = 0;
-                    if (Guests.Count()==0)
-                    {
-                        Guests.Add(guest);
-                    }
-                    else
-                    {
-                        another = Guests.Find(e => (e.AirplusId == Convert.ToInt64(doc["reservation"]["guest"]["id"])));
-                        if (another is null)
-                        {
-                            Guests.Add(guest);
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-                }
-            }
-            
-            return true;
-        }
-        public async Task Request_account_pushed_co()
-        {
-            try
-            {
-                var client = new HttpClient();
-
-                var requestContent = new FormUrlEncodedContent(new[] {
-                new KeyValuePair<string, string>("app_key", "P9cVh1ypGxkd1ISzstkg"),
-                new KeyValuePair<string, string>("app_secret", "bgcMm994HNegQpjSMGhNX0PHMBsuReNj8w035o7pnRuACuChniX7LsoYcoB1Xeqb"),
-                new KeyValuePair<string, string>("target_type", "app"),
-                new KeyValuePair<string, string>("content", this.MessageForNotification)
-                });
-
-                // Get the response.
-                HttpResponseMessage response = await client.PostAsync(@"https://api.pushed.co/1/push", requestContent);
-
-                //delay
-                for (int i = 0; ; i++)
-                {
-                    if (i / 100000000 == 1)
-                        break;
-                }
-
-                // Get the response content.
-                HttpContent responseContent = response.Content;
-                // Get the stream of the content.
-
-                using (var reader = new StreamReader(await responseContent.ReadAsStreamAsync()))
-                {
-                    // Write the output.
-                    Console.WriteLine(await reader.ReadToEndAsync());
-                }
-            }
-            catch (WebException e)
-            {
-                if (e.Status == WebExceptionStatus.ProtocolError)
-                {
-                }
-                Logger.Error("Protocol Error in push notification",e);
-            }
-
-            catch (Exception ex)
-            {
-                Logger.Error("Error in push notification",ex);
-            }
         }
     }
 }
