@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="AirbnbGuestList.exe" version="1.0.0.14" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
+  <asmv1:assemblyIdentity name="AirbnbGuestList.exe" version="1.0.0.15" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
   <application />
   <entryPoint>
     <assemblyIdentity name="AirbnbGuestList" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AirbnbGuestList.exe" size="42960">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AirbnbGuestList.exe" size="48592">
       <assemblyIdentity name="AirbnbGuestList" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>OUYxwVIsO6fkbNZStUr4aTPG9rt8QXMuRPNdXm0YF2A=</dsig:DigestValue>
+        <dsig:DigestValue>ggLf9Nphvdz6tYP9aVE0Fvsnv+YXrJG634Y+8OE0g14=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -98,6 +98,18 @@
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
         <dsig:DigestValue>Aj/h+lPUKhmxMfcLRJordNKlly+UGEnIly3tQUX++fE=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="RazorEngine.dll" size="288256">
+      <assemblyIdentity name="RazorEngine" version="3.10.0.0" publicKeyToken="9EE697374C7E744A" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>ZhHDBHMnAHhzsccY5YThMNlS8XBVlgUWUJq0alAD45U=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -197,13 +209,25 @@
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="AirbnbGuestList.exe.config" size="1510">
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="System.Web.Razor.dll" size="271056">
+      <assemblyIdentity name="System.Web.Razor" version="3.0.0.0" publicKeyToken="31BF3856AD364E35" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>mr0Jmg1fDzcv2a2vPFHwEc4lmvqPv7KtemRk/UdbjWk=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="AirbnbGuestList.exe.config" size="1513">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>wcdllAifcLM50KhC/iro74x4kHNa6EHEzc16VoezDrI=</dsig:DigestValue>
+      <dsig:DigestValue>di+YfFBO7DrLIroJ0pwsKpw0kpHHa5INT5q0Qlr/GoI=</dsig:DigestValue>
     </hash>
   </file>
   <file name="log4net.config" size="1437">

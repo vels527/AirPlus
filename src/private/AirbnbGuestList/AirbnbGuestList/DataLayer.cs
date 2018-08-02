@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
+using RazorEngine;
+using RazorEngine.Templating;
 
 namespace AirbnbGuestList
 {
@@ -148,159 +150,203 @@ namespace AirbnbGuestList
             connection.Close();
             return strb.ToString();
         }
+        public static string HeadingTemplate
+        {
+            get
+            {
+                StringBuilder strbHeading = new StringBuilder();
+                strbHeading.Append("<P>@Model.Heading");
+                strbHeading.Append("<Table>");
+                strbHeading.Append("<tr>");
+                strbHeading.Append(@"<td style='border:1px solid black;background-color:yellow;'>Guest Name</td>");
+                strbHeading.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check In</td>");
+                strbHeading.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check Out</td>");
+                strbHeading.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check In</td>");
+                strbHeading.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check Out</td>");
+                strbHeading.Append(@"<td style='border:1px solid black;background-color:yellow;'>Remarks</td>");
+                strbHeading.Append(@"<td style='border:1px solid black;background-color:yellow;'>Cleaning Timing</td>");
+                strbHeading.Append(@"<td style='border:1px solid black;background-color:yellow;'>Status</td>");
+                strbHeading.Append(@"</tr>");
+                return strbHeading.ToString();
+            }
+        }
+        public static string MessageTemplate
+        {
+            get
+            {
+                StringBuilder strbTemplate = new StringBuilder();
+                strbTemplate.Append("<tr>");
+                strbTemplate.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>@Model.Name</td>");
+                strbTemplate.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>@Model.CheckIn</td>");
+                strbTemplate.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>@Model.CheckOut</td>");
+                strbTemplate.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>@Model.RCheckIn</td>");
+                strbTemplate.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>@Model.RCheckOut</td>");
+                strbTemplate.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>@Model.Remarks</td>");
+                strbTemplate.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>@Model.CleanTiming</td>");
+                strbTemplate.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>@Model.Status</td>");
+                strbTemplate.Append(@"</tr>");
+                strbTemplate.Append(@"</Table>");
+                return strbTemplate.ToString();
+            }
+        }
         public static string MessageForDay(long ListingId)
         {
-            connection.Open();
-            SqlDataAdapter da = new SqlDataAdapter();
-            DataSet ds = new DataSet("Users");
-            SqlCommand cmd = new SqlCommand("GetGuestsListForToday", connection);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Add(new SqlParameter("@Listing", SqlDbType.Int));
-            cmd.Parameters[0].Value = ListingId;
-            da.SelectCommand = cmd;
-            da.Fill(ds);
-            DataSet dataset = ds;
-            DataTable data = dataset.Tables[0];
-            DataTable data_1 = dataset.Tables[1];
-            DataTable statuscode_data = dataset.Tables[2];
-            StringBuilder strb = new StringBuilder();
-
-            if (data.Rows.Count <= 0)
+            try
             {
+                connection.Open();
+                SqlDataAdapter da = new SqlDataAdapter();
+                DataSet ds = new DataSet("Users");
+                SqlCommand cmd = new SqlCommand("GetGuestsListForToday", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@Listing", SqlDbType.Int));
+                cmd.Parameters[0].Value = ListingId;
+                da.SelectCommand = cmd;
+                da.Fill(ds);
+                DataSet dataset = ds;
+                DataTable data = dataset.Tables[0];
+                DataTable data_1 = dataset.Tables[1];
+                DataTable statuscode_data = dataset.Tables[2];
+                
+                
+                string Heading = "";
+                string Template = "";
+                string completeMsg = "";
+
+                if (data.Rows.Count <= 0 && data_1.Rows.Count<=0)
+                {
+                    return "";
+                }
+
+                
+                Heading = HeadingTemplate;
+                Template = MessageTemplate;
+
+                var ResultHeading = Engine.Razor.RunCompile(Heading, "MessageInKey", null, new { Heading = "Check In Details" });
+                //return Result;
+                completeMsg = ResultHeading;
+                if (data.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in data.Rows)
+                    {
+                        string statusOption = "Not Specified";
+                        foreach (DataRow d in statuscode_data.Rows)
+                        {
+                            if (Convert.ToString(d[1]) == Convert.ToString(dr[9]))
+                            {
+                                statusOption = Convert.ToString(d[1]);
+                                break;
+                            }
+                        }
+
+                        var ResultCheckIn = Engine.Razor.RunCompile(Template, "MessageTemplate", null, new { Name = Convert.ToString(dr[3]), CheckIn = Convert.ToString(dr[7]), CheckOut = Convert.ToString(dr[8]), RCheckIn = (Convert.ToString(dr[5]) != "" ? Convert.ToDateTime(dr[5]).ToShortTimeString() : ""), RCheckOut = (Convert.ToString(dr[6]) != "" ? Convert.ToDateTime(dr[6]).ToShortTimeString() : ""), Remarks = Convert.ToString(dr[11]), CleanTiming = Convert.ToString(dr[10]) != "" ? Convert.ToDateTime(dr[10]).ToShortTimeString() : "", Status = statusOption });
+                        completeMsg += ResultCheckIn;
+                        //Result = Engine.Razor.Run("MessageKey",null,);
+                    }
+                }
+                else
+                {
+                    completeMsg = "";
+                }
+                if (data_1.Rows.Count <= 0)
+                {
+                    return completeMsg;
+                }
+                var ResultCheckOut= Engine.Razor.RunCompile(Heading, "MessageOutKey", null, new { Heading = "Check Out Details" }); ;
+                completeMsg += ResultCheckOut;
+                foreach (DataRow dr in data_1.Rows)
+                {
+                    string statusOption = "Not Specified";
+                    foreach (DataRow d in statuscode_data.Rows)
+                    {
+                        if (Convert.ToString(d[1]) == Convert.ToString(dr[9]))
+                        {
+                            statusOption = Convert.ToString(d[1]);
+                            break;
+                        }
+                    }
+
+                    var MsgCheckOut = Engine.Razor.RunCompile(Template, "MessageTemplateOut", null, new { Name = Convert.ToString(dr[3]), CheckIn = Convert.ToString(dr[7]), CheckOut = Convert.ToString(dr[8]), RCheckIn = (Convert.ToString(dr[5]) != "" ? Convert.ToDateTime(dr[5]).ToShortTimeString() : ""), RCheckOut = (Convert.ToString(dr[6]) != "" ? Convert.ToDateTime(dr[6]).ToShortTimeString() : ""), Remarks = Convert.ToString(dr[11]), CleanTiming = Convert.ToString(dr[10]) != "" ? Convert.ToDateTime(dr[10]).ToShortTimeString() : "", Status = statusOption });
+                    completeMsg += MsgCheckOut;
+                    //Result = Engine.Razor.Run("MessageKey",null,);
+                }
+                connection.Close();
+                return completeMsg;
+            }
+            catch (Exception e)
+            {
+                connection.Close();
+                string msg = "Error in DataLayer Message  for Day for Listing : "+ListingId;
+                Logger.Error(msg,e);
                 return "";
             }
+            //strb.Append(@"</Table>");
+            //strb.Append("<P>Check Out");
+            //strb.Append("<Table>");
+            //strb.Append("<tr>");
+            //strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Guest Name</td>");
+            //strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check In</td>");
+            //strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check Out</td>");
+            //strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check In</td>");
+            //strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check Out</td>");
+            //strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Remarks</td>");
+            //strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Cleaning Timing</td>");
+            //strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Status</td>");
 
-            strb.Append("<P>Check IN");
-            strb.Append("<Table>");
-            strb.Append("<tr>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Guest Name</td>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check In</td>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check Out</td>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check In</td>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check Out</td>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Remarks</td>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Cleaning Timing</td>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Status</td>");
+            //foreach (DataRow dr in data_1.Rows)
+            //{
+            //    strb.Append("<tr>");
+            //    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[3]) + @"</td>");
+            //    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[7]) + @"</td>");
+            //    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[8]) + @"</td>");
 
-            foreach (DataRow dr in data.Rows)
-            {
-                strb.Append("<tr>");
-                strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[3]) + @"</td>");
-                strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[7]) + @"</td>");
-                strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[8]) + @"</td>");
+            //    if (Convert.ToString(dr[5]) != "")
+            //    {
+            //        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
+            //    }
+            //    else
+            //    {
+            //        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+            //    }
 
-                if (Convert.ToString(dr[5]) != "")
-                {
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
-                }
-                else
-                {
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                }
-
-                if (Convert.ToString(dr[6]) != "")
-                {
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
-                }
-                else
-                {
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                }
-
-
-                strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[11]) + @"</td>");
-                if (Convert.ToString(dr[10]) != "")
-                {
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[10]).ToShortTimeString() + @"</td>");
-                }
-                else
-                {
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                }
-                bool isnotstatus = true;
-                foreach (DataRow d in statuscode_data.Rows)
-                {
-                    if (Convert.ToString(d[1]) == Convert.ToString(dr[9]))
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(d[1]) + @"</td>");
-                        isnotstatus = false;
-                        break;
-                    }
-                }
-                if (isnotstatus)
-                {
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>Not Specified</td>");
-                }
-                strb.Append(@"</tr>");
-            }
-            strb.Append(@"</Table>");
-            strb.Append("<P>Check Out");
-            strb.Append("<Table>");
-            strb.Append("<tr>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Guest Name</td>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check In</td>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Check Out</td>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check In</td>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check Out</td>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Remarks</td>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Cleaning Timing</td>");
-            strb.Append(@"<td style='border:1px solid black;background-color:yellow;'>Status</td>");
-
-            foreach (DataRow dr in data_1.Rows)
-            {
-                strb.Append("<tr>");
-                strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[3]) + @"</td>");
-                strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[7]) + @"</td>");
-                strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[8]) + @"</td>");
-
-                if (Convert.ToString(dr[5]) != "")
-                {
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[5]).ToShortTimeString() + @"</td>");
-                }
-                else
-                {
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                }
-
-                if (Convert.ToString(dr[6]) != "")
-                {
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
-                }
-                else
-                {
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                }
+            //    if (Convert.ToString(dr[6]) != "")
+            //    {
+            //        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[6]).ToShortTimeString() + @"</td>");
+            //    }
+            //    else
+            //    {
+            //        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+            //    }
 
 
-                strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[11]) + @"</td>");
-                if (Convert.ToString(dr[10]) != "")
-                {
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[10]).ToShortTimeString() + @"</td>");
-                }
-                else
-                {
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
-                }
-                bool isnotstatus = true;
-                foreach (DataRow d in statuscode_data.Rows)
-                {
-                    if (Convert.ToString(d[1]) == Convert.ToString(dr[9]))
-                    {
-                        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(d[1]) + @"</td>");
-                        isnotstatus = false;
-                        break;
-                    }
-                }
-                if (isnotstatus)
-                {
-                    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>Not Specified</td>");
-                }
-                strb.Append(@"</tr>");
-            }
-            strb.Append(@"</Table>");
+            //    strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(dr[11]) + @"</td>");
+            //    if (Convert.ToString(dr[10]) != "")
+            //    {
+            //        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToDateTime(dr[10]).ToShortTimeString() + @"</td>");
+            //    }
+            //    else
+            //    {
+            //        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'></td>");
+            //    }
+            //    bool isnotstatus = true;
+            //    foreach (DataRow d in statuscode_data.Rows)
+            //    {
+            //        if (Convert.ToString(d[1]) == Convert.ToString(dr[9]))
+            //        {
+            //            strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>" + Convert.ToString(d[1]) + @"</td>");
+            //            isnotstatus = false;
+            //            break;
+            //        }
+            //    }
+            //    if (isnotstatus)
+            //    {
+            //        strb.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>Not Specified</td>");
+            //    }
+            //    strb.Append(@"</tr>");
+            //}
+            //strb.Append(@"</Table>");
 
-            connection.Close();
-            return strb.ToString();
+            
+            //return strb.ToString();
 
         }
         public static string Message(long ListingId)

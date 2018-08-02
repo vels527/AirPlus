@@ -4,11 +4,11 @@
         <name>AirbnbGuestList</name>
     </assembly>
     <members>
-        <member name="M:AirbnbGuestList.Program.Request_www_airbnb_co_in(System.Net.HttpWebResponse@)">
-            <para>Request_www_airbnb_co_in method will not be used as it requires airbnb credentials.Instead use Request_www_airbnb_cal </para>
-        </member>
         <member name="M:AirbnbGuestList.GuestList.processJSON(System.String)">
             <para>processJSON is obsolete as this flow uses airbnb crdentials.Instead use airbnbcal</para>        
+        </member>
+        <member name="M:AirbnbGuestList.Program.Request_www_airbnb_co_in(System.Net.HttpWebResponse@)">
+            <para>Request_www_airbnb_co_in method will not be used as it requires airbnb credentials.Instead use Request_www_airbnb_cal </para>
         </member>
     </members>
 </doc>
