@@ -69,7 +69,7 @@ namespace AirbnbGuestList
             try
             {
                 string subject = ConfigurationManager.AppSettings["RegularSubject"];
-                await EmailLayer.SendMail(from,to,cc,subject,Message);
+                await EmailLayer.SendMail(from, to, cc, subject, Message);
             }
             catch (Exception ex)
             {
@@ -197,11 +197,7 @@ namespace AirbnbGuestList
                 HttpResponseMessage response = await client.PostAsync(@"https://api.pushed.co/1/push", requestContent);
 
                 //delay
-                for (int i = 0; ; i++)
-                {
-                    if (i / 100000000 == 1)
-                        break;
-                }
+                System.Threading.Thread.Sleep(2000);
 
                 // Get the response content.
                 HttpContent responseContent = response.Content;
