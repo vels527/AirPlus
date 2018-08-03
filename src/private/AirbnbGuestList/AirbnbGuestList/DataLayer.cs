@@ -184,12 +184,12 @@ namespace AirbnbGuestList
                 strbTemplate.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>@Model.Remarks</td>");
                 strbTemplate.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>@Model.CleanTiming</td>");
                 strbTemplate.Append(@"<td style='border-bottom:1px solid black;border-right:1px solid black'>@Model.Status</td>");
-                strbTemplate.Append(@"</tr>");               
+                strbTemplate.Append(@"</tr>");
                 return strbTemplate.ToString();
             }
         }
         private static int counter = 0;
-        public static string GuestToObject(DataTable dataSet,DataTable StatusTable)
+        public static string GuestToObject(DataTable dataSet, DataTable StatusTable)
         {
             string GuestMessage = "";
             int i = counter++;
@@ -205,7 +205,7 @@ namespace AirbnbGuestList
                     }
                 }
 
-                Object GuestDetail =  new { Name = Convert.ToString(dr[3]), CheckIn = Convert.ToString(dr[7]), CheckOut = Convert.ToString(dr[8]), RCheckIn = (Convert.ToString(dr[5]) != "" ? Convert.ToDateTime(dr[5]).ToShortTimeString() : ""), RCheckOut = (Convert.ToString(dr[6]) != "" ? Convert.ToDateTime(dr[6]).ToShortTimeString() : ""), Remarks = Convert.ToString(dr[11]), CleanTiming = Convert.ToString(dr[10]) != "" ? Convert.ToDateTime(dr[10]).ToShortTimeString() : "", Status = statusOption };
+                Object GuestDetail = new { Name = Convert.ToString(dr[3]), CheckIn = Convert.ToString(dr[7]), CheckOut = Convert.ToString(dr[8]), RCheckIn = (Convert.ToString(dr[5]) != "" ? Convert.ToDateTime(dr[5]).ToShortTimeString() : ""), RCheckOut = (Convert.ToString(dr[6]) != "" ? Convert.ToDateTime(dr[6]).ToShortTimeString() : ""), Remarks = Convert.ToString(dr[11]), CleanTiming = Convert.ToString(dr[10]) != "" ? Convert.ToDateTime(dr[10]).ToShortTimeString() : "", Status = statusOption };
                 GuestMessage += Engine.Razor.RunCompile(MessageTemplate, "MessageInKey" + i.ToString(), null, GuestDetail);
             }
             GuestMessage += @"</Table>";
@@ -229,16 +229,16 @@ namespace AirbnbGuestList
                 DataTable data_1 = dataset.Tables[1];
                 DataTable statuscode_data = dataset.Tables[2];
                 connection.Close();
-                
+
                 string Heading = "";
                 string completeMsg = "";
 
-                if (data.Rows.Count <= 0 && data_1.Rows.Count<=0)
+                if (data.Rows.Count <= 0 && data_1.Rows.Count <= 0)
                 {
                     return "";
                 }
 
-                
+
                 Heading = HeadingTemplate;
 
 
@@ -247,7 +247,7 @@ namespace AirbnbGuestList
 
                 if (data.Rows.Count > 0)
                 {
-                    completeMsg += GuestToObject(data,statuscode_data);
+                    completeMsg += GuestToObject(data, statuscode_data);
                 }
                 else
                 {
@@ -257,9 +257,9 @@ namespace AirbnbGuestList
                 {
                     return completeMsg;
                 }
-                var ResultCheckOut= Engine.Razor.RunCompile(Heading, "MessageOutKey", null, new { Heading = "Check Out Details" }); ;
+                var ResultCheckOut = Engine.Razor.RunCompile(Heading, "MessageOutKey", null, new { Heading = "Check Out Details" }); ;
                 completeMsg += ResultCheckOut;
-                completeMsg += GuestToObject(data_1,statuscode_data);
+                completeMsg += GuestToObject(data_1, statuscode_data);
                 return completeMsg;
             }
             catch (Exception e)
@@ -267,15 +267,16 @@ namespace AirbnbGuestList
                 if (connection != null && connection.State == ConnectionState.Open)
                 {
                     connection.Close();
-                }                
-                string msg = "Error in DataLayer Message  for Day for Listing : "+ListingId;
-                Logger.Error(msg,e);
+                }
+                string msg = "Error in DataLayer Message  for Day for Listing : " + ListingId;
+                Logger.Error(msg, e);
                 return "";
             }
         }
         public static string Message(long ListingId)
         {
-            try{
+            try
+            {
                 connection.Open();
                 SqlDataAdapter da = new SqlDataAdapter();
                 DataSet ds = new DataSet("Users");
@@ -297,10 +298,10 @@ namespace AirbnbGuestList
 
                 var ResultHeading = Engine.Razor.RunCompile(Heading, "MessageKey", null, new { Heading = "Guest Details" });
                 completeMsg = ResultHeading;
-                completeMsg += GuestToObject(data,statuscode_data);
+                completeMsg += GuestToObject(data, statuscode_data);
                 return completeMsg;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 if (connection != null && connection.State == ConnectionState.Open)
                 {
