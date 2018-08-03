@@ -84,7 +84,7 @@ namespace AirbnbGuestList
             {
                 if (MessageForDay == "")
                 {
-                    string msg = "ListingID " + this.ListingId + "has no check In or check Out for the day .";
+                    string msg = "ListingID " + this.ListingId + " has no check In or check Out for the day .";
                     Logger.Info(msg);
                 }
                 else
