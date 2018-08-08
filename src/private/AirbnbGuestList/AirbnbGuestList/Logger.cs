@@ -16,16 +16,21 @@ namespace AirbnbGuestList
         public static void Error(object msg)
         {
             Log.Error(msg);
+            EmailLayer.SendError("airplus@kustotech.in", "siva@kustotech.in", "saran@kustotech.in", "Airplus Error", msg.ToString()).Wait();
         }
 
         public static void Error(object msg, Exception ex)
         {
             Log.Error(msg, ex);
+            var mailmsg = msg + "\n\n" + ex.ToString();
+            EmailLayer.SendError("airplus@kustotech.in","siva@kustotech.in","saran@kustotech.in","Airplus Error",mailmsg).Wait();
         }
 
         public static void Error(Exception ex)
         {
             Log.Error(ex.Message, ex);
+            var mailmsg = ex.Message + "\n\n" + ex.ToString();
+            EmailLayer.SendError("airplus@kustotech.in", "siva@kustotech.in", "saran@kustotech.in", "Airplus Error", mailmsg).Wait();
         }
 
         public static void Info(object msg)
