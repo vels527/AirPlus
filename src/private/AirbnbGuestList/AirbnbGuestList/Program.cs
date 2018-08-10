@@ -12,10 +12,10 @@ namespace AirbnbGuestList
         {
             try
             {
-                Program program = new Program();
-                DataTable dt_property = program.GetProperties();
                 FileInfo fileInfo = new FileInfo("./log4net.config");
                 log4net.Config.XmlConfigurator.Configure(fileInfo);
+                Program program = new Program();
+                DataTable dt_property = program.GetProperties();
                 foreach (DataRow dr in dt_property.Rows)
                 {
                     string URL = Convert.ToString(dr[1]);

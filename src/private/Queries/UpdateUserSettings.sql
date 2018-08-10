@@ -1,4 +1,4 @@
-USE [AirplusDEV]
+USE [Airplus]
 GO
 
 /****** Object:  StoredProcedure [dbo].[UpdateUserSettings]    Script Date: 05/28/2018 12:59:18 ******/

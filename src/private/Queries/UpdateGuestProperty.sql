@@ -7,7 +7,17 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
+CREATE TYPE [dbo].[GUESTTYPETABLE] AS TABLE(
+	[GuestId] [int] NULL,
+	[PropertyId] [int] NULL,
+	[HostId] [int] NULL,
+	[RequestedCheckIn] [datetime] NULL,
+	[RequestedCheckOut] [datetime] NULL,
+	[CheckOutCleaning] [datetime] NULL,
+	[StatusCode] [int] NULL,
+	[Remarks] [varchar](350) NULL
+)
+GO
 IF EXISTS(SELECT 1 FROM SYS.PROCEDURES WHERE NAME='UpdateGuestProperty')
 BEGIN
 
