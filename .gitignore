@@ -2,3 +2,4 @@
 .pdb
 .dll
 .ide
+log4net.config
