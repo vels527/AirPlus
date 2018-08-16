@@ -30,15 +30,23 @@ namespace AirbnbGuestList
         }
         public static DataTable GetProperties()
         {
-            connection.Open();
-            SqlDataAdapter da = new SqlDataAdapter();
-            DataSet ds = new DataSet("PropertyList");
-            SqlCommand cmd = new SqlCommand("GetPropertyList", connection);
-            cmd.CommandType = CommandType.StoredProcedure;
-            da.SelectCommand = cmd;
-            da.Fill(ds);
-            connection.Close();
-            return ds.Tables[0];
+            try
+            {
+                connection.Open();
+                SqlDataAdapter da = new SqlDataAdapter();
+                DataSet ds = new DataSet("PropertyList");
+                SqlCommand cmd = new SqlCommand("GetPropertyList", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                da.SelectCommand = cmd;
+                da.Fill(ds);
+                connection.Close();
+                return ds.Tables[0];
+            }
+            catch(Exception ex)
+            {
+                Logger.Error(ex);
+                return new DataTable();
+            }
         }
         public static DataTable GuestTable(List<Guest> Guests)
         {

@@ -18,12 +18,6 @@ namespace AirbnbGuestList
             client = new SendGridClient(apiKey);
         }
 
-        private static void Timer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-
-            throw new NotImplementedException();
-        }
-
         public static async Task SendMail(string from,string to,string cc,string subject,string message)
         {
                 var fromEmail = new EmailAddress(from);

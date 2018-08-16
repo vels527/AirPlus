@@ -25,7 +25,6 @@ C:\Users\Siva\source\repos\AirbnbGuestList\AirbnbGuestList\obj\Debug\AirbnbGuest
 C:\Users\Siva\source\repos\AirbnbGuestList\AirbnbGuestList\obj\Debug\AirbnbGuestList.csproj.CopyComplete
 C:\Users\Siva\source\repos\AirbnbGuestList\AirbnbGuestList\obj\Debug\AirbnbGuestList.exe
 C:\Users\Siva\source\repos\AirbnbGuestList\AirbnbGuestList\obj\Debug\AirbnbGuestList.pdb
-C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Debug\log4net.config
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Debug\AirbnbGuestList.exe.config
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Debug\AirbnbGuestList.exe.manifest
 C:\projects\Airplus\AirPlus\src\private\AirbnbGuestList\AirbnbGuestList\bin\Debug\AirbnbGuestList.application

@@ -1,7 +1,7 @@
-create database Airplus;
+create database AirplusDev;
 GO
 
-use Airplus;
+use AirplusDev;
 Create Table Guest(
 Guest_Id INT IDENTITY(1,1) PRIMARY KEY,
 AirplusId BIGINT,
@@ -53,6 +53,7 @@ RequestedCheckOut DATETIME,
 CCompanyTiming DATETIME,
 CStatus VARCHAR(100),
 RecordTIme DATETIME,
+Remarks VARCHAR(350),
 CONSTRAINT FK_Guest_Host FOREIGN KEY (Guest_Id) REFERENCES Guest (Guest_Id),
 CONSTRAINT FK_Guest_Property FOREIGN KEY (Property_Id) REFERENCES Property (Property_Id),
 CONSTRAINT FK_Guest_Company FOREIGN KEY (CCompanyId) REFERENCES CleaningCompany (CompanyId),
