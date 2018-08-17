@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <startup> 
+        <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.6.1" />
+    </startup>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-11.0.0.0" newVersion="11.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Net.Http" publicKeyToken="b03f5f7f11d50a3a" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-4.1.1.2" newVersion="4.1.1.2" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+  <appSettings>
+    <add key="fromEmailAddress" value="airplus@kustotech.in" />
+    <add key="ccEmailAddress" value="siva@kustotech.in" />
+    <add key="DailySubject" value="Reminder Check In - Check Out" />
+    <add key="RegularSubject" value="All Check In - Check Out" />
+  </appSettings>
+  <connectionStrings>
+    <add name="Prod" connectionString="Server=137.135.87.113,1433;Network Library=DBMSSOCN;Initial Catalog=Airplus;User Id=siva;Password=agent225%;" providerName="System.Data.SqlClient" />
+    <add name="Dev" connectionString="Server=137.135.87.113,1433;Network Library=DBMSSOCN;Initial Catalog=AirplusDev;User Id=siva;Password=agent225%;" providerName="System.Data.SqlClient" />
+  </connectionStrings>
+</configuration>
