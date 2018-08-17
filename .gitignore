@@ -3,3 +3,4 @@
 .dll
 .ide
 log4net.config
+/src/private/AirplusCore/.vs/CoreAirPlus/v15/Server/sqlite3

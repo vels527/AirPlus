@@ -1,0 +1,12 @@
+C:\projects\Airplus\AirPlus\src\private\AirplusCore\CoreAirPlus\bin\Debug\netcoreapp2.0\CoreAirPlus.deps.json
+C:\projects\Airplus\AirPlus\src\private\AirplusCore\CoreAirPlus\bin\Debug\netcoreapp2.0\CoreAirPlus.runtimeconfig.json
+C:\projects\Airplus\AirPlus\src\private\AirplusCore\CoreAirPlus\bin\Debug\netcoreapp2.0\CoreAirPlus.runtimeconfig.dev.json
+C:\projects\Airplus\AirPlus\src\private\AirplusCore\CoreAirPlus\bin\Debug\netcoreapp2.0\CoreAirPlus.dll
+C:\projects\Airplus\AirPlus\src\private\AirplusCore\CoreAirPlus\bin\Debug\netcoreapp2.0\CoreAirPlus.pdb
+C:\projects\Airplus\AirPlus\src\private\AirplusCore\CoreAirPlus\obj\Debug\netcoreapp2.0\CoreAirPlus.csproj.CoreCompileInputs.cache
+C:\projects\Airplus\AirPlus\src\private\AirplusCore\CoreAirPlus\obj\Debug\netcoreapp2.0\CoreAirPlus.AssemblyInfoInputs.cache
+C:\projects\Airplus\AirPlus\src\private\AirplusCore\CoreAirPlus\obj\Debug\netcoreapp2.0\CoreAirPlus.AssemblyInfo.cs
+C:\projects\Airplus\AirPlus\src\private\AirplusCore\CoreAirPlus\obj\Debug\netcoreapp2.0\CoreAirPlus.dll
+C:\projects\Airplus\AirPlus\src\private\AirplusCore\CoreAirPlus\obj\Debug\netcoreapp2.0\CoreAirPlus.pdb
+C:\projects\Airplus\AirPlus\src\private\AirplusCore\CoreAirPlus\obj\Debug\netcoreapp2.0\UserSecretsAssemblyInfo.cs
+C:\projects\Airplus\AirPlus\src\private\AirplusCore\CoreAirPlus\obj\Debug\netcoreapp2.0\CoreAirPlus.csprojAssemblyReference.cache
