@@ -2,6 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography;
+using System.Security;
+using System.Text;
 
 namespace CoreAirPlus.Entities
 {
@@ -19,8 +22,11 @@ namespace CoreAirPlus.Entities
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Remarks { get; set; }
-        public string Uname { get; set; }
-        public string Passwd { get; set; }
+        public string Password
+        {
+            get;set;
+        }
+        public string Username { get; set; }
 
         [ForeignKey("HostId")]
         public ICollection<Property> properties { get; set; }

@@ -19,7 +19,7 @@ namespace CoreAirPlus.Services
         {
             return _db.Set<TEntity>();
         }
-
+        
         public TEntity Get<TEntity>(int id, bool includeRelatedEntities = false) where TEntity : class
         {
             var record = _db.Set<TEntity>().Find(new object[] { id });

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace CoreAirPlus.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,14 +13,16 @@ namespace CoreAirPlus.Migrations
                 name: "ccompanies",
                 columns: table => new
                 {
-                    CompanyId = table.Column<int>(nullable: false)
+                    CleaningCompanyId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Address = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: false)
+                    Name = table.Column<string>(nullable: false),
+                    Phone = table.Column<string>(nullable: true),
+                    Url = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ccompanies", x => x.CompanyId);
+                    table.PrimaryKey("PK_ccompanies", x => x.CleaningCompanyId);
                 });
 
             migrationBuilder.CreateTable(
@@ -30,13 +32,11 @@ namespace CoreAirPlus.Migrations
                     GuestId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Age = table.Column<byte>(nullable: false),
-                    CheckIn = table.Column<DateTime>(nullable: false),
                     DOB = table.Column<DateTime>(nullable: false),
                     Email = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
                     FullName = table.Column<string>(nullable: false),
                     LastName = table.Column<string>(nullable: true),
-                    ListingId = table.Column<long>(nullable: false),
                     Phone = table.Column<string>(nullable: true),
                     Remarks = table.Column<string>(nullable: true),
                     Tag = table.Column<string>(nullable: true)
@@ -58,10 +58,10 @@ namespace CoreAirPlus.Migrations
                     FirstName = table.Column<string>(nullable: false),
                     FullName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: false),
-                    Passwd = table.Column<string>(nullable: true),
+                    Password = table.Column<string>(nullable: true),
                     Phone = table.Column<string>(nullable: true),
                     Remarks = table.Column<string>(nullable: true),
-                    Uname = table.Column<string>(nullable: true)
+                    Username = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -98,23 +98,23 @@ namespace CoreAirPlus.Migrations
                     PropertyId = table.Column<int>(nullable: false),
                     CheckIn = table.Column<DateTime>(nullable: false),
                     CheckOut = table.Column<DateTime>(nullable: false),
-                    CCId = table.Column<int>(nullable: false),
-                    CleaningTiming = table.Column<DateTime>(nullable: true),
-                    CreateTiming = table.Column<DateTime>(nullable: false),
+                    CleaningCompanyId = table.Column<int>(nullable: false),
+                    CleaningTime = table.Column<DateTime>(nullable: true),
+                    CreatedTime = table.Column<DateTime>(nullable: false),
                     RCheckIn = table.Column<DateTime>(nullable: true),
                     RCheckOut = table.Column<DateTime>(nullable: true),
                     Remarks = table.Column<string>(nullable: true),
-                    status = table.Column<int>(nullable: false)
+                    status = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_reservations", x => new { x.GuestId, x.PropertyId, x.CheckIn, x.CheckOut });
                     table.UniqueConstraint("AK_reservations_CheckIn_CheckOut_GuestId_PropertyId", x => new { x.CheckIn, x.CheckOut, x.GuestId, x.PropertyId });
                     table.ForeignKey(
-                        name: "FK_reservations_ccompanies_CCId",
-                        column: x => x.CCId,
+                        name: "FK_reservations_ccompanies_CleaningCompanyId",
+                        column: x => x.CleaningCompanyId,
                         principalTable: "ccompanies",
-                        principalColumn: "CompanyId",
+                        principalColumn: "CleaningCompanyId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_reservations_guests_GuestId",
@@ -136,9 +136,9 @@ namespace CoreAirPlus.Migrations
                 column: "HostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_reservations_CCId",
+                name: "IX_reservations_CleaningCompanyId",
                 table: "reservations",
-                column: "CCId");
+                column: "CleaningCompanyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_reservations_PropertyId",

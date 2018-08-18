@@ -18,10 +18,6 @@ namespace CoreAirPlus.Entities
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Remarks { get; set; }
-        [Required]
-        public long ListingId { get; set; }
-        [Required]
-        public DateTime CheckIn { get; set; }
         public string Tag { get; set; }
 
         [ForeignKey("GuestId")]
