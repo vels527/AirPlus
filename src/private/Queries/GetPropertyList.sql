@@ -1,4 +1,4 @@
-USE [Airplus]
+USE [CoreAirplusDb]
 GO
 
 /****** Object:  StoredProcedure [dbo].[GetPropertyList]    Script Date: 05/28/2018 12:59:18 ******/
@@ -22,14 +22,14 @@ BEGIN
 
   SELECT 
     P.LISTINGID,
-    P.ICSURL,
+    P.IcalUrl,
 	H.Email,
 	H.FirstName
-  FROM PROPERTY P
-    JOIN [Host] H
+  FROM properties P
+    JOIN [hosts] H
       ON P.HostId=H.HostId	
   WHERE LISTINGID IS NOT NULL 
-    AND ICSURL IS NOT NULL
+    AND IcalUrl IS NOT NULL
 
 END
 

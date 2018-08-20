@@ -1,0 +1,45 @@
+﻿@model IEnumerable<CoreAirPlus.ViewModel.ReservationViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<div>
+    <h4>Reservation</h4>
+    <hr />
+    <table>
+        <thead>
+            <tr>
+                <td>GuestName</td>
+                <td>CheckIn</td>
+                <td>CheckOut</td>
+                <td>Requested Check In</td>
+                <td>Requested Check Out</td>
+                <td>Remarks</td>
+                <td>Cleaning Time</td>
+                <td>Status</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reservation in Model)
+            {
+                <tr>
+                    <td>@reservation.GuestName</td>
+                    <td>@reservation.CheckIn</td>
+                    <td>@reservation.CheckOut</td>
+                    <td>@reservation.RCheckIn</td>
+                    <td>@reservation.RCheckOut</td>
+                    <td>@reservation.Remarks</td>
+                    <td>@reservation.CleaningTime</td>
+                    <td>@reservation.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>

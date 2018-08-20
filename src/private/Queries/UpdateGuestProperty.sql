@@ -1,4 +1,4 @@
-USE [Airplus]
+USE CoreAirplusDb
 GO
 
 /****** Object:  StoredProcedure [dbo].[UpdateGuestProperty]    Script Date: 05/28/2018 12:59:18 ******/
@@ -32,17 +32,17 @@ AS
 BEGIN
 
 Update GP
-SET GP.RequestedCheckIN=GT.REQUESTEDCHECKIN,
-GP.RequestedCheckOut=GT.REQUESTEDCHECKOUT,
-GP.CStatus=GT.STATUSCODE,
+SET GP.RCheckIN=GT.REQUESTEDCHECKIN,
+GP.RCheckOut=GT.REQUESTEDCHECKOUT,
+GP.[status]=GT.STATUSCODE,
 GP.REMARKS=GT.REMARKS,
-GP.CCompanyTiming=GT.CHECKOUTCLEANING
-FROM GuestProperty GP
+GP.CleaningTime=GT.CHECKOUTCLEANING
+FROM reservations GP
 JOIN @Guest GT ON
-GP.Guest_ID=GT.GUESTID AND
-GP.Property_ID=GT.PROPERTYID 
-JOIN PROPERTY P ON
-P.Property_Id=GP.Property_Id
+GP.GuestID=GT.GUESTID AND
+GP.PropertyID=GT.PROPERTYID 
+JOIN properties P ON
+P.PropertyId=GP.PropertyId
 AND P.HostId=GT.HOSTID 
 
  

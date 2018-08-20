@@ -1,4 +1,4 @@
-USE [Airplus]
+USE [CoreAirplusDb]
 GO
 
 /****** Object:  StoredProcedure [dbo].[InsertUpdateGuestList]    Script Date: 05/28/2018 12:59:18 ******/
@@ -36,9 +36,8 @@ CREATE PROCEDURE InsertUpdateGuestList
  @Guest dbo.GUESTPROPERTYTYPETABLE READONLY 
 AS
 BEGIN
-  INSERT INTO Guest(AirplusId,FullName,FirstName,LastName,Age,DOB,Email,Phone,ListingID,CheckIN,Tag)
+  INSERT INTO Guests(FullName,FirstName,LastName,Age,DOB,Email,Phone,Tag)
   SELECT 
-	null,
     G.FullName,
 	G.FirstName,
 	null,
@@ -46,23 +45,21 @@ BEGIN
 	null,
 	G.Email,
 	G.Phone,
-	G.ListingID,
-	G.CHECKIN,
 	null
   FROM
     @Guest G
-      LEFT JOIN Guest GT
+      LEFT JOIN guests GT
 	    ON G.FullName=GT.FullName 
 		  AND G.FirstName=GT.FirstName
-		  AND G.ListingID=GT.ListingID
-		  AND G.CHECKIN=GT.CHECKIN
+		  AND ISNULL(G.Email,'')=ISNULL(GT.Email,'')
+		  AND ISNULL(G.phone,'')=ISNULL(GT.phone,'')
   WHERE
     GT.FullName is null 
 
-  INSERT INTO GuestProperty(Guest_Id,Property_Id,CCompanyId,CheckIn,CheckOut,RequestedCheckIn,RequestedCheckOut,CCompanyTiming,CStatus,RecordTIme,REMARKS)
+  INSERT INTO reservations(GuestId,PropertyId,CleaningCompanyId,CheckIn,CheckOut,RCheckIn,RCheckOut,CleaningTime,status,CreatedTime,REMARKS)
   SELECT 
-    GT.Guest_Id,
-	P.Property_Id,
+    GT.GuestId,
+	P.PropertyId,
 	null,
 	G.CHECKIN,
 	G.CHECKOUT,
@@ -74,17 +71,17 @@ BEGIN
 	null
   FROM
     @Guest G
-	  JOIN Guest GT
+	  JOIN guests GT
 	    ON G.FirstName=GT.FirstName
 		  AND G.FullName=GT.FullName
-		  AND G.ListingID=GT.ListingID
-		  AND G.CHECKIN=GT.CHECKIN
-	  LEFT JOIN GuestProperty GP
-	    ON GT.Guest_Id=GP.Guest_Id
-	  JOIN Property P
+		  AND G.Email=GT.Email
+		  AND G.Phone=GT.Phone
+	  LEFT JOIN reservations GP
+	    ON GT.GuestId=GP.GuestId
+	  JOIN properties P
 	    ON G.ListingID=P.Listingid
   WHERE
-    GP.Guest_Id is null
+    GP.GuestId is null
 
 END
 

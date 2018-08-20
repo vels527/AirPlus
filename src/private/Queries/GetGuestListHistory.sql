@@ -1,4 +1,4 @@
-USE [Airplus]
+USE [CoreAirplusDb]
 GO
 
 /****** Object:  StoredProcedure [dbo].[GetGuestsListHistory]    Script Date: 05/28/2018 12:59:18 ******/
@@ -21,32 +21,24 @@ CREATE PROCEDURE [dbo].[GetGuestsListHistory]
 AS
 BEGIN
 select 
-  G.Guest_Id,
-  GP.Property_Id,
+  G.GuestId,
+  GP.PropertyId,
   P.HostId,
   G.FullName,
   G.FirstName,
-  ISNULL(convert(varchar,GP.RequestedCheckIn,101)+' '+convert(varchar,GP.RequestedCheckIn,8),'') AS RequestedCheckIn,
-  ISNULL(convert(varchar,GP.RequestedCheckOut,101)+' '+convert(varchar,GP.RequestedCheckOut,8),'') AS RequestedCheckOut,
+  ISNULL(convert(varchar,GP.RCheckIn,101)+' '+convert(varchar,GP.RCheckIn,8),'') AS RequestedCheckIn,
+  ISNULL(convert(varchar,GP.RCheckOut,101)+' '+convert(varchar,GP.RCheckOut,8),'') AS RequestedCheckOut,
   convert(varchar, GP.CheckIn, 101) AS CheckIN,
    convert(varchar, GP.CheckOut, 101) AS CheckOut,
-   ISNULL(SC.StatusValue,'Empty') AS StatusCode,
-   ISNULL(convert(varchar,GP.CCompanyTiming,101)+' '+convert(varchar,GP.CCompanyTiming,8),'') AS CleaningCompanyTiming,
+   ISNULL(convert(varchar,GP.CleaningTime,101)+' '+convert(varchar,GP.CleaningTime,8),'') AS CleaningCompanyTiming,
    ISNULL(GP.REMARKS,'') AS Remarks
-from Guest G
-  left join GuestProperty GP
-    on G.Guest_Id=GP.Guest_Id
-  left join StatusCode SC
-    on GP.CStatus=SC.StatusCode_Id
-  inner join Property P
-    on GP.Property_Id=P.Property_Id
-Where P.ListingId=@Listing
+from guests G
+  left join reservations GP
+    on G.GuestId=GP.GuestId
+  inner join properties P
+    on GP.PropertyId=P.PropertyId
+Where P.Listingid=@Listing  
 order by GP.CheckIn	DESC
-	  
-
-select StatusCode_id,
-  StatusValue
-from StatusCode
 
 END
 

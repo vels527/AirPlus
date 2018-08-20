@@ -1,4 +1,4 @@
-USE [Airplus]
+USE [CoreAirplusDb]
 GO
 
 /****** Object:  StoredProcedure [dbo].[GetGuestsList]    Script Date: 05/28/2018 12:59:18 ******/

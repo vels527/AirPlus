@@ -35,7 +35,7 @@ namespace AirbnbGuestList
                 connection.Open();
                 SqlDataAdapter da = new SqlDataAdapter();
                 DataSet ds = new DataSet("PropertyList");
-                SqlCommand cmd = new SqlCommand("GetPropertyList", connection);
+                SqlCommand cmd = new SqlCommand("[GetPropertyList]", connection);
                 cmd.CommandType = CommandType.StoredProcedure;
                 da.SelectCommand = cmd;
                 da.Fill(ds);
