@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace CoreAirPlus.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -76,7 +76,7 @@ namespace CoreAirPlus.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Address = table.Column<string>(nullable: false),
                     HostId = table.Column<int>(nullable: false),
-                    ICALURL = table.Column<string>(nullable: true),
+                    IcalUrl = table.Column<string>(nullable: true),
                     ListingId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
@@ -98,7 +98,7 @@ namespace CoreAirPlus.Migrations
                     PropertyId = table.Column<int>(nullable: false),
                     CheckIn = table.Column<DateTime>(nullable: false),
                     CheckOut = table.Column<DateTime>(nullable: false),
-                    CleaningCompanyId = table.Column<int>(nullable: false),
+                    CleaningCompanyId = table.Column<int>(nullable: true),
                     CleaningTime = table.Column<DateTime>(nullable: true),
                     CreatedTime = table.Column<DateTime>(nullable: false),
                     RCheckIn = table.Column<DateTime>(nullable: true),
@@ -115,7 +115,7 @@ namespace CoreAirPlus.Migrations
                         column: x => x.CleaningCompanyId,
                         principalTable: "ccompanies",
                         principalColumn: "CleaningCompanyId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_reservations_guests_GuestId",
                         column: x => x.GuestId,

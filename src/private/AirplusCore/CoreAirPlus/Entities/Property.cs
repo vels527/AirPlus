@@ -12,7 +12,7 @@ namespace CoreAirPlus.Entities
         public long ListingId { get; set; }
         [Required]
         public string Address { get; set; }
-        public string ICALURL { get; set; }
+        public string IcalUrl { get; set; }
 
         [ForeignKey("HostId")]
         public int HostId { get; set; }

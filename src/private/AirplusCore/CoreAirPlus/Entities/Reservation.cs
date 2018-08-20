@@ -18,7 +18,7 @@ namespace CoreAirPlus.Entities
         [ForeignKey("PropertyId")]
         public virtual Property property { get; set; }
 
-        public int CleaningCompanyId { get; set; }
+        public int? CleaningCompanyId { get; set; }
         [ForeignKey("CleaningCompanyId")]
         public virtual CleaningCompany CleaningCompany { get; set; }
 

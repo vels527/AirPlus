@@ -20,7 +20,7 @@ namespace CoreAirPlus.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Guest>().HasMany(c => c.reservations).WithOne(e => e.guest).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Property>().HasMany(c => c.reservations).WithOne(e => e.property).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<CleaningCompany>().HasMany(c => c.reservations).WithOne(e => e.CleaningCompany).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<CleaningCompany>().HasMany(c => c.reservations).WithOne(e => e.CleaningCompany).OnDelete(DeleteBehavior.SetNull);
             modelBuilder.Entity<Reservation>().HasKey(t=>new { t.GuestId,t.PropertyId,t.CheckIn,t.CheckOut});
             modelBuilder.Entity<Host>().HasMany(c => c.properties).WithOne(e => e.host).OnDelete(DeleteBehavior.Cascade);
             //foreach(var relationship in modelBuilder.Model.GetEntityTypes().SE)

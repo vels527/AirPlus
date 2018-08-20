@@ -11,8 +11,8 @@ using System;
 namespace CoreAirPlus.Migrations
 {
     [DbContext(typeof(DataDBContext))]
-    [Migration("20180818113913_Initial")]
-    partial class Initial
+    [Migration("20180820054558_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -111,7 +111,7 @@ namespace CoreAirPlus.Migrations
 
                     b.Property<int>("HostId");
 
-                    b.Property<string>("ICALURL");
+                    b.Property<string>("IcalUrl");
 
                     b.Property<long>("ListingId");
 
@@ -132,7 +132,7 @@ namespace CoreAirPlus.Migrations
 
                     b.Property<DateTime>("CheckOut");
 
-                    b.Property<int>("CleaningCompanyId");
+                    b.Property<int?>("CleaningCompanyId");
 
                     b.Property<DateTime?>("CleaningTime");
 
@@ -170,7 +170,7 @@ namespace CoreAirPlus.Migrations
                     b.HasOne("CoreAirPlus.Entities.CleaningCompany", "CleaningCompany")
                         .WithMany("reservations")
                         .HasForeignKey("CleaningCompanyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("CoreAirPlus.Entities.Guest", "guest")
                         .WithMany("reservations")
