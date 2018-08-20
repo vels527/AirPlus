@@ -30,6 +30,7 @@ select
   ISNULL(convert(varchar,GP.RCheckOut,101)+' '+convert(varchar,GP.RCheckOut,8),'') AS RequestedCheckOut,
   convert(varchar, GP.CheckIn, 101) AS CheckIN,
    convert(varchar, GP.CheckOut, 101) AS CheckOut,
+      ISNULL(GP.[status],'') AS [Status],
    ISNULL(convert(varchar,GP.CleaningTime,101)+' '+convert(varchar,GP.CleaningTime,8),'') AS CleaningCompanyTiming,
    ISNULL(GP.REMARKS,'') AS Remarks
 from guests G

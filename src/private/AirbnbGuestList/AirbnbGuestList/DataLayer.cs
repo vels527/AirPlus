@@ -172,7 +172,7 @@ namespace AirbnbGuestList
                 strbHeading.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check In</td>");
                 strbHeading.Append(@"<td style='border:1px solid black;background-color:yellow;'>Requested Check Out</td>");
                 strbHeading.Append(@"<td style='border:1px solid black;background-color:yellow;'>Remarks</td>");
-                strbHeading.Append(@"<td style='border:1px solid black;background-color:yellow;'>Cleaning Timing</td>");
+                strbHeading.Append(@"<td style='border:1px solid black;background-color:yellow;'>Cleaning Time</td>");
                 strbHeading.Append(@"<td style='border:1px solid black;background-color:yellow;'>Status</td>");
                 strbHeading.Append(@"</tr>");
                 return strbHeading.ToString();
@@ -197,23 +197,15 @@ namespace AirbnbGuestList
             }
         }
         private static int counter = 0;
-        public static string GuestToObject(DataTable dataSet, DataTable StatusTable)
+        public static string GuestToObject(DataTable dataSet)
         {
             string GuestMessage = "";
             int i = counter++;
             foreach (DataRow dr in dataSet.Rows)
             {
-                string statusOption = "Not Specified";
-                foreach (DataRow d in StatusTable.Rows)
-                {
-                    if (Convert.ToString(d[1]) == Convert.ToString(dr[9]))
-                    {
-                        statusOption = Convert.ToString(d[1]);
-                        break;
-                    }
-                }
 
-                Object GuestDetail = new { Name = Convert.ToString(dr[3]), CheckIn = Convert.ToString(dr[7]), CheckOut = Convert.ToString(dr[8]), RCheckIn = (Convert.ToString(dr[5]) != "" ? Convert.ToDateTime(dr[5]).ToShortTimeString() : ""), RCheckOut = (Convert.ToString(dr[6]) != "" ? Convert.ToDateTime(dr[6]).ToShortTimeString() : ""), Remarks = Convert.ToString(dr[11]), CleanTiming = Convert.ToString(dr[10]) != "" ? Convert.ToDateTime(dr[10]).ToShortTimeString() : "", Status = statusOption };
+
+                Object GuestDetail = new { Name = Convert.ToString(dr[3]), CheckIn = Convert.ToString(dr[7]), CheckOut = Convert.ToString(dr[8]), RCheckIn = (Convert.ToString(dr[5]) != "" ? Convert.ToDateTime(dr[5]).ToShortTimeString() : ""), RCheckOut = (Convert.ToString(dr[6]) != "" ? Convert.ToDateTime(dr[6]).ToShortTimeString() : ""), Remarks = Convert.ToString(dr[11]), CleanTiming = Convert.ToString(dr[10]) != "" ? Convert.ToDateTime(dr[10]).ToShortTimeString() : "", Status = Convert.ToString(dr[9]) };
                 GuestMessage += Engine.Razor.RunCompile(MessageTemplate, "MessageInKey" + i.ToString(), null, GuestDetail);
             }
             GuestMessage += @"</Table>";
@@ -235,7 +227,7 @@ namespace AirbnbGuestList
                 DataSet dataset = ds;
                 DataTable data = dataset.Tables[0];
                 DataTable data_1 = dataset.Tables[1];
-                DataTable statuscode_data = dataset.Tables[2];
+                //DataTable statuscode_data = dataset.Tables[2];
                 connection.Close();
 
                 string Heading = "";
@@ -255,7 +247,7 @@ namespace AirbnbGuestList
 
                 if (data.Rows.Count > 0)
                 {
-                    completeMsg += GuestToObject(data, statuscode_data);
+                    completeMsg += GuestToObject(data);
                 }
                 else
                 {
@@ -267,7 +259,7 @@ namespace AirbnbGuestList
                 }
                 var ResultCheckOut = Engine.Razor.RunCompile(Heading, "MessageOutKey", null, new { Heading = "Check Out Details" }); ;
                 completeMsg += ResultCheckOut;
-                completeMsg += GuestToObject(data_1, statuscode_data);
+                completeMsg += GuestToObject(data_1);
                 return completeMsg;
             }
             catch (Exception e)
@@ -296,7 +288,7 @@ namespace AirbnbGuestList
                 da.Fill(ds);
                 DataSet dataset = ds;
                 DataTable data = dataset.Tables[0];
-                DataTable statuscode_data = dataset.Tables[1];
+                //DataTable statuscode_data = dataset.Tables[1];
                 StringBuilder strb = new StringBuilder();
                 connection.Close();
                 string Heading = "";
@@ -306,7 +298,7 @@ namespace AirbnbGuestList
 
                 var ResultHeading = Engine.Razor.RunCompile(Heading, "MessageKey", null, new { Heading = "Guest Details" });
                 completeMsg = ResultHeading;
-                completeMsg += GuestToObject(data, statuscode_data);
+                completeMsg += GuestToObject(data);
                 return completeMsg;
             }
             catch (Exception ex)
