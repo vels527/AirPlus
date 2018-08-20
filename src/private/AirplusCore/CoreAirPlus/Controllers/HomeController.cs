@@ -30,9 +30,9 @@ namespace CoreAirPlus.Controllers
                 GuestName = c.guest.FullName,
                 CheckIn = c.CheckIn,
                 CheckOut = c.CheckOut,
-                RCheckIn = c.RCheckIn == null ?DateTime.MinValue.TimeOfDay: c.RCheckIn.Value.TimeOfDay,
-                RCheckOut=c.RCheckOut==null?DateTime.MinValue.TimeOfDay:c.RCheckOut.Value.TimeOfDay,
-                Remarks=c.Remarks,
+                RCheckIn = c.RCheckIn == null ? DateTime.MinValue.TimeOfDay : c.RCheckIn.Value.TimeOfDay,
+                RCheckOut = c.RCheckOut == null ? DateTime.MinValue.TimeOfDay : c.RCheckOut.Value.TimeOfDay,
+                Remarks = c.Remarks,
                 CleaningTime=c.CleaningTime,
                 Status=c.status
             });
