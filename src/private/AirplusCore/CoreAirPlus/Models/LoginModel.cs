@@ -16,11 +16,17 @@ namespace CoreAirPlus.Models
         [BindProperty] // Bind on Post
         public LoginData loginData { get; set; }
 
-        public async Task<IActionResult> OnPostAsync(IReadRepository readRepository)
+        private IReadRepository _readRepository { get; set; }
+        public LoginModel(IReadRepository readRepository)
+        {
+            _readRepository = readRepository;
+        }
+
+        public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {
-                var isValid = (readRepository.AuthenticateHost(loginData.Username,loginData.Password)); // TODO Validate the username and the password with your own logic
+                var isValid = (_readRepository.AuthenticateHost(loginData.Username,loginData.Password)); // TODO Validate the username and the password with your own logic
                 if (!isValid)
                 {
                     ModelState.AddModelError("", "username or password is invalid");
@@ -32,10 +38,10 @@ namespace CoreAirPlus.Models
                 identity.AddClaim(new Claim(ClaimTypes.Name, loginData.Username));                
                 // Authenticate using the identity
                 var principal = new ClaimsPrincipal(identity);
-                Host host = readRepository.GetHost(loginData.Username);
+                Host host = _readRepository.GetHost(loginData.Username);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = loginData.RememberMe });
                 HttpContext.Session.SetInt32("HostId",host.HostId);
-                return RedirectToPage("Index");
+                return RedirectToAction("Index", "Home");
             }
             else
             {

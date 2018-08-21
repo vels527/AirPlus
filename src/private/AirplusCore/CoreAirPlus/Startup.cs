@@ -9,6 +9,7 @@ using CoreAirPlus.Services;
 using CoreAirPlus.Data;
 using Microsoft.EntityFrameworkCore;
 using CoreAirPlus.Repositories;
+using System;
 
 
 namespace CoreAirPlus
@@ -37,6 +38,7 @@ namespace CoreAirPlus
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             }).AddCookie(options => { options.LoginPath = "/Login"; });
+           
             var conn = Configuration.GetConnectionString("DefaultConnection");
             services.AddTransient<IDbReadService, DbReadService>();
             services.AddScoped<IReadRepository, SqlReadRepository>();
@@ -44,6 +46,12 @@ namespace CoreAirPlus
             services.AddMvc().AddRazorPagesOptions(options => {
                 options.Conventions.AuthorizeFolder("/");
                 options.Conventions.AllowAnonymousToPage("/Login");
+            });
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.HttpOnly = true;
             });
 
             //services.AddTransient<Id>
@@ -58,8 +66,12 @@ namespace CoreAirPlus
             }
 
             //
+            app.UseSession();
             app.UseAuthentication();
-            app.UseMvcWithDefaultRoute();
+            
+            //app.UseMvc(routes => { routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{Id?}"); });
+            app.UseMvc();
+            
             app.Run(async (context) =>
             {
                 await context.Response.WriteAsync(Configuration["Message"]);

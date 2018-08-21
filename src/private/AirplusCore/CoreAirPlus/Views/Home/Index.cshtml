@@ -9,7 +9,7 @@
 <div>
     <h4>Reservation</h4>
     <hr />
-    <table>
+    <table border="1">
         <thead>
             <tr>
                 <td>GuestName</td>
@@ -27,8 +27,8 @@
             {
                 <tr>
                     <td>@reservation.GuestName</td>
-                    <td>@reservation.CheckIn</td>
-                    <td>@reservation.CheckOut</td>
+                    <td>@reservation.CheckIn.ToShortDateString()</td>
+                    <td>@reservation.CheckOut.ToShortDateString()</td>
                     <td>@reservation.RCheckIn</td>
                     <td>@reservation.RCheckOut</td>
                     <td>@reservation.Remarks</td>

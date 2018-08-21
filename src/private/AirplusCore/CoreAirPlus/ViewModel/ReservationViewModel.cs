@@ -12,9 +12,9 @@ namespace CoreAirPlus.ViewModel
         [Required]
         public DateTime CheckOut { get; set; }
         [DataType(DataType.Time)]
-        public TimeSpan RCheckIn { get; set; }
+        public TimeSpan? RCheckIn { get; set; }
         [DataType(DataType.Time)]
-        public TimeSpan RCheckOut { get; set; }
+        public TimeSpan? RCheckOut { get; set; }
         public string Remarks { get; set; }
         public DateTime? CleaningTime { get; set; }
         public string Status { get; set; }

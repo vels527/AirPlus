@@ -3,6 +3,7 @@ using CoreAirPlus.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreAirPlus.Repositories
 {
@@ -57,7 +58,11 @@ namespace CoreAirPlus.Repositories
             var Reservations = new List<Reservation>();
             foreach(Property p in properties)
             {
-                Reservations.Add(_db.GetWithIncludes<Reservation>().Where(R => R.PropertyId == p.PropertyId).FirstOrDefault());
+                var eachproperty = GetProperty(p.PropertyId);
+               foreach(Reservation r in eachproperty.reservations)
+                {
+                    Reservations.Add(r);
+                }
             }
             return Reservations;
         }

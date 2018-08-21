@@ -9,6 +9,7 @@ using System;
 
 namespace CoreAirPlus.Controllers
 {
+
     public class HomeController : Controller
     {
         private IReadRepository _readRepository;
@@ -16,26 +17,29 @@ namespace CoreAirPlus.Controllers
         {
             _readRepository = readRepository;
         }
-        // GET: Home
+
+        [Route("")]
+        [Route("Index")]
         public ActionResult Index()
         {
             int? CurrentThisHostId = HttpContext.Session.GetInt32("HostId");
             int hostid = CurrentThisHostId == null ? -1 : CurrentThisHostId.Value;
             if (hostid == -1)
             {
-                throw new System.Exception("Session Host not Set");
+                return RedirectToPage("/Login");
             }
             var reservations = _readRepository.GetReservationsByHost(hostid);
-            var reservationViewModel = reservations.Select(c => new ReservationViewModel {
-                GuestName = c.guest.FullName,
+            var reservationViewModel = from c in  reservations select new ReservationViewModel
+            {
+                GuestName =_readRepository.GetGuest(c.GuestId).FullName,
                 CheckIn = c.CheckIn,
                 CheckOut = c.CheckOut,
                 RCheckIn = c.RCheckIn == null ? DateTime.MinValue.TimeOfDay : c.RCheckIn.Value.TimeOfDay,
                 RCheckOut = c.RCheckOut == null ? DateTime.MinValue.TimeOfDay : c.RCheckOut.Value.TimeOfDay,
                 Remarks = c.Remarks,
-                CleaningTime=c.CleaningTime,
-                Status=c.status
-            });
+                CleaningTime = c.CleaningTime,
+                Status = c.status
+            };
             return View(reservationViewModel);
         }
 
