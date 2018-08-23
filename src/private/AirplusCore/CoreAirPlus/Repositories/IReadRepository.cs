@@ -18,6 +18,7 @@ namespace CoreAirPlus.Repositories
         IEnumerable<Reservation> GetReservationsByHost(int hId);
         IEnumerable<Reservation> GetReservationsByHostAndDate(int hId, DateTime datestart, DateTime dateend);
         IEnumerable<Reservation> GetReservationsByHostAndGuest(int hId, Guest guest);
+        IEnumerable<Reservation> GetReservationsByGuestAndProperty(int guestid, int propertyid, DateTime checkin);
         bool AuthenticateHost(string userName,string password);
     }
 }

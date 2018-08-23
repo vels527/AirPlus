@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<CoreAirPlus.ViewModel.ReservationViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Reservation";
 }
 
 <h2>Index</h2>
@@ -20,6 +20,7 @@
                 <td>Remarks</td>
                 <td>Cleaning Time</td>
                 <td>Status</td>
+                <td>Action</td>
             </tr>
         </thead>
         <tbody>
@@ -34,12 +35,10 @@
                     <td>@reservation.Remarks</td>
                     <td>@reservation.CleaningTime</td>
                     <td>@reservation.Status</td>
+                    <td>@Html.ActionLink("Edit","Edit", "Home", new {guestId=reservation.GuestId,propertyid=reservation.PropertyId,checkin=reservation.CheckIn },null) |</td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
-</div>
+

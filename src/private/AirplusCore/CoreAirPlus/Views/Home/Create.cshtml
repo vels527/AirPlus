@@ -1,0 +1,76 @@
+﻿@model CoreAirPlus.ViewModel.ReservationViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<h4>ReservationViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*<div class="form-group">
+            <label asp-for="GuestId" class="control-label"></label>
+            <input asp-for="GuestId" class="form-control" />
+            <span asp-validation-for="GuestId" class="text-danger"></span>
+        </div>*@
+            @*@Html.HiddenFor(model => model.GuestId)*@
+            <div class="form-group">
+                <label asp-for="PropertyId" class="control-label"></label>
+                <input asp-for="PropertyId" class="form-control" />
+                <span asp-validation-for="PropertyId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GuestName" class="control-label"></label>
+                <input asp-for="GuestName" class="form-control" />
+                <span asp-validation-for="GuestName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CheckIn" class="control-label"></label>
+                <input asp-for="CheckIn" class="form-control" />
+                <span asp-validation-for="CheckIn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CheckOut" class="control-label"></label>
+                <input asp-for="CheckOut" class="form-control" />
+                <span asp-validation-for="CheckOut" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RCheckIn" class="control-label"></label>
+                <input asp-for="RCheckIn" class="form-control" />
+                <span asp-validation-for="RCheckIn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RCheckOut" class="control-label"></label>
+                <input asp-for="RCheckOut" class="form-control" />
+                <span asp-validation-for="RCheckOut" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Remarks" class="control-label"></label>
+                <input asp-for="Remarks" class="form-control" />
+                <span asp-validation-for="Remarks" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CleaningTime" class="control-label"></label>
+                <input asp-for="CleaningTime" class="form-control" />
+                <span asp-validation-for="CleaningTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" formmethod="post" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

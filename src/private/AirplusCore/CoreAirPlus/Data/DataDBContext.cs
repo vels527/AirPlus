@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using CoreAirPlus.Entities;
+using CoreAirPlus.ViewModel;
 namespace CoreAirPlus.Data
 {
     public class DataDBContext : DbContext
@@ -22,8 +23,11 @@ namespace CoreAirPlus.Data
             modelBuilder.Entity<Property>().HasMany(c => c.reservations).WithOne(e => e.property).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<CleaningCompany>().HasMany(c => c.reservations).WithOne(e => e.CleaningCompany).OnDelete(DeleteBehavior.SetNull);
             modelBuilder.Entity<Reservation>().HasKey(t=>new { t.GuestId,t.PropertyId,t.CheckIn,t.CheckOut});
+            modelBuilder.Entity<ReservationViewModel>().HasKey(t => new { t.GuestId, t.PropertyId, t.CheckIn, t.CheckOut });
             modelBuilder.Entity<Host>().HasMany(c => c.properties).WithOne(e => e.host).OnDelete(DeleteBehavior.Cascade);
             //foreach(var relationship in modelBuilder.Model.GetEntityTypes().SE)
         }
+
+        public DbSet<CoreAirPlus.ViewModel.ReservationViewModel> ReservationViewModel { get; set; }
     }
 }

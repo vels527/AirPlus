@@ -6,6 +6,7 @@ using System.Linq;
 using CoreAirPlus.Entities;
 using CoreAirPlus.ViewModel;
 using System;
+using System.Collections.Generic;
 
 namespace CoreAirPlus.Controllers
 {
@@ -29,13 +30,15 @@ namespace CoreAirPlus.Controllers
                 return RedirectToPage("/Login");
             }
             var reservations = _readRepository.GetReservationsByHost(hostid);
-            var reservationViewModel = from c in  reservations select new ReservationViewModel
+            var reservationViewModel = from c in reservations select new ReservationViewModel
             {
+                GuestId = c.GuestId,
+                PropertyId = c.PropertyId,
                 GuestName =_readRepository.GetGuest(c.GuestId).FullName,
                 CheckIn = c.CheckIn,
                 CheckOut = c.CheckOut,
-                RCheckIn = c.RCheckIn == null ? DateTime.MinValue.TimeOfDay : c.RCheckIn.Value.TimeOfDay,
-                RCheckOut = c.RCheckOut == null ? DateTime.MinValue.TimeOfDay : c.RCheckOut.Value.TimeOfDay,
+                RCheckIn = c.RCheckIn == null ? DateTime.MinValue.AddHours(16).ToShortTimeString() : c.RCheckIn.Value.ToShortTimeString(),
+                RCheckOut = c.RCheckOut == null ? DateTime.MinValue.AddHours(11).ToShortTimeString() : c.RCheckOut.Value.ToShortTimeString(),
                 Remarks = c.Remarks,
                 CleaningTime = c.CleaningTime,
                 Status = c.status
@@ -50,15 +53,29 @@ namespace CoreAirPlus.Controllers
         }
 
         // GET: Home/Create
+        [HttpGet("Create")]
         public ActionResult Create()
         {
-            return View();
+            int? CurrentThisHostId = HttpContext.Session.GetInt32("HostId");
+            int hostid = CurrentThisHostId == null ? -1 : CurrentThisHostId.Value;
+            if (hostid == -1)
+            {
+                return RedirectToPage("/Login");
+            }
+            var reservations = _readRepository.GetReservationsByHost(hostid).FirstOrDefault();
+            var reservationViewModel = new ReservationViewModel {
+                GuestId=reservations.GuestId,
+                PropertyId=reservations.PropertyId,
+            };
+            return View(reservationViewModel);
+
+            //return View();
         }
 
         // POST: Home/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        [HttpPost("Create")]
+        //[ValidateAntiForgeryToken]
+        public ActionResult Create(ReservationViewModel collection)
         {
             try
             {
@@ -73,21 +90,45 @@ namespace CoreAirPlus.Controllers
         }
 
         // GET: Home/Edit/5
-        public ActionResult Edit(int id)
+        [HttpGet("Edit")]
+        public ActionResult Edit(int guestid,int propertyid,DateTime checkIn)
         {
-            return View();
+            var reservations = _readRepository.GetReservationsByGuestAndProperty(guestid,propertyid,checkIn);
+            var reservationViewModels = from c in reservations
+                                       select new ReservationViewModel
+                                       {
+                                           GuestId = c.GuestId,
+                                           PropertyId = c.PropertyId,
+                                           GuestName = _readRepository.GetGuest(c.GuestId).FullName,
+                                           CheckIn = c.CheckIn,
+                                           CheckOut = c.CheckOut,
+                                           RCheckIn = c.RCheckIn == null ? DateTime.MinValue.AddHours(16).ToShortTimeString() : c.RCheckIn.Value.ToShortTimeString(),
+                                           RCheckOut = c.RCheckOut == null ? DateTime.MinValue.AddHours(11).ToShortTimeString() : c.RCheckOut.Value.ToShortTimeString(),
+                                           Remarks = c.Remarks,
+                                           CleaningTime = c.CleaningTime,
+                                           Status = c.status
+                                       };
+            return View(reservationViewModels.FirstOrDefault());
         }
 
         // POST: Home/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpPost("Edit")]
+        public ActionResult Edit(ReservationViewModel reservation)
         {
             try
             {
                 // TODO: Add update logic here
+                if (ModelState.IsValid)
+                {
 
-                return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    //ModelState.AddModelError()
+                    return View(reservation);
+                }
+
+                return RedirectToAction("Index");
             }
             catch
             {

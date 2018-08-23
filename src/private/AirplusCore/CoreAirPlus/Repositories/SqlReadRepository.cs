@@ -51,6 +51,12 @@ namespace CoreAirPlus.Repositories
         {
             return _db.GetWithIncludes<Property>();
         }
+        public IEnumerable<Reservation> GetReservationsByGuestAndProperty(int guestid,int propertyid,DateTime checkin)
+        {
+            var guest = GetGuest(guestid);
+            var Reservations = guest.reservations.Where(r=>r.PropertyId==propertyid && r.CheckIn==checkin);
+            return Reservations;
+        }   
         public IEnumerable<Reservation> GetReservationsByHost(int hId)
         {
             var host = GetHost(hId);
