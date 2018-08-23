@@ -99,6 +99,7 @@ namespace CoreAirPlus.Controllers
                                        {
                                            GuestId = c.GuestId,
                                            PropertyId = c.PropertyId,
+                                           CleaningCompanyId=c.CleaningCompanyId,
                                            GuestName = _readRepository.GetGuest(c.GuestId).FullName,
                                            CheckIn = c.CheckIn,
                                            CheckOut = c.CheckOut,
@@ -111,26 +112,62 @@ namespace CoreAirPlus.Controllers
             return View(reservationViewModels.FirstOrDefault());
         }
 
+        /*This is specifically for edit time span*/
+        private TimeSpan StringToTime(string InOutime)
+        {
+            string checkintime = InOutime;
+            TimeSpan RCheckIn = TimeSpan.MinValue;
+            if (String.IsNullOrEmpty(checkintime))
+            {
+                RCheckIn = new TimeSpan(0,0,0);
+            }
+            else
+            {
+                
+                int hours = Convert.ToInt32(checkintime.Split(":")[0]);
+                int minutes = Convert.ToInt32(checkintime.Split(":")[1]);
+                RCheckIn = new TimeSpan(hours, minutes, 0);
+            }
+            return RCheckIn;
+        }
+
         // POST: Home/Edit/5
         [HttpPost("Edit")]
-        public ActionResult Edit(ReservationViewModel reservation)
+        public ActionResult Edit(ReservationViewModel reservationvm)
         {
             try
             {
                 // TODO: Add update logic here
+
+                TimeSpan TimeCheckIn = StringToTime(reservationvm.RCheckIn);
+                TimeSpan TimeCheckOut = StringToTime(reservationvm.RCheckOut);
                 if (ModelState.IsValid)
                 {
-
+                   
+                    
+                    Reservation reservation = new Reservation {
+                        GuestId = reservationvm.GuestId,
+                        PropertyId = reservationvm.PropertyId,
+                        CleaningCompanyId = reservationvm.CleaningCompanyId,
+                        CheckIn = reservationvm.CheckIn,
+                        CheckOut=reservationvm.CheckOut,
+                        RCheckIn=reservationvm.CheckIn.Add(TimeCheckIn),
+                        RCheckOut=reservationvm.CheckOut.Add(TimeCheckOut),
+                        CleaningTime=reservationvm.CleaningTime,
+                        Remarks=reservationvm.Remarks,
+                        status=reservationvm.Status
+                    };
+                    _readRepository.UpdateReservation(reservation);
                 }
                 else
                 {
                     //ModelState.AddModelError()
-                    return View(reservation);
+                    return View(reservationvm);
                 }
 
                 return RedirectToAction("Index");
             }
-            catch
+            catch(Exception e)
             {
                 return View();
             }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using CoreAirPlus.Entities;
 
 namespace CoreAirPlus.Services
 {
@@ -62,6 +63,20 @@ namespace CoreAirPlus.Services
         {
             var items = Get<TEntity>();
             return new SelectList(items, valueField, textField);
+        }
+
+        public bool SaveReservation(Reservation reservation)
+        {
+            //var dbReservation = _db.reservations.FirstOrDefaultAsync(c => c.GuestId == reservation.GuestId
+            //                    && c.PropertyId == reservation.PropertyId
+            //                    && c.CheckIn == reservation.CheckIn);
+            //if (dbReservation == null)
+            //{
+            //    return false;
+            //}
+            _db.reservations.Update(reservation);
+            _db.SaveChangesAsync();
+            return true;
         }
     }
 }

@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace CoreAirPlus.Repositories
 {
-    public class SqlReadRepository:IReadRepository
+    public class SqlReadRepository : IReadRepository
     {
         private IDbReadService _db;
         public SqlReadRepository(IDbReadService db)
@@ -51,35 +52,35 @@ namespace CoreAirPlus.Repositories
         {
             return _db.GetWithIncludes<Property>();
         }
-        public IEnumerable<Reservation> GetReservationsByGuestAndProperty(int guestid,int propertyid,DateTime checkin)
+        public IEnumerable<Reservation> GetReservationsByGuestAndProperty(int guestid, int propertyid, DateTime checkin)
         {
             var guest = GetGuest(guestid);
-            var Reservations = guest.reservations.Where(r=>r.PropertyId==propertyid && r.CheckIn==checkin);
+            var Reservations = guest.reservations.Where(r => r.PropertyId == propertyid && r.CheckIn == checkin);
             return Reservations;
-        }   
+        }
         public IEnumerable<Reservation> GetReservationsByHost(int hId)
         {
             var host = GetHost(hId);
             var properties = host.properties;
             var Reservations = new List<Reservation>();
-            foreach(Property p in properties)
+            foreach (Property p in properties)
             {
                 var eachproperty = GetProperty(p.PropertyId);
-               foreach(Reservation r in eachproperty.reservations)
+                foreach (Reservation r in eachproperty.reservations)
                 {
                     Reservations.Add(r);
                 }
             }
             return Reservations;
         }
-        public IEnumerable<Reservation> GetReservationsByHostAndDate(int hId,DateTime datestart,DateTime dateend)
+        public IEnumerable<Reservation> GetReservationsByHostAndDate(int hId, DateTime datestart, DateTime dateend)
         {
-            var reservations = GetReservationsByHost(hId).Where<Reservation>(R=>R.CheckIn>= datestart && R.CheckIn<=dateend);
+            var reservations = GetReservationsByHost(hId).Where<Reservation>(R => R.CheckIn >= datestart && R.CheckIn <= dateend);
             return reservations;
         }
-        public IEnumerable<Reservation> GetReservationsByHostAndGuest(int hId,Guest guest)
+        public IEnumerable<Reservation> GetReservationsByHostAndGuest(int hId, Guest guest)
         {
-            var reservations = GetReservationsByHost(hId).Where<Reservation>(R => R.GuestId==guest.GuestId);
+            var reservations = GetReservationsByHost(hId).Where<Reservation>(R => R.GuestId == guest.GuestId);
             return reservations;
         }
 
@@ -98,7 +99,12 @@ namespace CoreAirPlus.Repositories
 
         public Host GetHost(string userId)
         {
-           return  _db.GetWithIncludes<Host>().Where(c => c.Username == userId).FirstOrDefault();
+            return _db.GetWithIncludes<Host>().Where(c => c.Username == userId).FirstOrDefault();
+        }
+
+        public bool UpdateReservation(Reservation reservation)
+        {
+           return _db.SaveReservation(reservation);
         }
     }
 }

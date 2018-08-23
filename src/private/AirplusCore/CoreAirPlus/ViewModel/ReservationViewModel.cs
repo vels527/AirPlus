@@ -12,7 +12,10 @@ namespace CoreAirPlus.ViewModel
         [Key]
         [HiddenInput]
         public int PropertyId { get; set; }
-        
+
+        [HiddenInput]
+        public int? CleaningCompanyId { get; set; }
+
         [Required(ErrorMessage ="Guest Name is Required")]
         [Display(Name = "Guest Name")]
         [DataType(DataType.Text)]

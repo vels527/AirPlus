@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CoreAirPlus.Entities;
+using System.Threading.Tasks;
 
 namespace CoreAirPlus.Repositories
 {
@@ -20,5 +21,6 @@ namespace CoreAirPlus.Repositories
         IEnumerable<Reservation> GetReservationsByHostAndGuest(int hId, Guest guest);
         IEnumerable<Reservation> GetReservationsByGuestAndProperty(int guestid, int propertyid, DateTime checkin);
         bool AuthenticateHost(string userName,string password);
+        bool UpdateReservation(Reservation reservation);
     }
 }

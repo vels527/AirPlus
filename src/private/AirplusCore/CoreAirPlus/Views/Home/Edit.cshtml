@@ -13,7 +13,8 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @Html.HiddenFor(model => model.GuestId)
-            @Html.HiddenFor(model => model.PropertyId)<br />
+            @Html.HiddenFor(model => model.PropertyId)
+            @Html.HiddenFor(model => model.CleaningCompanyId)<br />
             @Html.DisplayNameFor(model => model.GuestName)
             @Html.DisplayFor(model => model.GuestName)
             @Html.HiddenFor(model => model.GuestName)
