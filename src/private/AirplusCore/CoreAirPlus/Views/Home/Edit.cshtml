@@ -4,47 +4,55 @@
     ViewData["Title"] = "Edit";
 }
 
-<h2>Edit</h2>
+<html>
+<head>
+    <link href="~/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <script src="~/bootstrap/dist/js/bootstrap.js"></script>
 
-<h4>Reservation</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @Html.HiddenFor(model => model.GuestId)
-            @Html.HiddenFor(model => model.PropertyId)
-            @Html.HiddenFor(model => model.CleaningCompanyId)<br />
-            @Html.DisplayNameFor(model => model.GuestName)
-            @Html.DisplayFor(model => model.GuestName)
-            @Html.HiddenFor(model => model.GuestName)
-            <br />
-            @Html.ValidationMessageFor(model => model.GuestName)
-            <br />
-            @Html.DisplayNameFor(model => model.CheckIn)
-            @Html.DisplayFor(model => model.CheckIn)
-            @Html.HiddenFor(model => model.CheckIn)<br />
-            @Html.DisplayNameFor(model => model.CheckOut)
-            @Html.DisplayFor(model => model.CheckOut)
-            @Html.HiddenFor(model => model.CheckOut)<br />
-            @Html.DisplayNameFor(model => model.RCheckIn)
-            @Html.EditorFor(model => model.RCheckIn)<br />
-            @Html.DisplayNameFor(model => model.RCheckOut)
-            @Html.EditorFor(model => model.RCheckOut)<br />
-            @Html.DisplayNameFor(model => model.CleaningTime)
-            @Html.EditorFor(model => model.CleaningTime)<br />
-            @Html.DisplayNameFor(model => model.Remarks)
-            @Html.EditorFor(model => model.Remarks)<br />
-            @Html.DisplayNameFor(model => model.Status)
-            @Html.EditorFor(model => model.Status)
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" formmethod="post" />
-            </div>
-        </form>
+</head>
+<body>
+    <h2>Edit</h2>
+
+    <h4>Reservation</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                @Html.HiddenFor(model => model.GuestId)
+                @Html.HiddenFor(model => model.PropertyId)
+                @Html.HiddenFor(model => model.CleaningCompanyId)<br />
+                @Html.DisplayNameFor(model => model.GuestName)
+                @Html.DisplayFor(model => model.GuestName)
+                @Html.HiddenFor(model => model.GuestName)
+                <br />
+                @Html.ValidationMessageFor(model => model.GuestName)
+                <br />
+                @Html.DisplayNameFor(model => model.CheckIn)
+                @Html.DisplayFor(model => model.CheckIn)
+                @Html.HiddenFor(model => model.CheckIn)<br />
+                @Html.DisplayNameFor(model => model.CheckOut)
+                @Html.DisplayFor(model => model.CheckOut)
+                @Html.HiddenFor(model => model.CheckOut)<br />
+                @Html.DisplayNameFor(model => model.RCheckIn)
+                @Html.EditorFor(model => model.RCheckIn)<br />
+                @Html.DisplayNameFor(model => model.RCheckOut)
+                @Html.EditorFor(model => model.RCheckOut)<br />
+                @Html.DisplayNameFor(model => model.CleaningTime)
+                @Html.EditorFor(model => model.CleaningTime)<br />
+                @Html.DisplayNameFor(model => model.Remarks)
+                @Html.EditorFor(model => model.Remarks)<br />
+                @Html.DisplayNameFor(model => model.Status)
+                @Html.EditorFor(model => model.Status)
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" formmethod="post" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</body>
+</html>
