@@ -20,13 +20,13 @@
     <script src="~/assets/bootstrap-table/src/bootstrap-table.js"></script>
     <script src="~/assets/bootstrap-table/src/extensions/export/bootstrap-table-export.js"></script>
     <script>
-            var sortCheckIn = function (date1, date2,row1,row2) {
-                var datetime1 = new Date(date1);
-                var dateTime2 = new Date(date2);
-                if (datetime1 > dateTime2) {
-                    return -1;
-                }
-                return 1;
+        var sortCheckIn = function (date1, date2, row1, row2) {
+            var datetime1 = new Date(date1);
+            var dateTime2 = new Date(date2);
+            if (datetime1 > dateTime2) {
+                return -1;
+            }
+            return 1;
         }
     </script>
     @*<script src="~/boottable.js"></script>*@
@@ -39,15 +39,14 @@
             <div>
                 <table data-toggle="table"
                        data-striped="true"
-                       showToggle="true"
-                       showColumns="true">
+                       data-show-columns="true">
                     <thead>
                         <tr>
-                            <th data-sortable="true">Guest Name</th>
-                            <th data-sortable="true" data-sorter="sortCheckIn">CheckIn</th>
-                            <th data-sortable="true">CheckOut</th>
-                            <th data-sortable="true">Requested Check In</th>
-                            <th data-sortable="true">Requested Check Out</th>
+                            <th data-sortable="true" data-width="60%">Guest Name</th>
+                            <th data-sortable="true" data-sorter="sortCheckIn">Check In</th>
+                            <th data-sortable="true">Check Out</th>
+                            <th data-sortable="true">Requested<br/>Check In</th>
+                            <th data-sortable="true">Requested<br/>Check Out</th>
                             <th data-sortable="true">Remarks</th>
                             <th data-sortable="true">Cleaning Time</th>
                             <th data-sortable="true" data-switchable="true">Status</th>
