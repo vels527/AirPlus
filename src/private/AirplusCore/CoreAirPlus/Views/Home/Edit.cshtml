@@ -8,9 +8,10 @@
 <head>
     <link href="~/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
     <script src="~/bootstrap/dist/js/bootstrap.js"></script>
-
+    <script src="~/jquery/dist/jquery.js"></script>
 </head>
 <body>
+
     <h2>Edit</h2>
 
     <h4>Reservation</h4>
@@ -24,7 +25,8 @@
                 @Html.HiddenFor(model => model.CleaningCompanyId)<br />
                 @Html.DisplayNameFor(model => model.GuestName)
                 @Html.DisplayFor(model => model.GuestName)
-                @Html.HiddenFor(model => model.GuestName)
+                @Html.EditorFor(model => model.GuestName, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                @*@Html.HiddenFor(model => model.GuestName)*@
                 <br />
                 @Html.ValidationMessageFor(model => model.GuestName)
                 <br />

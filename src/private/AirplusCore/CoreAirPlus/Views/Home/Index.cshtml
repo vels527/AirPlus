@@ -3,42 +3,76 @@
 @{
     ViewData["Title"] = "Reservation";
 }
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Guest Reservation Chart</title>
+    @*<link href="~/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+        <script src="~/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/jquery/dist/jquery.js"></script>*@
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="~/assets/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="~/assets/bootstrap-table/src/bootstrap-table.css">
+    <link rel="stylesheet" href="http://rawgit.com/vitalets/x-editable/master/dist/bootstrap3-editable/css/bootstrap-editable.css">
+    <script src="~/assets/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/assets/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="~/assets/bootstrap-table/src/extensions/export/bootstrap-table-export.js"></script>
+    <script>
+            var sortCheckIn = function (date1, date2,row1,row2) {
+                var datetime1 = new Date(date1);
+                var dateTime2 = new Date(date2);
+                if (datetime1 > dateTime2) {
+                    return -1;
+                }
+                return 1;
+        }
+    </script>
+    @*<script src="~/boottable.js"></script>*@
+</head>
+<body>
 
-<h2>Index</h2>
-
-<div>
-    <h4>Reservation</h4>
-    <hr />
-    <table border="1">
-        <thead>
-            <tr>
-                <td>GuestName</td>
-                <td>CheckIn</td>
-                <td>CheckOut</td>
-                <td>Requested Check In</td>
-                <td>Requested Check Out</td>
-                <td>Remarks</td>
-                <td>Cleaning Time</td>
-                <td>Status</td>
-                <td>Action</td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var reservation in Model)
-            {
-                <tr>
-                    <td>@reservation.GuestName</td>
-                    <td>@reservation.CheckIn.ToShortDateString()</td>
-                    <td>@reservation.CheckOut.ToShortDateString()</td>
-                    <td>@reservation.RCheckIn</td>
-                    <td>@reservation.RCheckOut</td>
-                    <td>@reservation.Remarks</td>
-                    <td>@reservation.CleaningTime</td>
-                    <td>@reservation.Status</td>
-                    <td>@Html.ActionLink("Edit","Edit", "Home", new {guestId=reservation.GuestId,propertyid=reservation.PropertyId,checkin=reservation.CheckIn },null) |</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
+    <div class="container">
+        <h4>Guest Reservation Chart</h4>
+        <div class="row">
+            <div>
+                <table data-toggle="table"
+                       data-striped="true"
+                       showToggle="true"
+                       showColumns="true">
+                    <thead>
+                        <tr>
+                            <th data-sortable="true">Guest Name</th>
+                            <th data-sortable="true" data-sorter="sortCheckIn">CheckIn</th>
+                            <th data-sortable="true">CheckOut</th>
+                            <th data-sortable="true">Requested Check In</th>
+                            <th data-sortable="true">Requested Check Out</th>
+                            <th data-sortable="true">Remarks</th>
+                            <th data-sortable="true">Cleaning Time</th>
+                            <th data-sortable="true" data-switchable="true">Status</th>
+                            <th data-sortable="true">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var reservation in Model)
+                        {
+                            <tr>
+                                <td>@reservation.GuestName</td>
+                                <td>@reservation.CheckIn.ToShortDateString()</td>
+                                <td>@reservation.CheckOut.ToShortDateString()</td>
+                                <td>@reservation.RCheckIn</td>
+                                <td>@reservation.RCheckOut</td>
+                                <td>@reservation.Remarks</td>
+                                <td>@reservation.CleaningTime</td>
+                                <td>@reservation.Status</td>
+                                <td>@Html.ActionLink("Edit", "Edit", "Home", new { guestId = reservation.GuestId, propertyid = reservation.PropertyId, checkin = reservation.CheckIn }, null) </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
