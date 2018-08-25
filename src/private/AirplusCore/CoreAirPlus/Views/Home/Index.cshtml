@@ -28,6 +28,130 @@
             }
             return 1;
         }
+
+        var sortCheckInTime = function (date1, date2, row1, row2) {
+            var datetime1 = new Date(row1[1]);
+            var datetime2 = new Date(row2[1]);
+            if (datetime1 > datetime2) {
+                return -1;
+            }
+            else if (datetime1 < datetime2) {
+                return 1;
+            }
+            var time1 = date1;
+            var time2 = date2;
+            if (time1 == null || time1.trim() == "") {
+                if (time2 == null || time2.trim() == "") {
+                    return 1;
+                }
+                else {
+                    return -1;
+                }
+            }
+            else if (time2 == null || time2.trim() == "") {
+                return 1;
+            }
+            else {
+                var AM1 = time1.split(" ")[1].toString().toLowerCase();
+                var AM2 = time2.split(" ")[1].toString().toLowerCase();
+                if (AM1 == AM2) {
+                    var hour1 = parseInt(time1.split(" ")[0].split(":")[0]);
+                    var hour2 = parseInt(time2.split(" ")[0].split(":")[0]);
+                    if (hour1 > hour2) {
+                        if (AM1 == "am" && hour1 == "12" && hour2 > 0) {
+                            return 1;
+                        }
+                        return -1;
+                    }
+                    else if (hour1 < hour2) {
+                        if (AM1 == "am" && hour2 == "12" && hour1>0) {
+                            return -1;
+                        }
+                        return 1;
+                    }
+                    else {
+                        var minute1 = parseInt(time1.split(" ")[0].split(":")[1]);
+                        var minute2 = parseInt(time2.split(" ")[0].split(":")[1]);
+                        if (minute1 > minute2) {
+                            return -1;
+                        }
+                        else {
+                            return 1;
+                        }
+
+                    }
+                }
+                else if (AM1 == "pm") {
+                    return -1;
+                }
+                else {
+                    return 1;
+                }
+            }         
+            return 1;
+        }
+
+        var sortCheckOutTime = function (date1, date2, row1, row2) {
+            var datetime1 = new Date(row1[2]);
+            var datetime2 = new Date(row2[2]);
+            if (datetime1 > datetime2) {
+                return -1;
+            }
+            else if (datetime1 < datetime2) {
+                return 1;
+            }
+            var time1 = date1;
+            var time2 = date2;
+            if (time1 == null || time1.trim() == "") {
+                if (time2 == null || time2.trim() == "") {
+                    return 1;
+                }
+                else {
+                    return -1;
+                }
+            }
+            else if (time2 == null || time2.trim() == "") {
+                return 1;
+            }
+            else {
+                var AM1 = time1.split(" ")[1].toString().toLowerCase();
+                var AM2 = time2.split(" ")[1].toString().toLowerCase();
+                if (AM1 == AM2) {
+                    var hour1 = parseInt(time1.split(" ")[0].split(":")[0]);
+                    var hour2 = parseInt(time2.split(" ")[0].split(":")[0]);
+                    if (hour1 > hour2) {
+                        if (AM1 == "am" && hour1 == "12" && hour2 > 0) {
+                            return 1;
+                        }
+                        return -1;
+                    }
+                    else if (hour1 < hour2) {
+                        if (AM1 == "am" && hour2 == "12" && hour1 > 0) {
+                            return -1;
+                        }
+                        return 1;
+                    }
+                    else {
+                        var minute1 = parseInt(time1.split(" ")[0].split(":")[1]);
+                        var minute2 = parseInt(time2.split(" ")[0].split(":")[1]);
+                        if (minute1 > minute2) {
+                            return -1;
+                        }
+                        else {
+                            return 1;
+                        }
+
+                    }
+                }
+                else if (AM1 == "pm") {
+                    return -1;
+                }
+                else {
+                    return 1;
+                }
+            }
+            return 1;
+        }
     </script>
     @*<script src="~/boottable.js"></script>*@
 </head>
@@ -45,10 +169,10 @@
                             <th data-sortable="true" data-width="60%">Guest Name</th>
                             <th data-sortable="true" data-sorter="sortDate">Check In</th>
                             <th data-sortable="true" data-sorter="sortDate">Check Out</th>
-                            <th data-sortable="true">Requested<br/>Check In</th>
-                            <th data-sortable="true">Requested<br/>Check Out</th>
+                            <th data-sortable="true" data-sorter="sortCheckInTime">Requested<br />Check In</th>
+                            <th data-sortable="true" data-sorter="sortCheckOutTime">Requested<br />Check Out</th>
                             <th data-sortable="true">Remarks</th>
-                            <th data-sortable="true">Cleaning Time</th>
+                            <th data-sortable="true" data-sorter="sortCheckOutTime">Cleaning Time</th>
                             <th data-sortable="true" data-switchable="true">Status</th>
                             <th data-sortable="true">Action</th>
                         </tr>

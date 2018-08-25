@@ -16,7 +16,6 @@ namespace CoreAirPlus.ViewModel
         [HiddenInput]
         public int? CleaningCompanyId { get; set; }
 
-        [Required(ErrorMessage ="Guest Name is Required")]
         [Display(Name = "Guest Name")]
         [DataType(DataType.Text)]
         public string GuestName { get; set; }
