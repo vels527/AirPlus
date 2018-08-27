@@ -7,9 +7,6 @@
 <html>
 <head>
     <title>Guest Reservation Chart</title>
-    @*<link href="~/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
-        <script src="~/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/jquery/dist/jquery.js"></script>*@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="~/assets/bootstrap/dist/css/bootstrap.css">
@@ -153,17 +150,16 @@
             return 1;
         }
     </script>
-    @*<script src="~/boottable.js"></script>*@
 </head>
 <body>
 
     <div class="container">
         <h4>Guest Reservation Chart</h4>
+        <br/>
         <div class="row">
             <div>
                 <table data-toggle="table"
-                       data-striped="true"
-                       data-show-columns="true">
+                       data-striped="true">
                     <thead>
                         <tr>
                             <th data-sortable="true" data-width="60%">Guest Name</th>
@@ -172,9 +168,9 @@
                             <th data-sortable="true" data-sorter="sortCheckInTime">Requested<br />Check In</th>
                             <th data-sortable="true" data-sorter="sortCheckOutTime">Requested<br />Check Out</th>
                             <th data-sortable="true">Remarks</th>
-                            <th data-sortable="true" data-sorter="sortCheckOutTime">Cleaning Time</th>
+                            <th data-sortable="true" data-sorter="sortCheckOutTime">Cleaning<br />Time</th>
                             <th data-sortable="true" data-switchable="true">Status</th>
-                            <th data-sortable="true">Action</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
