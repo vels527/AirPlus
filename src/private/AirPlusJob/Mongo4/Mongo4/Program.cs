@@ -1,27 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Net.Http;
-using System.IO;
-using System.Net;
-using System.Net.Mail;
-using SendGrid;
-using SendGrid.Helpers.Mail;
-using System.Text.RegularExpressions;
-using System.Web;
-//using System.Windows.Forms;
-using System.Xml;
-using MongoDB;
-using MongoDB.Driver;
-using MongoDB.Driver.Core;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+//using System.Windows.Forms;
+using MongoDB.Driver;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;   
-
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+using Mongo4;
 
 namespace Mongo4
 {
@@ -205,6 +195,13 @@ namespace Mongo4
                     }
                 }
                 for (int iK = 0; iK < 1000000; iK++) ;             
+            }
+        }
+        public void SaveToDB()
+        {
+            foreach(var day in days)
+            {
+                DataLayer.SaveToDB(Convert.ToInt64(this.ListingId), day.date, day.available, Convert.ToDecimal(day.price));
             }
         }
         public Mail()
@@ -402,6 +399,7 @@ namespace Mongo4
                 Mone.populate(output);
                 Mone.Sort();
                 Mone.PopulatePrice();
+                Mone.SaveToDB();
                 /*For price population the URL and logic is different.*/
 
                 mout.MailListings.Add(Mone);

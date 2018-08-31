@@ -5,3 +5,16 @@
 log4net.config
 /src/private/AirplusCore/.vs/CoreAirPlus/v15/Server/sqlite3
 .cache
+/src/private/AirbnbGuestList/AirbnbGuestList/obj/Debug
+/src/private/AirbnbMonitor/code/obj
+/src/private/AirPlusJob/Mongo4/Mongo4/obj
+/src/private/AirplusJobShort/AirplusJobShort/obj/Debug
+/src/private/AirplusWCF/AirplusWcf/AirplusWcf/obj
+/src/private/AirplusWCF/AirplusWcf/ClassLibrary1/obj
+/src/private/AirplusWCF/AirplusWcf/ClassLibrary2/obj
+/src/private/AirplusWCF/AirplusWcf/MDataLayer/obj
+/src/private/AirplusWCF/AirplusWcf/MongoDataLayer/obj
+/src/private/AirplusWeb/AirplusWeb/obj
+/src/private/AirplusWeb/ModelDomain/obj
+/src/private/WebAirplus/WebAirplus/obj
+/src/private/AirbnbGuestList/AirbnbGuestList/obj/Release

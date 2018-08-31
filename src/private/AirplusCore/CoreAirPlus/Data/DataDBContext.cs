@@ -10,6 +10,7 @@ namespace CoreAirPlus.Data
         public DbSet<Host> hosts { get; set; }
         public DbSet<Property> properties { get; set; }
         public DbSet<Reservation> reservations { get; set; }
+        public DbSet<CalendarPrice> calendarPrices { get; set; }
 
         public DataDBContext(DbContextOptions<DataDBContext> options):base(options)
         {
@@ -23,8 +24,10 @@ namespace CoreAirPlus.Data
             modelBuilder.Entity<Property>().HasMany(c => c.reservations).WithOne(e => e.property).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<CleaningCompany>().HasMany(c => c.reservations).WithOne(e => e.CleaningCompany).OnDelete(DeleteBehavior.SetNull);
             modelBuilder.Entity<Reservation>().HasKey(t=>new { t.GuestId,t.PropertyId,t.CheckIn,t.CheckOut});
+            modelBuilder.Entity<CalendarPrice>().HasKey(c => new { c.ListingID,c.CalendarDate});
             modelBuilder.Entity<ReservationViewModel>().HasKey(t => new { t.GuestId, t.PropertyId, t.CheckIn, t.CheckOut });
             modelBuilder.Entity<Host>().HasMany(c => c.properties).WithOne(e => e.host).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Property>().HasMany(c => c.CalendarPrices).WithOne(e => e.property).OnDelete(DeleteBehavior.SetNull);
             //foreach(var relationship in modelBuilder.Model.GetEntityTypes().SE)
         }
 

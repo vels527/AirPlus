@@ -20,5 +20,8 @@ namespace CoreAirPlus.Entities
 
         [ForeignKey("PropertyId")]
         public ICollection<Reservation> reservations { get; set; }
+
+        [ForeignKey("PropertyId")]
+        public ICollection<CalendarPrice> CalendarPrices { get; set; }
     }
 }

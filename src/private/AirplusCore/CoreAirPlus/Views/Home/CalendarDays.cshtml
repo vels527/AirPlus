@@ -1,0 +1,103 @@
+﻿@using System;
+@using System.Globalization;
+@using System.Text;
+
+@model IEnumerable<CoreAirPlus.Entities.CalendarPrice>
+
+@{
+    ViewData["Title"] = "CalendarDays";
+}
+
+<h2>CalendarDays</h2>
+
+<div>
+    <h4>CalendarPrice</h4>
+    <hr />
+    <table>
+        <thead>
+            <tr>
+                @{
+                    string MonthNom = "";
+                    long ListingID = 0;
+                    List<string> repeatString = new List<string>();
+                    @foreach (var m in Model)
+                    {
+                        var monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(m.CalendarDate.Month);
+                        if (ListingID == 0)
+                        {
+                            ListingID = m.ListingID;
+                            <td></td>
+                        }
+                        else if (ListingID != m.ListingID)
+                        {
+                            break;
+                        }
+                        if (MonthNom != monthName)
+                        {
+                            MonthNom = monthName;
+                            if (repeatString.Contains(MonthNom))
+                            {
+
+                            }
+                            else
+                            {
+                                <td style='border:1px solid black'>@MonthNom</td>
+                                repeatString.Add(MonthNom);
+                            }
+                        }
+                        else
+                        {
+
+                        }
+                        <td style='border:1px solid black'>@m.CalendarDate.Day</td>
+                    }
+                }
+
+            </tr>
+        </thead>
+        @{
+            long listingID = 0;
+            int month = 0;
+            StringBuilder strb = new StringBuilder();
+            @foreach (var cal in Model)
+            {
+
+                if (listingID == 0)
+                {
+                    listingID = cal.ListingID;
+                    strb.Append("<tr>");
+                    strb.Append("<td style='border-bottom:1px solid black'>" + cal.ListingID + @"</td>");
+                }
+                else if (listingID != cal.ListingID)
+                {
+                    listingID = cal.ListingID;
+                    strb.Append("</tr><tr>");
+                    strb.Append("<td style='border-bottom:1px solid black'>" + cal.ListingID + @"</td>");
+                }
+
+                if (month != cal.CalendarDate.Month)
+                {
+                    month = cal.CalendarDate.Month;
+                    strb.Append("<td></td>");
+                }
+                if (cal.IsAvailable)
+                {
+                    strb.Append("<td style='border-bottom:1px solid black;background-color:green;'>" + cal.Price + "</td>");
+                }
+                else
+                {
+                    strb.Append("<td style='border-bottom:1px solid black;background-color:red;'>" + cal.Price + "</td>");
+                }
+            }
+            strb.Append("@</tr>");
+        <tbody>
+            @Html.Raw(@strb.ToString());
+        </tbody>
+                }
+            
+        </table>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>

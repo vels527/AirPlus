@@ -20,6 +20,27 @@ namespace CoreAirPlus.Migrations
                 .HasAnnotation("ProductVersion", "2.0.3-rtm-10026")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("CoreAirPlus.Entities.CalendarPrice", b =>
+                {
+                    b.Property<long>("ListingID");
+
+                    b.Property<DateTime>("CalendarDate");
+
+                    b.Property<bool>("IsAvailable");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<int?>("PropertyId");
+
+                    b.HasKey("ListingID", "CalendarDate");
+
+                    b.HasAlternateKey("CalendarDate", "ListingID");
+
+                    b.HasIndex("PropertyId");
+
+                    b.ToTable("calendarPrices");
+                });
+
             modelBuilder.Entity("CoreAirPlus.Entities.CleaningCompany", b =>
                 {
                     b.Property<int>("CleaningCompanyId")
@@ -186,6 +207,14 @@ namespace CoreAirPlus.Migrations
                     b.HasAlternateKey("CheckIn", "GuestId", "PropertyId");
 
                     b.ToTable("ReservationViewModel");
+                });
+
+            modelBuilder.Entity("CoreAirPlus.Entities.CalendarPrice", b =>
+                {
+                    b.HasOne("CoreAirPlus.Entities.Property", "property")
+                        .WithMany("CalendarPrices")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("CoreAirPlus.Entities.Property", b =>

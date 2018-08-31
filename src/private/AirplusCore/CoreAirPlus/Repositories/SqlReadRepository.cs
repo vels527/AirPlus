@@ -106,5 +106,10 @@ namespace CoreAirPlus.Repositories
         {
            return _db.SaveReservation(reservation);
         }
+
+        public IEnumerable<CalendarPrice> GetCalendarPrices()
+        {
+            return _db.GetWithIncludes<CalendarPrice>();
+        }
     }
 }

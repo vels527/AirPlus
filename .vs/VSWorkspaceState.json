@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\private",
+    "\\src\\private\\AirplusCore",
+    "\\src\\private\\AirplusCore\\CoreAirPlus",
+    "\\src\\private\\AirplusCore\\CoreAirPlus\\Controllers"
+  ],
+  "SelectedNode": "\\src\\private\\AirplusCore\\CoreAirPlus\\bin",
+  "PreviewInSolutionExplorer": false
+}

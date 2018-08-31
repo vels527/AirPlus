@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using CoreAirPlus.Entities;
 using CoreAirPlus.Repositories;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using CoreAirPlus.Entities;
 using CoreAirPlus.ViewModel;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System.Linq;
 using System;
 using System.Collections.Generic;
 
@@ -194,6 +193,46 @@ namespace CoreAirPlus.Controllers
             {
                 return View();
             }
+        }
+
+        [Route("Calendar")]
+        public ActionResult CalendarDays()
+        {
+            var calendars = _readRepository.GetCalendarPrices();
+
+
+            List<CalendarPrice> calendarprices = new List<CalendarPrice>();
+            calendarprices = calendars.ToList();
+            for(int i = 0; i < calendarprices.Count(); i++)
+            {
+                for(int j = i+1; j < calendarprices.Count(); j++)
+                {
+                    if(calendarprices[i].ListingID> calendarprices[j].ListingID)
+                    {
+                        var temp =calendarprices[i];
+                        calendarprices[i] = calendarprices[j];
+                        calendarprices[j] = temp;
+                    }
+                }
+            }
+            for (int i = 0; i < calendarprices.Count(); i++)
+            {
+                for (int j = i + 1; j < calendarprices.Count(); j++)
+                {
+                    if (calendarprices[i].ListingID == calendarprices[j].ListingID)
+                    {
+                        if (calendarprices[i].CalendarDate>calendarprices[j].CalendarDate)
+                        {
+                            var temp = calendarprices[i];
+                            calendarprices[i] = calendarprices[j];
+                            calendarprices[j] = temp;
+                        }
+
+                    }
+                }
+            }
+            return View(calendarprices);
+
         }
     }
 }

@@ -54,14 +54,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Mongo4.exe" size="39888">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Mongo4.exe" size="40912">
       <assemblyIdentity name="Mongo4" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>9frUYlBdq7vST1JLS8UCVLl1+oQq9RxGA2fPgXFjfsk=</dsig:DigestValue>
+        <dsig:DigestValue>MK7OQNQgSFRKCfGFWlgdtOP2bQWuWvHGDybxLa03too=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -137,13 +137,13 @@
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="Mongo4.exe.config" size="550">
+  <file name="Mongo4.exe.config" size="1108">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>h+RzEU+zbu21Fk2I7lNRxTsLhlBNXLhVbWY4UlXUSJc=</dsig:DigestValue>
+      <dsig:DigestValue>frAeMrXtmzwY1tgaDKqeWTmOAfMeFa7rgc/ftAvN8LM=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>
