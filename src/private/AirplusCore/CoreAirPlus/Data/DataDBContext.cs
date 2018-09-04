@@ -26,11 +26,11 @@ namespace CoreAirPlus.Data
             modelBuilder.Entity<CleaningCompany>().HasMany(c => c.reservations).WithOne(e => e.CleaningCompany).OnDelete(DeleteBehavior.SetNull);
             modelBuilder.Entity<Reservation>().HasKey(t=>new { t.GuestId,t.PropertyId,t.CheckIn,t.CheckOut});
             modelBuilder.Entity<CalendarPrice>().HasKey(c => new { c.ListingId,c.CalendarDate});
-            //modelBuilder.Entity<Listing>().HasKey(c=>new { c.ListingId,c.PropertyId});
+            modelBuilder.Entity<Listing>().HasKey(c=>new { c.ListingId,c.PropertyId});
             modelBuilder.Entity<ReservationViewModel>().HasKey(t => new { t.GuestId, t.PropertyId, t.CheckIn, t.CheckOut });
             modelBuilder.Entity<Host>().HasMany(c => c.properties).WithOne(e => e.host).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Property>().HasMany(c => c.Listings).WithOne(e => e.property).OnDelete(DeleteBehavior.SetNull);
-            modelBuilder.Entity<Listing>().HasMany(c => c.CalendarDetail).WithOne(e => e.ListingDetail).OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Listing>().HasMany(c => c.CalendarDetail).WithOne(e => e.ListingDetail).HasForeignKey(e=>new { e.ListingId,e.PropertyId}).OnDelete(DeleteBehavior.SetNull);
             //foreach(var relationship in modelBuilder.Model.GetEntityTypes().SE)
         }
 

@@ -10,8 +10,11 @@ namespace CoreAirPlus.Entities
         [Key, Column(Order = 1)]
         public long ListingId { get; set; }//ID is Id
 
-        [ForeignKey("ListingId")]
+        public int PropertyId { get; set; }
+
+        [ForeignKey("ListingId,PropertyId")]
         public virtual Listing ListingDetail { get; set; }
+
 
         [Key, Column(Order = 2)]
         public DateTime CalendarDate { get; set; }
