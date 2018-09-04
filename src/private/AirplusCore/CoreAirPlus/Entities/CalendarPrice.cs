@@ -7,12 +7,10 @@ namespace CoreAirPlus.Entities
     public class CalendarPrice
     {
 
-        public int? PropertyId { get; set; }
-        [ForeignKey("PropertyId")]
-        public virtual Property property { get; set; }
-
         [Key, Column(Order = 1)]
-        public long ListingID { get; set; }
+        public long ListingId { get; set; }//ID is Id
+        [ForeignKey("ListingId")]
+        public virtual Listing ListingDetail { get; set; }
 
         [Key, Column(Order = 2)]
         public DateTime CalendarDate { get; set; }

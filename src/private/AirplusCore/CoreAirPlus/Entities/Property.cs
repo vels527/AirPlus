@@ -9,7 +9,8 @@ namespace CoreAirPlus.Entities
         [Key]
         public int PropertyId { get; set; }
         [Required]
-        public long ListingId { get; set; }
+        public long ListingId { get; set; }//owner listingid
+        //List of competitions listingid's
         [Required]
         public string Address { get; set; }
         public string IcalUrl { get; set; }
@@ -20,8 +21,8 @@ namespace CoreAirPlus.Entities
 
         [ForeignKey("PropertyId")]
         public ICollection<Reservation> reservations { get; set; }
-
+        //reservations should be Reservations
         [ForeignKey("PropertyId")]
-        public ICollection<CalendarPrice> CalendarPrices { get; set; }
+        public ICollection<Listing> Listings { get; set; }
     }
 }

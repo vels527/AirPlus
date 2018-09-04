@@ -207,7 +207,7 @@ namespace CoreAirPlus.Controllers
             {
                 for(int j = i+1; j < calendarprices.Count(); j++)
                 {
-                    if(calendarprices[i].ListingID> calendarprices[j].ListingID)
+                    if(calendarprices[i].ListingId> calendarprices[j].ListingId)
                     {
                         var temp =calendarprices[i];
                         calendarprices[i] = calendarprices[j];
@@ -219,7 +219,7 @@ namespace CoreAirPlus.Controllers
             {
                 for (int j = i + 1; j < calendarprices.Count(); j++)
                 {
-                    if (calendarprices[i].ListingID == calendarprices[j].ListingID)
+                    if (calendarprices[i].ListingId == calendarprices[j].ListingId)
                     {
                         if (calendarprices[i].CalendarDate>calendarprices[j].CalendarDate)
                         {
