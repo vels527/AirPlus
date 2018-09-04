@@ -9,6 +9,7 @@ namespace CoreAirPlus.Entities
 
         [Key, Column(Order = 1)]
         public long ListingId { get; set; }//ID is Id
+
         [ForeignKey("ListingId")]
         public virtual Listing ListingDetail { get; set; }
 
