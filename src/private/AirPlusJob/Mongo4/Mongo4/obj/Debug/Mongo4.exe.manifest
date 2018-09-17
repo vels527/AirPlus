@@ -54,14 +54,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Mongo4.exe" size="41936">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Mongo4.exe" size="44496">
       <assemblyIdentity name="Mongo4" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>ocsXvmgzeKmp5ZCSTQfhp4shu7uVsWgwDeUKeq2nRn8=</dsig:DigestValue>
+        <dsig:DigestValue>F65dj0N8yjXaqdTIOZ3amqKHfL2ygrKxGt0JhblrTwE=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

@@ -32,9 +32,14 @@ namespace Mongo4
             Log.Error(ex.Message, ex);
         }
 
-        public static void Info(object msg)
+        //public static void Info(object msg)
+        //{
+        //    Log.Info(msg);
+        //}
+        //void InfoFormat(string format, params object[] args)
+        public static void Info(string format, params object[] args)
         {
-            Log.Info(msg);
+            Log.InfoFormat(format, args);
         }
     }
 }

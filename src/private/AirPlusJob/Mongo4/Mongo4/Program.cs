@@ -12,6 +12,8 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using System.Linq;
+using System.Threading;
 using Mongo4;
 
 namespace Mongo4
@@ -21,7 +23,7 @@ namespace Mongo4
     {
         static async Task Execute()
         {
-            codeEvaler cde = new codeEvaler();  
+            codeEvaler cde = new codeEvaler();
             cde.Eval();
             var apiKey = Environment.GetEnvironmentVariable("SENDSEND");
             var client = new SendGridClient(apiKey);
@@ -36,12 +38,12 @@ namespace Mongo4
                 msg.AddCc("siva@kustotech.in", "siva");
                 var response = await client.SendEmailAsync(msg);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Logger.Error("Error in mail part",e);
+                Logger.Error("Error in mail part", e);
             }
         }
-        static void Main(string[] args) 
+        static void Main(string[] args)
         {
             try
             {
@@ -49,10 +51,10 @@ namespace Mongo4
                 log4net.Config.XmlConfigurator.Configure(fileInfo);
                 Execute().Wait();
             }
-            catch(FileNotFoundException fe)
+            catch (FileNotFoundException fe)
             {
                 FileInfo fileInfo = new FileInfo("temp.txt");
-                FileStream fs=fileInfo.Create();
+                FileStream fs = fileInfo.Create();
                 fs.Close();
             }
             catch (Exception ex)
@@ -60,7 +62,7 @@ namespace Mongo4
                 //Console.WriteLine(ex.Message);
                 Logger.Error(ex);
             }
-            
+
         }
     }
     [BsonDiscriminator("Price")]
@@ -137,29 +139,29 @@ namespace Mongo4
                 {
                     DayName oneday = new DayName();
                     oneday.available = Convert.ToBoolean(json["calendar_months"][i].days[j]["available"].Value);
-                    oneday.date = Convert.ToDateTime(json["calendar_months"][i].days[j]["date"].Value);                    
+                    oneday.date = Convert.ToDateTime(json["calendar_months"][i].days[j]["date"].Value);
                     days.Add(oneday);
                 }
             }
         }
         public void Sort()
         {
-           for (int i=0;i<this.days.Count-1;i++)
+            for (int i = 0; i < this.days.Count - 1; i++)
             {
-                for(int j=i+1;j< this.days.Count; j++)
+                for (int j = i + 1; j < this.days.Count; j++)
                 {
-                    if(this.days[i].date> this.days[j].date)
+                    if (this.days[i].date > this.days[j].date)
                     {
                         DayName swap = this.days[j];
                         this.days[j] = this.days[i];
                         this.days[i] = swap;
                     }
-                    else if(this.days[i].date == this.days[j].date)
+                    else if (this.days[i].date == this.days[j].date)
                     {
                         DayName swap = this.days[j];
                         this.days[j] = this.days[i];
-                        this.days[i] = swap;                        
-                        this.days.RemoveAt(j--);                        
+                        this.days[i] = swap;
+                        this.days.RemoveAt(j--);
                     }
                 }
             }
@@ -167,7 +169,7 @@ namespace Mongo4
         public void PopulatePrice()
         {
             for (int i = 0; i < this.days.Count;)
-            {                
+            {
                 codeEvaler codePrice = new codeEvaler();
                 var guests = 3;
                 DateTime dateTime_checkin = this.days[i].date;
@@ -177,7 +179,7 @@ namespace Mongo4
                 string url = string.Format(codePrice.urlPriceTemplate, guests, ListingId, strCheckInDate, strCheckOutDate, guests);
                 string output;
                 codePrice.DownloadPriceFromAirbnb(ListingId, url, out output);
-                if (output == "")
+                if (string.IsNullOrEmpty(output))
                 {
                     continue;
                 }
@@ -190,21 +192,21 @@ namespace Mongo4
                         {
                             break;
                         }
-                        this.days[i++].price = Convert.ToDouble(jsonPrice["pdp_listing_booking_details"][0]["p3_display_rate"]["amount"].Value);                           
+                        this.days[i++].price = Convert.ToDouble(jsonPrice["pdp_listing_booking_details"][0]["p3_display_rate"]["amount"].Value);
                     }
                     if (i >= this.days.Count)
                     {
                         break;
                     }
                 }
-                for (int iK = 0; iK < 1000000; iK++) ;             
+                Thread.Sleep(5000);
             }
         }
         public void SaveToDB()
         {
-            foreach(var day in days)
+            foreach (var day in days)
             {
-                DataLayer.SaveToDB(Convert.ToInt64(this.ListingId), day.date, day.available, Convert.ToDecimal(day.price),this.PropertyId);
+                DataLayer.SaveToDB(Convert.ToInt64(this.ListingId), day.date, day.available, Convert.ToDecimal(day.price), this.PropertyId);
             }
         }
         public Mail()
@@ -215,7 +217,7 @@ namespace Mongo4
     }
     public class MailOut
     {
-        public List<Mail> MailListings= new List<Mail>();
+        public List<Mail> MailListings = new List<Mail>();
         public string RetString()
         {
             StringBuilder strb = new StringBuilder();
@@ -243,7 +245,8 @@ namespace Mongo4
                             repeatString.Add(monthNom);
                         }
                     }
-                    else{
+                    else
+                    {
                         //continue;                        
                     }
                     strb.Append("<td style='border:1px solid black'>" + Convert.ToString(dates.date.Day) + @"</td>");
@@ -256,9 +259,9 @@ namespace Mongo4
             {
                 m.Sort();
                 strb.Append("<tr>");
-                strb.Append("<td style='border-bottom:1px solid black'>" + m.ListingId+@"</td>");
+                strb.Append("<td style='border-bottom:1px solid black'>" + m.ListingId + @"</td>");
                 int monindex = 0;
-                for (int r=0;r<m.days.Count;r++)
+                for (int r = 0; r < m.days.Count; r++)
                 {
                     if (monindex != m.days[r].date.Month)
                     {
@@ -267,7 +270,7 @@ namespace Mongo4
                     }
                     if (m.days[r].available)
                     {
-                        strb.Append("<td style='border-bottom:1px solid black;background-color:green;'>"+m.days[r].price+"</td>");
+                        strb.Append("<td style='border-bottom:1px solid black;background-color:green;'>" + m.days[r].price + "</td>");
                     }
                     else
                     {
@@ -286,10 +289,10 @@ namespace Mongo4
         }
         private EachMonth MonthName(int mon)
         {
-            EachMonth moneach=new EachMonth();
+            EachMonth moneach = new EachMonth();
             moneach.days = 0;
             moneach.mon = "";
-            switch(mon)
+            switch (mon)
             {
                 case 1:
                     moneach.mon = "January";
@@ -298,11 +301,11 @@ namespace Mongo4
                 case 2:
                     moneach.mon = "February";
                     moneach.days = 28;
-                    return moneach;                    
+                    return moneach;
                 case 3:
                     moneach.mon = "March";
                     moneach.days = 31;
-                    return moneach; 
+                    return moneach;
                 case 4:
                     moneach.mon = "April";
                     moneach.days = 30;
@@ -310,7 +313,7 @@ namespace Mongo4
                 case 5:
                     moneach.mon = "May";
                     moneach.days = 31;
-                    return moneach;                    
+                    return moneach;
                 case 6:
                     moneach.mon = "June";
                     moneach.days = 30;
@@ -345,9 +348,9 @@ namespace Mongo4
     }
 
     public class DayName
-    {        
+    {
         public Boolean available { get; set; }
-        
+
         public DateTime date { get; set; }
 
         public Double price { get; set; }
@@ -366,7 +369,7 @@ namespace Mongo4
     {
 
         //string urlTemplate =
-//"https://www.airbnb.com/api/v2/calendar_months?key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=USD&locale=en&listing_id={0}&month={1}&year={2}&count=6&_format=with_conditions&guests={3}";
+        //"https://www.airbnb.com/api/v2/calendar_months?key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=USD&locale=en&listing_id={0}&month={1}&year={2}&count=6&_format=with_conditions&guests={3}";
         string urlTemplate = "https://www.airbnb.com/api/v2/calendar_months?_format=for_price_calculator_date_picker&count={0}&listing_id={1}&month={2}&year={3}&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=INR&locale=en";
 
         public string urlPriceTemplate = "https://www.airbnb.co.in/api/v2/pdp_listing_booking_details?guests={0}&listing_id={1}&show_smart_promotion=0&_format=for_web_with_date&_interaction_type=pageload&_intents=p3_book_it&_parent_request_uuid=d7cdc14f-f110-43aa-accd-03918cb52be2&_p3_impression_id=p3_1516182527_ZjCNtdJhJV2Qha5s&check_in={2}&check_out={3}&number_of_adults={4}&number_of_children=0&number_of_infants=0&key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=USD&locale=en-US";
@@ -377,83 +380,56 @@ namespace Mongo4
         private StringBuilder bodyBuilder = new StringBuilder();
         private StringBuilder headerBuilder = new StringBuilder();
         public string MailBody { get; set; }
-        public int PropertyId { get; set; }
+        //public int PropertyId { get; set; }
 
-        public void DownloadMain(List<string> listingIds, string urlTemplate)
+        public void DownloadMain(int propertyId, List<string> listingIds, string urlTemplate)
         {
-            if(listingIds.Count==0)
-            {
-                return;
-            }
             DateTime d = DateTime.Today;
             var month = d.Month;
             var year = d.Year;
             var guests = 3;
-            MailOut mout = new MailOut();                            
+            MailOut mout = new MailOut();
             foreach (var listingId in listingIds)
             {
                 //string url = string.Format(urlTemplate, listingId, month, year, guests);
                 string output;
-                string url = string.Format(urlTemplate, guests,listingId,month,year);
-                DownloadFromAirbnb(listingId, url,out output);
-                if(output=="")
+                string url = string.Format(urlTemplate, guests, listingId, month, year);
+                DownloadFromAirbnb(listingId, url, out output);
+                if (String.IsNullOrEmpty(output))
                 {
-                    string infoMessage = "No output for listing " + listingId;
-                    Logger.Info(infoMessage);
+                    Logger.Info("No output for listing {0}", listingId);
                     continue;
                 }
-                Mail Mone = new Mail();
-                Mone.ListingId = listingId;
-                Mone.PropertyId = PropertyId;
-                Mone.Month = month;
-                Mone.populate(output);
-                Mone.Sort();
-                Mone.PopulatePrice();
-                Mone.SaveToDB();
+                Mail mail = new Mail();
+                mail.ListingId = listingId;
+                mail.PropertyId = propertyId;
+                mail.Month = month;
+                mail.populate(output);
+                mail.Sort();
+                mail.PopulatePrice();
+                mail.SaveToDB();
                 /*For price population the URL and logic is different.*/
 
-                mout.MailListings.Add(Mone);
-                Task t = MyMethodAsync();      
+                mout.MailListings.Add(mail);
+                Thread.Sleep(5000);
             }
             MailBody = mout.RetString();
-        }
-
-        public async Task MyMethodAsync()
-        {
-            Task<int> longRunningTask = LongRunningOperationAsync();
-            // independent work which doesn't need the result of LongRunningOperationAsync can be done here
-
-            //and now we call await on the task 
-            int result = await longRunningTask;
-            //use the result 
-            //Console.WriteLine(result);
-        }
-
-        public async Task<int> LongRunningOperationAsync() // assume we return an int from this long running operation 
-        {
-            await Task.Delay(5000); //2 seconds delay
-            return 1;
         }
 
         public void Eval()
         {
             DataTable PropertyListingPairs = DataLayer.GetListings();
-            PropertyId = -1;
-            foreach (DataRow dr in PropertyListingPairs.Rows)
+            int PropertyId = -1;
+            var propertyMap = PropertyListingPairs.AsEnumerable().Select(r => new { key = r.Field<int>("PropertyId"), val = r.Field<Int64>("ListingId").ToString() })
+                                               .GroupBy(g => g.key)
+                                               .ToDictionary(a => a.Key, a => a.Select(x => x.val).ToList());
+            foreach (var k in propertyMap.Keys)
             {
-                if (Convert.ToInt32(dr[0]) != PropertyId)
-                {
-                    DownloadMain(listingIds,urlTemplate);
-                    listingIds.Clear();
-                    PropertyId = Convert.ToInt32(dr[0]);
-                }
-                listingIds.Add(Convert.ToString(dr[1]));
+                DownloadMain(PropertyId, propertyMap[k], urlTemplate);
             }
-            DownloadMain(listingIds, urlTemplate);
-            //ProcessMain(listingIds, urlPriceTemplate);
         }
 
-        private void DownloadFromAirbnb(string listingId, string url,out string output)
+        private void DownloadFromAirbnb(string listingId, string url, out string output)
         {
 
             HttpWebResponse response;
@@ -468,17 +444,18 @@ namespace Mongo4
             {
 
                 var encoding = Encoding.GetEncoding(response.CharacterSet);
-                using (var responseStream = response.GetResponseStream()) { 
-                using (var reader = new StreamReader(responseStream, encoding))
-                    output= reader.ReadToEnd();
+                using (var responseStream = response.GetResponseStream())
+                {
+                    using (var reader = new StreamReader(responseStream, encoding))
+                        output = reader.ReadToEnd();
                 }
 
-            response.Close();
+                response.Close();
             }
 
         }
 
-        public void DownloadPriceFromAirbnb(string listingId,string url,out string output)
+        public void DownloadPriceFromAirbnb(string listingId, string url, out string output)
         {
             HttpWebResponse response;
             output = "";
@@ -499,7 +476,7 @@ namespace Mongo4
 
         public void Save(string listingId, string content)
         {
-   
+
             DateTime dtx = new DateTime();
             dtx = DateTime.Now;
             var client = new MongoClient("mongodb://airplusmongo:7ABjdtYSDQ4Zn3oB4zMPF82xIiK5JgRkTgYjgB7kylxE1jSkaOPnY0qYgtrheNKmOTKFGy98Ao4OKxLm00SQkg==@airplusmongo.documents.azure.com:10255/?ssl=true&replicaSet=globaldb");
@@ -507,14 +484,14 @@ namespace Mongo4
             //database.CreateCollection("listings");
             var collection = database.GetCollection<BsonDocument>("listings");
             dynamic json = JsonConvert.DeserializeObject(content);
-            for(int i=0;i<json["calendar_months"].Count;i++)
+            for (int i = 0; i < json["calendar_months"].Count; i++)
             {
                 var oneDoc = json["calendar_months"];
                 Document d = new Document();
                 d.Month = new BsonString(oneDoc[i].abbr_name.Value);
                 d.ListingId = new BsonString(listingId);
                 d.datetaken = new BsonDateTime(DateTime.Now);
-                for(int j=0;j< json["calendar_months"][i].days.Count;j++)
+                for (int j = 0; j < json["calendar_months"][i].days.Count; j++)
                 {
                     Day oneday = new Day();
                     oneday.available = new BsonBoolean(json["calendar_months"][i].days[j]["available"].Value);
@@ -528,11 +505,11 @@ namespace Mongo4
                     oneday.price.native_price = new BsonDouble(dnative_price);
                     oneday.price.type = new BsonString(json["calendar_months"][i].days[j]["price"]["type"].Value);
                     d.days.Add(oneday);
-               }
+                }
                 var bsonDocument = d.ToBsonDocument();
                 collection.InsertOneAsync(bsonDocument).Wait();
             }
-            
+
             //var abELement=new BsonElement()
             //var abListing = new BsonDocument();
 
@@ -571,10 +548,11 @@ namespace Mongo4
             }
             catch (Exception)
             {
-                if (response != null) {
+                if (response != null)
+                {
                     response.Close();
                 }
-                
+
                 return false;
             }
 
