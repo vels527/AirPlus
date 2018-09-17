@@ -26,7 +26,7 @@ namespace Mongo4
 #endif
             }
         }
-        public static void SaveToDB(long ListingID,DateTime dateTime,bool IsAvailable,decimal price)
+        public static void SaveToDB(long ListingID,DateTime dateTime,bool IsAvailable,decimal price,int propertyId)
         {
             connection.Open();
             SqlCommand command = new SqlCommand("SAVEAVAILABILITY", connection);
@@ -35,8 +35,22 @@ namespace Mongo4
             command.Parameters.Add(new SqlParameter("@CALENDARDATE", dateTime));
             command.Parameters.Add(new SqlParameter("@ISAVAILABLE", IsAvailable));
             command.Parameters.Add(new SqlParameter("@PRICE", price));
+            command.Parameters.Add(new SqlParameter("@PROPERTYID",propertyId));
             command.ExecuteNonQuery();
             connection.Close();
+        }
+        public static DataTable GetListings()
+        {
+            DataSet dataSet_Listings = new DataSet();
+            connection.Open();
+            SqlDataAdapter daListings = new SqlDataAdapter();
+            SqlCommand command = new SqlCommand("GetListings",connection);
+            command.CommandType = CommandType.StoredProcedure;
+            //command.EndExecuteNonQuery
+            daListings.SelectCommand = command;
+            daListings.Fill(dataSet_Listings);
+            connection.Close();
+            return dataSet_Listings.Tables[0];
         }
     }
 
