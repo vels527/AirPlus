@@ -7,13 +7,8 @@
 @{
     ViewData["Title"] = "CalendarDays";
 }
-
 <h2>CalendarDays</h2>
-
-<div>
-    <h4>CalendarPrice</h4>
-    <hr />
-    <table>
+<div><table>
         <thead>
             <tr>
                 @{
@@ -25,10 +20,10 @@
                         var monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(m.CalendarDate.Month);
                         if (ListingID == 0)
                         {
-                            ListingID = m.ListingID;
+                            ListingID = m.ListingId;
                             <td></td>
                         }
-                        else if (ListingID != m.ListingID)
+                        else if (ListingID != m.ListingId)
                         {
                             break;
                         }
@@ -64,15 +59,15 @@
 
                 if (listingID == 0)
                 {
-                    listingID = cal.ListingID;
+                    listingID = cal.ListingId;
                     strb.Append("<tr>");
-                    strb.Append("<td style='border-bottom:1px solid black'>" + cal.ListingID + @"</td>");
+                    strb.Append("<td style='border-bottom:1px solid black'>" + cal.ListingId + @"</td>");
                 }
-                else if (listingID != cal.ListingID)
+                else if (listingID != cal.ListingId)
                 {
-                    listingID = cal.ListingID;
+                    listingID = cal.ListingId;
                     strb.Append("</tr><tr>");
-                    strb.Append("<td style='border-bottom:1px solid black'>" + cal.ListingID + @"</td>");
+                    strb.Append("<td style='border-bottom:1px solid black'>" + cal.ListingId + @"</td>");
                 }
 
                 if (month != cal.CalendarDate.Month)
