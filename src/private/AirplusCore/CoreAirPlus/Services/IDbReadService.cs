@@ -13,5 +13,6 @@ namespace CoreAirPlus.Services
         IEnumerable<TEntity> GetWithIncludes<TEntity>() where TEntity : class;
         SelectList GetSelectList<TEntity>(string valueField, string textField) where TEntity : class;
         bool SaveReservation(Reservation reservation);
+        bool SaveHost(Host host);
     }
 }

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoreAirPlus.Controllers
 {
@@ -109,6 +111,47 @@ namespace CoreAirPlus.Controllers
                                            Status = c.status
                                        };
             return View(reservationViewModels.FirstOrDefault());
+        }
+
+        [HttpGet("Register")]
+        public ActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost("Register")]
+        public ActionResult Register(HostViewModel hostvm)
+        {
+            if (ModelState.IsValid)
+            {
+                Host host = new Host();
+                host.FirstName = hostvm.FirstName;
+                host.LastName = hostvm.LastName;
+                host.FullName = hostvm.FirstName + " " + hostvm.LastName;
+                host.Password = hostvm.Password;
+                host.Email = hostvm.Email;
+                host.Username = hostvm.Email;
+                var checkIfExists = _readRepository.GetHost(host.Username);
+                if (checkIfExists is null)
+                {
+                    if (_readRepository.SaveHost(host))
+                    {
+                        Task.Delay(200).Wait();
+                        Host verifiedHost = _readRepository.GetHost(host.Username);
+                        HttpContext.Session.SetInt32("HostId", host.HostId);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("","Kindly Try Again or contact support,Some Technical Issue");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("","UserId Already Present");
+                }
+            }
+            return BadRequest(ModelState);
         }
 
         /*This is specifically for edit time span*/

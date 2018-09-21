@@ -67,14 +67,13 @@ namespace CoreAirPlus.Services
 
         public bool SaveReservation(Reservation reservation)
         {
-            //var dbReservation = _db.reservations.FirstOrDefaultAsync(c => c.GuestId == reservation.GuestId
-            //                    && c.PropertyId == reservation.PropertyId
-            //                    && c.CheckIn == reservation.CheckIn);
-            //if (dbReservation == null)
-            //{
-            //    return false;
-            //}
             _db.reservations.Update(reservation);
+            _db.SaveChangesAsync();
+            return true;
+        }
+        public bool SaveHost(Host host)
+        {
+            _db.hosts.Update(host);
             _db.SaveChangesAsync();
             return true;
         }

@@ -111,5 +111,10 @@ namespace CoreAirPlus.Repositories
         {
             return _db.GetWithIncludes<CalendarPrice>();
         }
+
+        public bool SaveHost(Host host)
+        {
+            return _db.SaveHost(host);
+        }
     }
 }
