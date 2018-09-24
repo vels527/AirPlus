@@ -1,0 +1,42 @@
+﻿@model CoreAirPlus.ViewModel.PropertyViewModel
+
+@{
+    ViewData["Title"] = "Property";
+}
+
+<h2>Property</h2>
+
+<h4>PropertyViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Property">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.HiddenFor(model => model.PropertyId)
+            @Html.HiddenFor(model => model.HostId)
+            @Html.DisplayNameFor(model => model.ListingId)
+            @Html.DisplayFor(model => model.ListingId)
+            @Html.EditorFor(model => model.ListingId)<br />
+
+            @Html.DisplayNameFor(model => model.Address)
+            @Html.DisplayFor(model => model.Address)
+            @Html.EditorFor(model => model.Address) < br />
+
+            @Html.DisplayNameFor(model => model.IcalUrl)
+            @Html.DisplayFor(model => model.IcalUrl)
+            @Html.EditorFor(model => model.IcalUrl)<br />
+
+            @Html.DisplayNameFor(model => model.Listings)
+            @Html.DisplayFor(model => model.Listings)
+            @Html.EditorFor(model => model.Listings)
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

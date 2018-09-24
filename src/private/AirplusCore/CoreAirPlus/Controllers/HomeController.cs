@@ -33,7 +33,7 @@ namespace CoreAirPlus.Controllers
             var properties = _readRepository.GetHost(hostid).properties;
             if (properties.Count == 0)
             {
-
+                return RedirectToAction("Property");
             }
             var reservations = _readRepository.GetReservationsByHost(hostid);
             var reservationViewModel = from c in reservations select new ReservationViewModel
@@ -50,6 +50,12 @@ namespace CoreAirPlus.Controllers
                 Status = c.status
             };
             return View(reservationViewModel);
+        }
+
+        [HttpGet("Property")]
+        public ActionResult Property()
+        {
+            return View();
         }
 
         [Route("LoginDirect")]

@@ -37,5 +37,6 @@ namespace CoreAirPlus.Data
 
         public DbSet<CoreAirPlus.ViewModel.ReservationViewModel> ReservationViewModel { get; set; }
         public DbSet<CoreAirPlus.ViewModel.HostViewModel> HostsViewModel { get; set; }
+        public DbSet<CoreAirPlus.ViewModel.PropertyViewModel> PropertyViewModels { get; set; }
     }
 }
