@@ -68,13 +68,13 @@ namespace CoreAirPlus.Services
         public bool SaveReservation(Reservation reservation)
         {
             _db.reservations.Update(reservation);
-            _db.SaveChangesAsync();
+            _db.SaveChanges();
             return true;
         }
         public bool SaveHost(Host host)
         {
             _db.hosts.Update(host);
-            _db.SaveChangesAsync();
+            _db.SaveChanges();
             return true;
         }
     }
