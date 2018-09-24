@@ -23,6 +23,6 @@ namespace CoreAirPlus.Repositories
         bool AuthenticateHost(string userName,string password);
         bool UpdateReservation(Reservation reservation);
         bool SaveHost(Host host);
-        IEnumerable<CalendarPrice> GetCalendarPrices();
+        IEnumerable<CalendarPrice> GetCalendarPrices(int PropertyId);
     }
 }

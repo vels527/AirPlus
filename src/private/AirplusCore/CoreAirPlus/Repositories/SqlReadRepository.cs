@@ -107,9 +107,9 @@ namespace CoreAirPlus.Repositories
            return _db.SaveReservation(reservation);
         }
 
-        public IEnumerable<CalendarPrice> GetCalendarPrices()
+        public IEnumerable<CalendarPrice> GetCalendarPrices(int propertyId)
         {
-            return _db.GetWithIncludes<CalendarPrice>();
+            return _db.GetWithIncludes<CalendarPrice>().Where(c=>c.PropertyId==propertyId);
         }
 
         public bool SaveHost(Host host)

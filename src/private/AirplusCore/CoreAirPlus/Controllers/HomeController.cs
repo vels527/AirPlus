@@ -241,11 +241,20 @@ namespace CoreAirPlus.Controllers
         [Route("Calendar")]
         public ActionResult CalendarDays()
         {
-            var calendars = _readRepository.GetCalendarPrices();
-
-
+            int? CurrentThisHostId = HttpContext.Session.GetInt32("HostId");
+            int hostid = CurrentThisHostId == null ? -1 : CurrentThisHostId.Value;
+            if (hostid == -1)
+            {
+                return RedirectToPage("/Login");
+            }
+            //var calendars = _readRepository.GetCalendarPrices();
+            var properties = _readRepository.GetHost(hostid).properties;
             List<CalendarPrice> calendarprices = new List<CalendarPrice>();
-            calendarprices = calendars.ToList();
+            foreach (var property in properties)
+            {
+                calendarprices.AddRange(_readRepository.GetCalendarPrices(property.PropertyId));
+            }            
+            //calendarprices = calendars.ToList();
             for(int i = 0; i < calendarprices.Count(); i++)
             {
                 for(int j = i+1; j < calendarprices.Count(); j++)
