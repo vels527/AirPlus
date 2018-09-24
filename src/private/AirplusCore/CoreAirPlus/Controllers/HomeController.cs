@@ -47,6 +47,12 @@ namespace CoreAirPlus.Controllers
             return View(reservationViewModel);
         }
 
+        [Route("LoginDirect")]
+        public ActionResult LoginDirect()
+        {
+            return RedirectToPage("/Login");
+        }
+
         // GET: Home/Details/5
         public ActionResult Details(int id)
         {
