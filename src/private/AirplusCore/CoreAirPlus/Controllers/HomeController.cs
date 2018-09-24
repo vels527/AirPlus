@@ -30,6 +30,11 @@ namespace CoreAirPlus.Controllers
             {
                 return RedirectToPage("/Login");
             }
+            var properties = _readRepository.GetHost(hostid).properties;
+            if (properties.Count == 0)
+            {
+
+            }
             var reservations = _readRepository.GetReservationsByHost(hostid);
             var reservationViewModel = from c in reservations select new ReservationViewModel
             {
